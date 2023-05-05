@@ -4,17 +4,17 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import RootLayout from './components/elements/layouts/RootLayout';
-import HowToLayout from './components/elements/layouts/HowToLayout';
-import HomePage from './pages/HomePage';
-import EditHowToPage from './pages/EditHowToPage';
-import ExplorePage from './pages/ExplorePage';
-import HowToPage from './pages/HowToPage';
-import BookmarksPage from './pages/BookmarksPage';
-import CreatePage from './pages/CreatePage';
-import SearchPage from './pages/SearchPage';
-import SettingsPage from './pages/SettingsPage';
-import UserPage from './pages/UserPage';
+import RootLayout from '~/components/layouts/RootLayout';
+import HowToLayout from '~/components/layouts/HowToLayout';
+import HomePage from '~/pages/HomePage';
+import EditHowToPage from '~/pages/EditHowToPage';
+import ExplorePage from '~/pages/ExplorePage';
+import HowToPage from '~/pages/HowToPage';
+import BookmarksPage from '~/pages/BookmarksPage';
+import CreatePage from '~/pages/CreatePage';
+import SearchPage from '~/pages/SearchPage';
+import SettingsPage from '~/pages/SettingsPage';
+import UserPage from '~/pages/UserPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
