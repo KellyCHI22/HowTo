@@ -24,7 +24,7 @@ export default function RootLayout() {
   const [intro, setIntro] = useState('');
   const introRef = useRef<HTMLTextAreaElement>(null);
 
-  useAutosizeTextArea(introRef.current, intro);
+  useAutosizeTextArea(introRef.current, intro, 5);
 
   return (
     <>
@@ -97,6 +97,7 @@ export default function RootLayout() {
         <Textarea
           id="intro"
           value={intro}
+          rows={5}
           ref={introRef}
           onChange={(e) => setIntro(e.target.value)}
           limit={200}

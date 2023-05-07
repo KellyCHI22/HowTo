@@ -2,12 +2,13 @@ import { useEffect } from 'react';
 
 const useAutosizeTextArea = (
   textAreaRef: HTMLTextAreaElement | null,
-  value: string
+  value: string,
+  rows: number
 ) => {
   useEffect(() => {
     if (textAreaRef) {
       // We need to reset the height momentarily to get the correct scrollHeight for the textarea
-      textAreaRef.style.height = '136px';
+      textAreaRef.style.height = `${40 + 24 * (rows - 1)}px`;
       const scrollHeight = textAreaRef.scrollHeight;
 
       // We then set the height directly, outside of the render loop

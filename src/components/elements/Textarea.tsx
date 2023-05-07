@@ -9,6 +9,7 @@ interface TextAreaProps extends ComponentPropsWithoutRef<'textarea'> {
   id: string;
   label?: string;
   value: string;
+  rows: number;
   limit?: number;
   disabled?: boolean;
   placeholder?: string;
@@ -17,7 +18,7 @@ interface TextAreaProps extends ComponentPropsWithoutRef<'textarea'> {
 
 const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
-    { id, label, value, limit, disabled, placeholder, onChange, ...rest },
+    { id, label, value, rows, limit, disabled, placeholder, onChange, ...rest },
     ref
   ) => {
     return (
@@ -36,7 +37,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             {...rest}
             id={id}
             value={value}
-            rows={1}
+            rows={rows}
             ref={ref}
             placeholder={placeholder}
             onChange={onChange}
