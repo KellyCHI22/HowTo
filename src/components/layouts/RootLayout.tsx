@@ -15,6 +15,7 @@ import { IconType } from 'react-icons';
 import { useEffect, useRef, useState } from 'react';
 import Textarea from '../elements/Textarea';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import Tag from '../elements/Tag';
 
 export default function RootLayout() {
   const [email, setEmail] = useState('');
@@ -101,8 +102,13 @@ export default function RootLayout() {
           limit={200}
           placeholder="Turn your cat into a DJ! Train them to respond sounds, attach a collar with sensors..."
         />
+        <div className="flex gap-2">
+          <Tag label="hello" />
+          <Tag label="strawberry" />
+          <Tag label="another" />
+        </div>
       </div>
-      <div></div>
+
       {/* <Outlet /> */}
     </>
   );
