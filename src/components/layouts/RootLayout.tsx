@@ -1,14 +1,24 @@
 import { Link, Outlet } from 'react-router-dom';
-import Button from '~/components/elements/Button';
+import Button from '../elements/Button';
 import Spinner from '../elements/Spinner';
 import {
   RiArrowRightLine,
   RiThumbUpFill,
   RiHeartLine,
   RiArrowGoBackLine,
+  RiMailFill,
+  RiLock2Fill,
+  RiAccountCircleFill,
 } from 'react-icons/ri';
+import Input from '../elements/Input';
+import { IconType } from 'react-icons';
+import { useState } from 'react';
 
 export default function RootLayout() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
+
   return (
     <>
       <header className="flex gap-2 items-center">
@@ -44,7 +54,38 @@ export default function RootLayout() {
       <div className="w-48 h-36 grid place-items-center">
         <Spinner />
       </div>
-      <Outlet />
+      <div className="w-72">
+        <Input
+          type="text"
+          label="Email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          icon={<RiMailFill />}
+          placeholder="JohnDoe@example.com"
+          disabled
+        />
+        <Input
+          type="password"
+          label="Password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          // icon={<RiLock2Fill />}
+          placeholder="Minimum 6 characters"
+        />
+        <Input
+          type="text"
+          label="Name"
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          icon={<RiAccountCircleFill />}
+          placeholder="John Doe"
+          limit={25}
+        />
+      </div>
+      {/* <Outlet /> */}
     </>
   );
 }
