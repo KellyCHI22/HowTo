@@ -12,12 +12,18 @@ import {
 } from 'react-icons/ri';
 import Input from '../elements/Input';
 import { IconType } from 'react-icons';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Textarea from '../elements/Textarea';
+import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 
 export default function RootLayout() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [intro, setIntro] = useState('');
+  const introRef = useRef<HTMLTextAreaElement>(null);
+
+  useAutosizeTextArea(introRef.current, intro);
 
   return (
     <>
@@ -43,7 +49,7 @@ export default function RootLayout() {
           <RiHeartLine className="inline text-2xl" />
         </Button>
       </header>
-      <div className="w-48">
+      {/* <div className="w-48">
         <Button loading={false} full outline rounded>
           Full width
         </Button>
@@ -53,7 +59,7 @@ export default function RootLayout() {
       </div>
       <div className="w-48 h-36 grid place-items-center">
         <Spinner />
-      </div>
+      </div> */}
       <div className="w-72">
         <Input
           type="text"
@@ -84,7 +90,19 @@ export default function RootLayout() {
           placeholder="John Doe"
           limit={25}
         />
+        <Button loading={false} full primary>
+          Sign up
+        </Button>
+        <Textarea
+          id="intro"
+          value={intro}
+          ref={introRef}
+          onChange={(e) => setIntro(e.target.value)}
+          limit={200}
+          placeholder="Turn your cat into a DJ! Train them to respond sounds, attach a collar with sensors..."
+        />
       </div>
+      <div></div>
       {/* <Outlet /> */}
     </>
   );
