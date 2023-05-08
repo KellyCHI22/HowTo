@@ -13,7 +13,7 @@ const Tag = forwardRef<HTMLButtonElement, TagProps>(
         ref={ref}
         className={clsx(
           rest.className,
-          'px-2 py-1 rounded-full bg-white border border-teal-500 text-teal-500'
+          'rounded-full border border-teal-500 bg-white px-2 py-1 text-teal-500'
         )}
       >
         {label}

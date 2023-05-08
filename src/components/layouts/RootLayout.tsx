@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from 'react';
 import Textarea from '../elements/Textarea';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import Tag from '../elements/Tag';
+import TagInput from '../elements/TagInput';
 
 export default function RootLayout() {
   const [email, setEmail] = useState('');
@@ -26,12 +27,27 @@ export default function RootLayout() {
 
   useAutosizeTextArea(introRef.current, intro, 5);
 
+  // tag
+  const [tags, setTags] = useState<string[]>(['apple', 'banana', 'orange']);
+  const [newTag, setNewTag] = useState('');
+  const removeTag = (indexToRemove: number) => {
+    setTags([...tags.filter((_, index) => index !== indexToRemove)]);
+  };
+  const addTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      if (newTag !== '') {
+        setTags([...tags, newTag]);
+        setNewTag('');
+      }
+    }
+  };
+
   return (
     <>
-      <header className="flex gap-2 items-center">
+      <header className="flex items-center gap-2">
         This is a logo
         <Link to="/search">Search something</Link>
-        <Button loading={false} primary basic>
+        {/* <Button loading={false} primary basic>
           Get started <RiArrowRightLine className="inline text-2xl" />
         </Button>
         <Button loading={false} outline basic>
@@ -48,21 +64,21 @@ export default function RootLayout() {
         </Button>
         <Button loading={false} primary rounded>
           <RiHeartLine className="inline text-2xl" />
-        </Button>
+        </Button> */}
       </header>
-      {/* <div className="w-48">
-        <Button loading={false} full outline rounded>
+      <div className="w-48">
+        {/* <Button loading={false} full outline rounded>
           Full width
         </Button>
         <Button loading={false} full primary>
           Full width
-        </Button>
+        </Button> */}
       </div>
-      <div className="w-48 h-36 grid place-items-center">
-        <Spinner />
-      </div> */}
+      <div className="grid h-36 w-48 place-items-center">
+        {/* <Spinner /> */}
+      </div>
       <div className="w-72">
-        <Input
+        {/* <Input
           type="text"
           label="Email"
           id="email"
@@ -93,8 +109,8 @@ export default function RootLayout() {
         />
         <Button loading={false} full primary>
           Sign up
-        </Button>
-        <Textarea
+        </Button> */}
+        {/* <Textarea
           id="intro"
           value={intro}
           rows={5}
@@ -102,12 +118,27 @@ export default function RootLayout() {
           onChange={(e) => setIntro(e.target.value)}
           limit={200}
           placeholder="Turn your cat into a DJ! Train them to respond sounds, attach a collar with sensors..."
-        />
+        /> */}
+      </div>
+      <div className="w-72">
         <div className="flex gap-2">
           <Tag label="hello" />
           <Tag label="strawberry" />
           <Tag label="another" />
         </div>
+        <div>
+          <TagInput
+            label="Tags"
+            id="tags"
+            tags={tags}
+            value={newTag}
+            onAddTag={addTag}
+            onRemoveTag={removeTag}
+            onChange={(e) => setNewTag(e.target.value)}
+            placeholder="Press enter to add tags"
+          />
+        </div>
+        {tags.toString()}
       </div>
 
       {/* <Outlet /> */}

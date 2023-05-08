@@ -26,16 +26,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div
         className={clsx(
           rest.className,
-          'text-slate-600 focus-within:text-teal-500 my-2',
+          'my-2 text-slate-600 focus-within:text-teal-500',
           { 'pointer-events-none opacity-80': disabled }
         )}
       >
-        <label htmlFor={id} className="block font-bold mb-1 ">
+        <label htmlFor={id} className="mb-1 block font-bold ">
           {label}
         </label>
-        <div className="flex items-center border border-slate-500 focus-within:ring-teal-400 focus-within:ring-2 focus-within:border-transparent">
+        <div className="flex items-center border border-slate-500 focus-within:border-transparent focus-within:ring-2 focus-within:ring-teal-400">
           {icon ? (
-            <div className="text-slate-400 pl-2 text-xl">{icon}</div>
+            <div className="pl-2 text-xl text-slate-400">{icon}</div>
           ) : null}
           <input
             {...rest}
@@ -46,7 +46,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange={onChange}
             className={clsx(
               rest.className,
-              'w-full border-none placeholder-slate-400 focus:outline-none focus:ring-0 text-black',
+              'w-full border-none text-black placeholder-slate-400 focus:outline-none focus:ring-0',
               {
                 '': disabled,
               }
@@ -54,7 +54,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
         </div>
         {limit ? (
-          <div className="flex justify-end text-xs text-slate-400 mt-1">
+          <div className="mt-1 flex justify-end text-xs text-slate-400">
             <span>
               {value.length}/{limit}
             </span>
