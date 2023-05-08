@@ -49,7 +49,7 @@ export default function RootLayout() {
   };
 
   return (
-    <>
+    <div className="font-mulish">
       <nav className="flex items-center gap-2">
         This is a logo
         <Link to="/search">Search something</Link>
@@ -154,6 +154,6 @@ export default function RootLayout() {
       </div>
 
       {/* <Outlet /> */}
-    </>
+    </div>
   );
 }
