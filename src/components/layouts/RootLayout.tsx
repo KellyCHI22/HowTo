@@ -30,24 +30,30 @@ export default function RootLayout() {
   // tag
   const [tags, setTags] = useState<string[]>(['apple', 'banana', 'orange']);
   const [newTag, setNewTag] = useState('');
+  const [tagError, setTagError] = useState('');
   const removeTag = (indexToRemove: number) => {
     setTags([...tags.filter((_, index) => index !== indexToRemove)]);
   };
   const addTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      if (newTag !== '') {
+      if (newTag.length > 20) {
+        return setTagError('Tags cannot be longer than 20 characters');
+      } else if (tags.length >= 5) {
+        return setTagError('Cannot add more than 5 tags');
+      } else if (newTag !== '') {
         setTags([...tags, newTag]);
         setNewTag('');
+        setTagError('');
       }
     }
   };
 
   return (
     <>
-      <header className="flex items-center gap-2">
+      <nav className="flex items-center gap-2">
         This is a logo
         <Link to="/search">Search something</Link>
-        {/* <Button loading={false} primary basic>
+        <Button loading={false} primary basic>
           Get started <RiArrowRightLine className="inline text-2xl" />
         </Button>
         <Button loading={false} outline basic>
@@ -64,21 +70,21 @@ export default function RootLayout() {
         </Button>
         <Button loading={false} primary rounded>
           <RiHeartLine className="inline text-2xl" />
-        </Button> */}
-      </header>
+        </Button>
+      </nav>
       <div className="w-48">
-        {/* <Button loading={false} full outline rounded>
+        <Button loading={false} full outline rounded>
           Full width
         </Button>
         <Button loading={false} full primary>
           Full width
-        </Button> */}
+        </Button>
       </div>
       <div className="grid h-36 w-48 place-items-center">
-        {/* <Spinner /> */}
+        <Spinner />
       </div>
       <div className="w-72">
-        {/* <Input
+        <Input
           type="text"
           label="Email"
           id="email"
@@ -109,8 +115,8 @@ export default function RootLayout() {
         />
         <Button loading={false} full primary>
           Sign up
-        </Button> */}
-        {/* <Textarea
+        </Button>
+        <Textarea
           id="intro"
           value={intro}
           rows={5}
@@ -118,20 +124,26 @@ export default function RootLayout() {
           onChange={(e) => setIntro(e.target.value)}
           limit={200}
           placeholder="Turn your cat into a DJ! Train them to respond sounds, attach a collar with sensors..."
-        /> */}
+        />
       </div>
-      <div className="w-72">
-        <div className="flex gap-2">
+      <div className="w-96">
+        <div className="flex flex-wrap gap-2">
           <Tag label="hello" />
           <Tag label="strawberry" />
           <Tag label="another" />
+          <Tag label="another" />
+          <Tag label="another" />
+          <Tag label="another" />
+          <Tag label="another" />
+          <Tag label="another" />
         </div>
-        <div>
+        <div className="mx-5">
           <TagInput
             label="Tags"
             id="tags"
             tags={tags}
             value={newTag}
+            error={tagError}
             onAddTag={addTag}
             onRemoveTag={removeTag}
             onChange={(e) => setNewTag(e.target.value)}

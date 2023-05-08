@@ -12,7 +12,7 @@ interface TagInputProps extends ComponentPropsWithoutRef<'input'> {
   label: string;
   tags: string[];
   value: string;
-  limit?: number;
+  error?: string;
   disabled?: boolean;
   placeholder?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
@@ -27,7 +27,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
       label,
       tags,
       value,
-      limit,
+      error,
       disabled,
       placeholder,
       onChange,
@@ -69,21 +69,18 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
             id={id}
             value={value}
             placeholder={placeholder}
-            onChange={onChange}
-            onKeyUp={onAddTag}
+            onChange={(e) => onChange?.(e)}
+            onKeyUp={(e) => onAddTag?.(e)}
             className={clsx(
               rest.className,
-              'w-[25ch] border-none text-black placeholder-slate-400 focus:outline-none focus:ring-0'
+              'w-[24ch] border-none text-black placeholder-slate-400 focus:outline-none focus:ring-0'
             )}
           />
         </div>
-        {limit ? (
-          <div className="mt-1 flex justify-end text-xs text-slate-400">
-            <span>
-              {value.length}/{limit}
-            </span>
-          </div>
-        ) : null}
+        <div className="mt-1 flex justify-between text-xs text-slate-400">
+          <span className="text-red-500">{error}</span>
+          <span>{tags.length}/5</span>
+        </div>
       </div>
     );
   }
