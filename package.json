@@ -22,7 +22,8 @@
     "react-icons": "^4.8.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.1",
-    "react-spinners": "^0.13.8"
+    "react-spinners": "^0.13.8",
+    "vite-plugin-svgr": "^3.2.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",
