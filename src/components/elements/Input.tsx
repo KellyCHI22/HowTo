@@ -56,7 +56,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {limit ? (
           <div className="mt-1 flex justify-end text-xs text-slate-400">
             <span>
-              {value.length}/{limit}
+              {value.length} / {limit}
             </span>
           </div>
         ) : null}

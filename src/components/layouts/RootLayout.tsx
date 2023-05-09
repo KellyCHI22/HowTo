@@ -5,15 +5,20 @@ import { RiMenuFill, RiSearchLine, RiArrowRightLine } from 'react-icons/ri';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import { useState } from 'react';
 import LoginModal from '../LoginModal';
+import SignupModal from '../SignupModal';
 
 export default function RootLayout() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignupModal, setShowSignupModal] = useState(false);
   const handleToggleSidebar = () => {
     setShowSidebar((prev) => !prev);
   };
   const handleToggleLoginModal = () => {
     setShowLoginModal((prev) => !prev);
+  };
+  const handleToggleSignupModal = () => {
+    setShowSignupModal((prev) => !prev);
   };
   // textarea
   // const [intro, setIntro] = useState('');
@@ -57,13 +62,22 @@ export default function RootLayout() {
           <RiSearchLine className="text-2xl" />
         </Link>
       </nav>
-      <Outlet context={handleToggleLoginModal} />
+      <Outlet context={{ handleToggleLoginModal, handleToggleSignupModal }} />
       <MobileSidebar
         toggleSidebar={handleToggleSidebar}
         showSidebar={showSidebar}
       />
       {showLoginModal && (
-        <LoginModal toggleLoginModal={handleToggleLoginModal} />
+        <LoginModal
+          toggleLoginModal={handleToggleLoginModal}
+          toggleSignupModal={handleToggleSignupModal}
+        />
+      )}
+      {showSignupModal && (
+        <SignupModal
+          toggleSignupModal={handleToggleSignupModal}
+          toggleLoginModal={handleToggleLoginModal}
+        />
       )}
     </>
   );
