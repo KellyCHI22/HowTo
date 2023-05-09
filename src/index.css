@@ -2,3 +2,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: Mulish, sans-serif;
+    color: hsl(222, 47%, 11%);
+    background-color: hsl(0, 0%, 96%);
+  }
+}

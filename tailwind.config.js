@@ -8,6 +8,9 @@ export default {
         mulish: ['Mulish', 'sans-serif'],
         slabo: ['"Slabo 13px"', 'serif'],
       },
+      boxShadow: {
+        basic: '0px 4px 15px 0px rgba(0,0,0,0.04)',
+      },
     },
   },
   plugins: [require('@tailwindcss/forms')],
