@@ -1,13 +1,17 @@
 import {
   RiCloseFill,
   RiLightbulbFlashLine,
+  RiLightbulbFlashFill,
   RiBookmark2Line,
   RiAccountCircleLine,
   RiSettings5Line,
   RiEdit2Line,
   RiLogoutBoxRLine,
+  RiBookmark2Fill,
+  RiAccountCircleFill,
+  RiSettings5Fill,
 } from 'react-icons/ri';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import Button from './elements/Button';
 
@@ -49,44 +53,40 @@ export default function MobileSidebar({
           </div>
           <ul className="space-y-2">
             <li>
-              <NavLink
+              <AppNavLink
                 to="/howtos"
-                className="flex items-center rounded-lg p-2 hover:bg-gray-100"
+                label="Explore"
+                defaultIcon={<RiLightbulbFlashLine />}
+                activeIcon={<RiLightbulbFlashFill />}
                 onClick={toggleSidebar}
-              >
-                <RiLightbulbFlashLine className="text-2xl text-slate-400" />
-                <span className="ml-3 flex-1 whitespace-nowrap">Explore</span>
-              </NavLink>
+              />
             </li>
             <li>
-              <NavLink
+              <AppNavLink
                 to="/bookmarks"
-                className="flex items-center rounded-lg p-2 hover:bg-gray-100 "
+                label="Bookmarks"
+                defaultIcon={<RiBookmark2Line />}
+                activeIcon={<RiBookmark2Fill />}
                 onClick={toggleSidebar}
-              >
-                <RiBookmark2Line className="text-2xl text-slate-400" />
-                <span className="ml-3 flex-1 whitespace-nowrap">Bookmarks</span>
-              </NavLink>
+              />
             </li>
             <li>
-              <NavLink
-                to="users/123"
-                className="flex items-center rounded-lg p-2 hover:bg-gray-100 "
+              <AppNavLink
+                to="/users/123"
+                label="Profile"
+                defaultIcon={<RiAccountCircleLine />}
+                activeIcon={<RiAccountCircleFill />}
                 onClick={toggleSidebar}
-              >
-                <RiAccountCircleLine className="text-2xl text-slate-400" />
-                <span className="ml-3 flex-1 whitespace-nowrap">Profile</span>
-              </NavLink>
+              />
             </li>
             <li>
-              <NavLink
+              <AppNavLink
                 to="/settings"
-                className="flex items-center rounded-lg p-2 hover:bg-gray-100 "
+                label="Settings"
+                defaultIcon={<RiSettings5Line />}
+                activeIcon={<RiSettings5Fill />}
                 onClick={toggleSidebar}
-              >
-                <RiSettings5Line className="text-2xl text-slate-400" />
-                <span className="ml-3 flex-1 whitespace-nowrap">Settings</span>
-              </NavLink>
+              />
             </li>
           </ul>
           <div className="mx-2 my-5">
@@ -112,5 +112,43 @@ export default function MobileSidebar({
         </div>
       </div>
     </>
+  );
+}
+
+type AppNavLinkProps = {
+  to: string;
+  label: string;
+  defaultIcon: JSX.Element;
+  activeIcon: JSX.Element;
+  onClick?: () => void;
+};
+
+function AppNavLink({
+  to,
+  label,
+  defaultIcon,
+  activeIcon,
+  onClick,
+}: AppNavLinkProps) {
+  const { pathname } = useLocation();
+  const isActive = pathname.includes(to);
+
+  return (
+    <NavLink
+      to={to}
+      className={clsx('flex items-center rounded-lg p-2 hover:bg-gray-100', {
+        'text-teal-500': isActive,
+      })}
+      onClick={onClick}
+    >
+      <span
+        className={clsx('text-2xl text-slate-400', {
+          'text-teal-500': isActive,
+        })}
+      >
+        {isActive ? activeIcon : defaultIcon}
+      </span>
+      <span className="ml-3 flex-1 whitespace-nowrap">{label}</span>
+    </NavLink>
   );
 }
