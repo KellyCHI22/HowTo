@@ -4,11 +4,16 @@ import MobileSidebar from '../MobileSidebar';
 import { RiMenuFill, RiSearchLine, RiArrowRightLine } from 'react-icons/ri';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import { useState } from 'react';
+import LoginModal from '../LoginModal';
 
 export default function RootLayout() {
   const [showSidebar, setShowSidebar] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const handleToggleSidebar = () => {
     setShowSidebar((prev) => !prev);
+  };
+  const handleToggleLoginModal = () => {
+    setShowLoginModal((prev) => !prev);
   };
   // textarea
   // const [intro, setIntro] = useState('');
@@ -52,11 +57,14 @@ export default function RootLayout() {
           <RiSearchLine className="text-2xl" />
         </Link>
       </nav>
-      <Outlet />
+      <Outlet context={handleToggleLoginModal} />
       <MobileSidebar
         toggleSidebar={handleToggleSidebar}
         showSidebar={showSidebar}
       />
+      {showLoginModal && (
+        <LoginModal toggleLoginModal={handleToggleLoginModal} />
+      )}
     </>
   );
 }

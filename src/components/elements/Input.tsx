@@ -33,9 +33,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <label htmlFor={id} className="mb-1 block font-bold ">
           {label}
         </label>
-        <div className="flex items-center border border-slate-500 focus-within:border-transparent focus-within:ring-2 focus-within:ring-teal-400">
+        <div className="flex items-center border border-slate-400 focus-within:border-transparent focus-within:ring-2 focus-within:ring-teal-400">
           {icon ? (
-            <div className="pl-2 text-xl text-slate-400">{icon}</div>
+            <div className="pl-3 text-xl text-slate-400">{icon}</div>
           ) : null}
           <input
             {...rest}
@@ -46,7 +46,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             onChange={onChange}
             className={clsx(
               rest.className,
-              'w-full border-none text-black placeholder-slate-400 focus:outline-none focus:ring-0',
+              'w-full border-none py-3 text-black placeholder-slate-400 focus:outline-none focus:ring-0',
               {
                 '': disabled,
               }
