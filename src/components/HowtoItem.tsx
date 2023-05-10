@@ -5,7 +5,7 @@ export default function HowToItem() {
   return (
     <Link
       to="/howtos/123"
-      className="flex h-32 gap-2 rounded-xl bg-white p-2 shadow-basic hover:bg-slate-50  hover:shadow-teal"
+      className="flex h-32 gap-2 rounded-xl bg-white p-2 shadow-basic hover:bg-gray-50  hover:shadow-teal"
     >
       <img
         src="https://picsum.photos/id/200/500/300"

@@ -29,10 +29,12 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           { 'pointer-events-none opacity-80': disabled }
         )}
       >
-        <label htmlFor={id} className="mb-1 block font-bold ">
-          {label}
-        </label>
-        <div className="flex items-center border border-slate-500 focus-within:border-transparent focus-within:ring-2 focus-within:ring-teal-400">
+        {label && (
+          <label htmlFor={id} className="mb-1 block font-bold ">
+            {label}
+          </label>
+        )}
+        <div className="flex items-center border border-slate-400 focus-within:border-transparent focus-within:ring-2 focus-within:ring-teal-400">
           <textarea
             {...rest}
             id={id}

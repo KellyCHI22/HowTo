@@ -3,15 +3,15 @@ import {
   RiLightbulbFlashLine,
   RiLightbulbFlashFill,
   RiBookmark2Line,
+  RiBookmark2Fill,
   RiAccountCircleLine,
+  RiAccountCircleFill,
   RiSettings5Line,
+  RiSettings5Fill,
   RiEdit2Line,
   RiLogoutBoxRLine,
-  RiBookmark2Fill,
-  RiAccountCircleFill,
-  RiSettings5Fill,
 } from 'react-icons/ri';
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import Button from './elements/Button';
 
@@ -90,15 +90,18 @@ export default function MobileSidebar({
             </li>
           </ul>
           <div className="mx-2 my-5">
-            <Button
-              loading={false}
-              basic
-              full
-              primary
-              className="py-2.5 font-normal"
-            >
-              <RiEdit2Line className="text-2xl" /> Create HowTo
-            </Button>
+            <Link to="/create">
+              <Button
+                loading={false}
+                basic
+                full
+                primary
+                className="py-2.5 font-normal"
+                onClick={toggleSidebar}
+              >
+                <RiEdit2Line className="text-2xl" /> Create HowTo
+              </Button>
+            </Link>
           </div>
           <div className="absolute bottom-5">
             <NavLink
