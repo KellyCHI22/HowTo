@@ -1,4 +1,4 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import Button from '../elements/Button';
 import MobileSidebar from '../MobileSidebar';
 import { RiMenuFill, RiSearchLine, RiArrowRightLine } from 'react-icons/ri';
@@ -8,6 +8,7 @@ import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
 
 export default function RootLayout() {
+  const { pathname } = useLocation();
   const [showSidebar, setShowSidebar] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -48,20 +49,25 @@ export default function RootLayout() {
 
   return (
     <>
-      <nav className="flex items-center justify-between gap-2 bg-white px-4 py-1 shadow-basic">
-        <button onClick={handleToggleSidebar}>
-          <RiMenuFill className="text-2xl" />
-        </button>
+      {!pathname.includes('search') && (
+        <>
+          <nav className="flex h-[4.5rem] items-center justify-between gap-2 bg-white px-4 py-1 shadow-basic">
+            <button onClick={handleToggleSidebar}>
+              <RiMenuFill className="text-2xl" />
+            </button>
 
-        <div className="flex items-center">
-          <Logo className="h-16 w-16" />
-          <h1 className="font-slabo text-2xl text-teal-500">HowTo...</h1>
-        </div>
+            <div className="flex items-center">
+              <Logo className="h-16 w-16" />
+              <h1 className="font-slabo text-2xl text-teal-500">HowTo...</h1>
+            </div>
 
-        <Link to="/search">
-          <RiSearchLine className="text-2xl" />
-        </Link>
-      </nav>
+            <Link to="/search">
+              <RiSearchLine className="text-2xl" />
+            </Link>
+          </nav>
+        </>
+      )}
+
       <Outlet context={{ handleToggleLoginModal, handleToggleSignupModal }} />
       <MobileSidebar
         toggleSidebar={handleToggleSidebar}

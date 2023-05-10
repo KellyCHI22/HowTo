@@ -7,7 +7,7 @@ export default function ExplorePage() {
   return (
     <div className="m-5">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-slabo text-3xl text-teal-500">Explore</h2>
+        <h2 className="ml-2 font-slabo text-2xl text-teal-500">Explore</h2>
         <button className="flex items-center rounded-full border border-teal-500 px-3 py-2 text-teal-500">
           sort by
           <RiArrowDownSFill className="text-2xl" />
