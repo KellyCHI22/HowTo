@@ -42,11 +42,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={clsx(
           rest.className,
-          'flex items-center justify-center gap-2 py-3',
+          'flex items-center justify-center gap-2',
           {
-            'rounded-full px-4': basic,
-            'rounded-full px-2': rounded,
-            'w-full justify-center': full,
+            'rounded-full px-4 py-2': basic,
+            'rounded-full px-3 py-3': rounded,
+            'w-full justify-center py-3': full,
             'border border-teal-500 bg-white text-teal-500 hover:bg-slate-100':
               outline,
             'bg-teal-500 text-white hover:bg-teal-600': primary,
