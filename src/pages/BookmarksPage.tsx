@@ -26,7 +26,7 @@ export default function BookmarksPage() {
         loading={false}
         rounded
         primary
-        className="fixed bottom-8 right-5 shadow-lg"
+        className="fixed bottom-8 right-5 px-3 py-3 shadow-lg"
       >
         <Link to="/create">
           <RiEdit2Line className="text-2xl" />
