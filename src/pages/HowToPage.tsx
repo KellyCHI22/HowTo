@@ -35,12 +35,12 @@ export default function HowToPage() {
           <button className="relative" onClick={handleShowOption}>
             <RiMoreLine className="text-2xl" />
             {showOption && (
-              <div className="absolute -left-16 top-6 rounded-lg bg-white p-1 text-left text-sm shadow-2xl shadow-gray-400">
-                <button className="flex w-full items-center gap-2 rounded-lg px-2 py-1 hover:bg-gray-50">
+              <div className="absolute -left-16 top-6 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
+                <button className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50">
                   <RiEdit2Line className="text-xl" />
                   Edit
                 </button>
-                <button className="flex items-center gap-2 rounded-lg px-2 py-1 text-red-400 hover:bg-gray-50">
+                <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
                   <RiDeleteBin6Line className="text-xl" />
                   Delete
                 </button>
@@ -177,7 +177,7 @@ function CommentItem() {
               className="text-sm"
               onChange={(e) => setCommentEditInput(e.target.value)}
             />
-            <div className="flex justify-end gap-2">
+            <div className="mt-2 flex justify-end gap-2">
               <Button
                 loading={false}
                 danger
@@ -221,15 +221,15 @@ function CommentItem() {
               >
                 <RiMoreLine className="text-2xl" />
                 {showOption && (
-                  <div className="absolute -left-16 top-6 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
+                  <div className="absolute -left-16 top-6 rounded-lg bg-white p-1 text-left text-base shadow-2xl shadow-gray-400">
                     <button
-                      className="flex w-full items-center gap-2 rounded-lg px-2 py-1 hover:bg-gray-50"
+                      className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50"
                       onClick={handleEditMode}
                     >
                       <RiEdit2Line className="text-xl" />
                       Edit
                     </button>
-                    <button className="flex items-center gap-2 rounded-lg px-2 py-1 text-red-400 hover:bg-gray-50">
+                    <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
                       <RiDeleteBin6Line className="text-xl" />
                       Delete
                     </button>
@@ -274,7 +274,7 @@ function CommentInput() {
           className="text-sm"
           onChange={(e) => setCommentInput(e.target.value)}
         />
-        <Button loading={false} primary basic className="self-end">
+        <Button loading={false} primary basic className="mt-2 self-end">
           <RiSendPlaneFill />
           Send
         </Button>

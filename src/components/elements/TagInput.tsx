@@ -79,7 +79,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
         </div>
         <div className="mt-1 flex justify-between text-xs text-gray-400">
           <span className="text-red-500">{error}</span>
-          <span>{tags.length}/5</span>
+          <span>{tags.length} / 5</span>
         </div>
       </div>
     );
