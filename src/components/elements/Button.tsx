@@ -12,6 +12,7 @@ interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   primary?: boolean;
   outline?: boolean;
   secondary?: boolean;
+  danger?: boolean;
   basic?: boolean;
   rounded?: boolean;
   full?: boolean;
@@ -25,6 +26,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary,
       outline,
       secondary,
+      danger,
       basic,
       rounded,
       full,
@@ -47,11 +49,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'rounded-full px-4 py-2': basic,
             'rounded-full px-2 py-2': rounded,
             'w-full justify-center py-3': full,
-            'border border-teal-500 bg-white text-teal-500 hover:bg-slate-100':
+            'border border-teal-500 bg-white text-teal-500 hover:bg-gray-50':
               outline,
             'bg-teal-500 text-white hover:bg-teal-600': primary,
-            'border border-slate-400 bg-white text-slate-400 hover:bg-slate-100':
+            'border border-slate-400 bg-white text-slate-400 hover:bg-gray-50':
               secondary,
+            'border border-red-400 bg-white text-red-400 hover:bg-gray-50':
+              danger,
             'pointer-events-none opacity-80': loading,
           }
         )}
