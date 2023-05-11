@@ -145,7 +145,7 @@ function AppNavLink({
       onClick={onClick}
     >
       <span
-        className={clsx('text-2xl text-gray-400', {
+        className={clsx('text-2xl text-slate-400', {
           'text-teal-500': isActive,
         })}
       >
