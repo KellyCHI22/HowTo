@@ -108,7 +108,7 @@ export default function MobileSidebar({
               to="#"
               className="flex items-center rounded-lg p-2 hover:bg-gray-100 "
             >
-              <RiLogoutBoxRLine className="text-2xl text-slate-400" />
+              <RiLogoutBoxRLine className="text-2xl text-gray-400" />
               <span className="ml-3 flex-1 whitespace-nowrap">Log out</span>
             </NavLink>
           </div>
@@ -145,7 +145,7 @@ function AppNavLink({
       onClick={onClick}
     >
       <span
-        className={clsx('text-2xl text-slate-400', {
+        className={clsx('text-2xl text-gray-400', {
           'text-teal-500': isActive,
         })}
       >

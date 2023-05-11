@@ -25,7 +25,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
       <div
         className={clsx(
           rest.className,
-          'my-2 text-slate-600 focus-within:text-teal-500',
+          'my-2 text-gray-500 focus-within:text-teal-500',
           { 'pointer-events-none opacity-80': disabled }
         )}
       >
@@ -53,7 +53,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           />
         </div>
         {limit ? (
-          <div className="mt-1 flex justify-end text-xs text-slate-400">
+          <div className="mt-1 flex justify-end text-xs text-gray-400">
             <span>
               {value.length}/{limit}
             </span>

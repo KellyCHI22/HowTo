@@ -52,7 +52,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             'border border-teal-500 bg-white text-teal-500 hover:bg-gray-50':
               outline,
             'bg-teal-500 text-white hover:bg-teal-600': primary,
-            'border border-slate-400 bg-white text-slate-400 hover:bg-gray-50':
+            'border border-slate-400 bg-white text-gray-400 hover:bg-gray-50':
               secondary,
             'border border-red-400 bg-white text-red-400 hover:bg-gray-50':
               danger,

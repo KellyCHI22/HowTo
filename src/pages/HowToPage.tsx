@@ -64,7 +64,7 @@ export default function HowToPage() {
             </Link>
             <span>Betty Liang</span>
           </div>
-          <span className="text-slate-400">3 hours ago</span>
+          <span className="text-gray-400">3 hours ago</span>
         </div>
         <h2 className="text-2xl font-extrabold text-teal-500">
           How To Turn Your Cat into a DJ?
@@ -74,7 +74,7 @@ export default function HowToPage() {
           <Tag label="music" />
           <Tag label="funny" />
         </div>
-        <p className="text-sm italic text-slate-600">
+        <p className="text-sm italic text-gray-600">
           Turn your cat into a DJ! Train them to respond to sounds, attach a
           collar with sensors to trigger turntables & mixer, watch them mix
           beats & become internet famous.
@@ -116,7 +116,7 @@ export default function HowToPage() {
         </div>
         <div className="flex items-end justify-between">
           <div>
-            <div className="flex items-center justify-end gap-3 text-slate-400">
+            <div className="flex items-center justify-end gap-3 text-gray-400">
               <div className="flex items-center gap-1">
                 <RiChat1Line />5
               </div>
@@ -211,8 +211,8 @@ function CommentItem() {
             />
           </Link>
           <div>
-            <div className="relative space-x-2 text-slate-400">
-              <span className="font-bold text-slate-900">Betty Liang</span>
+            <div className="relative space-x-2 text-gray-400">
+              <span className="font-bold text-gray-900">Betty Liang</span>
               <span>3 hours ago</span>
 
               <button
@@ -237,7 +237,7 @@ function CommentItem() {
                 )}
               </button>
             </div>
-            <p className="mt-3 text-slate-900">
+            <p className="mt-3 text-gray-900">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Expl
               laboriosam veritatis nulla expedita placeat vel distinctio.
             </p>

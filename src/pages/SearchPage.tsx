@@ -30,7 +30,7 @@ export default function SearchPage() {
     <>
       <nav className="flex h-[4.5rem] items-center justify-between gap-2 bg-white px-4 py-1 shadow-basic">
         <button
-          className="mr-1 text-slate-400"
+          className="mr-1 text-gray-400"
           onClick={() => {
             navigate(-1);
           }}
@@ -51,7 +51,7 @@ export default function SearchPage() {
             autoFocus
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="text-slate-400" onClick={() => setSearchQuery('')}>
+          <button className="text-gray-400" onClick={() => setSearchQuery('')}>
             <RiCloseFill className="text-2xl " />
           </button>
         </div>

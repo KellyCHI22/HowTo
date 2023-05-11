@@ -56,7 +56,7 @@ export default function LoginModal({
       <Button loading={false} full primary className="font-bold">
         Log in
       </Button>
-      <p className="mb-16 mt-3 text-center text-slate-400">
+      <p className="mb-16 mt-3 text-center text-gray-400">
         Don't have an account yet?
         <button
           onClick={() => {

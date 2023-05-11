@@ -43,7 +43,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
         ref={ref}
         className={clsx(
           rest.className,
-          'my-2 text-slate-600 focus-within:text-teal-500',
+          'my-2 text-gray-500 focus-within:text-teal-500',
           { 'pointer-events-none opacity-80': disabled }
         )}
       >
@@ -59,7 +59,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
               >
                 <span className="tag-title">{tag}</span>
                 <button onClick={() => onRemoveTag?.(index)}>
-                  <RiCloseCircleFill className="text-2xl hover:text-slate-100" />
+                  <RiCloseCircleFill className="text-2xl hover:text-gray-50" />
                 </button>
               </li>
             ))}
@@ -77,7 +77,7 @@ const TagInput = forwardRef<HTMLInputElement, TagInputProps>(
             )}
           />
         </div>
-        <div className="mt-1 flex justify-between text-xs text-slate-400">
+        <div className="mt-1 flex justify-between text-xs text-gray-400">
           <span className="text-red-500">{error}</span>
           <span>{tags.length}/5</span>
         </div>

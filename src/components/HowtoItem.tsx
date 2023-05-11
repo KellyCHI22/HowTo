@@ -13,7 +13,7 @@ export default function HowToItem() {
         className="aspect-square h-full rounded-md object-cover"
       />
       <div className="flex flex-col justify-between">
-        <div className="flex items-center justify-between text-xxs text-slate-400">
+        <div className="flex items-center justify-between text-xxs text-gray-400">
           <div className="flex items-center gap-1">
             <img
               src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
@@ -34,7 +34,7 @@ export default function HowToItem() {
             music
           </span>
         </div>
-        <div className="flex items-center justify-end gap-2 text-xs text-slate-400">
+        <div className="flex items-center justify-end gap-2 text-xs text-gray-400">
           <div className="flex items-center gap-1">
             <RiChat1Line />5
           </div>
