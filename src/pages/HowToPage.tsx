@@ -36,10 +36,12 @@ export default function HowToPage() {
             <RiMoreLine className="text-2xl" />
             {showOption && (
               <div className="absolute -left-16 top-6 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
-                <button className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50">
-                  <RiEdit2Line className="text-xl" />
-                  Edit
-                </button>
+                <Link to={`/howtos/${id}/edit`}>
+                  <button className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50">
+                    <RiEdit2Line className="text-xl" />
+                    Edit
+                  </button>
+                </Link>
                 <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
                   <RiDeleteBin6Line className="text-xl" />
                   Delete

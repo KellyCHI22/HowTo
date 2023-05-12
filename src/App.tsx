@@ -23,7 +23,8 @@ const router = createBrowserRouter(
       <Route element={<HowToLayout />}>
         <Route path="howtos">
           <Route index element={<ExplorePage />} />
-          <Route path=":id" element={<HowToPage />}>
+          <Route path=":id">
+            <Route index element={<HowToPage />} />
             <Route path="edit" element={<EditHowToPage />} />
           </Route>
         </Route>
