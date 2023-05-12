@@ -49,37 +49,37 @@ export default function LoginModal({
         placeholder="John Doe"
         className="mb-0"
       />
-      <Input
-        type="text"
-        label="Email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        icon={<RiMailFill />}
-        placeholder="JohnDoe@example.com"
-      />
-      <Input
-        type="password"
-        label="Password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        icon={<RiLock2Fill />}
-        placeholder="Minimum 6 characters"
-      />
-      <Input
-        type="password"
-        label="Confirm Password"
-        id="confirmPassword"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        icon={<RiLock2Fill />}
-        placeholder="Confirm your password"
-      />
+      <div className="space-y-3">
+        <Input
+          type="text"
+          label="Email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          icon={<RiMailFill />}
+          placeholder="JohnDoe@example.com"
+        />
+        <Input
+          type="password"
+          label="Password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          icon={<RiLock2Fill />}
+          placeholder="Minimum 6 characters"
+        />
+        <Input
+          type="password"
+          label="Confirm Password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          icon={<RiLock2Fill />}
+          placeholder="Confirm your password"
+        />
+      </div>
 
-      <p className="mb-3 mt-1 text-center text-red-500">
-        {'Wrong email format'}
-      </p>
+      <p className="my-3 text-center text-red-500">{'Wrong email format'}</p>
       <Button loading={false} full primary className="font-bold">
         Sign up
       </Button>

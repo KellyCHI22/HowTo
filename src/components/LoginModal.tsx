@@ -31,28 +31,28 @@ export default function LoginModal({
       <h2 className="mb-3 mt-5 text-center font-slabo text-4xl text-teal-500">
         Welcome back
       </h2>
-      <Input
-        type="text"
-        label="Email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        icon={<RiMailFill />}
-        placeholder="JohnDoe@example.com"
-      />
-      <Input
-        type="password"
-        label="Password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        icon={<RiLock2Fill />}
-        placeholder="Minimum 6 characters"
-      />
+      <div className="space-y-3">
+        <Input
+          type="text"
+          label="Email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          icon={<RiMailFill />}
+          placeholder="JohnDoe@example.com"
+        />
+        <Input
+          type="password"
+          label="Password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          icon={<RiLock2Fill />}
+          placeholder="Minimum 6 characters"
+        />
+      </div>
 
-      <p className="mb-3 mt-1 text-center text-red-500">
-        {'Wrong email format'}
-      </p>
+      <p className="my-3 text-center text-red-500">{'Wrong email format'}</p>
       <Button loading={false} full primary className="font-bold">
         Log in
       </Button>

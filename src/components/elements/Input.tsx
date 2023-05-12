@@ -26,7 +26,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div
         className={clsx(
           rest.className,
-          'my-2 text-gray-500 focus-within:text-teal-500',
+          'text-gray-500 focus-within:text-teal-500',
           { 'pointer-events-none opacity-80': disabled }
         )}
       >
