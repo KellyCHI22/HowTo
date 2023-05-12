@@ -16,27 +16,25 @@ import Button from './elements/Button';
 const dummySteps = [
   {
     id: 'step-001',
-    description:
-      'Gather materials such as aluminum foil, duct tape, and a clear plastic bag',
+    description: 'Buy a set of DJ turntables and a mixer.',
   },
   {
     id: 'step-002',
-    description:
-      'Wrap yourself in layers of aluminum foil and secure with duct tape',
+    description: 'Train your cat to respond to certain sounds or commands.',
   },
   {
     id: 'step-003',
     description:
-      'Put on the clear plastic bag over the foil suit and secure at the neck and wrists with duct tape',
+      'Attach a special collar with sensors that can trigger the turntables and mixer.',
   },
   {
     id: 'step-004',
-    description:
-      'Attach cardboard boxes to your feet with duct tape to make your own space boots',
+    description: 'Play music and watch your cat scratch and mix the beats.',
   },
   {
     id: 'step-005',
-    description: "Step outside and imagine you're exploring the stars!",
+    description:
+      'Upload the videos to social media and become internet famous.',
   },
 ];
 
