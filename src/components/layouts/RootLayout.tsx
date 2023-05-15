@@ -73,17 +73,31 @@ export default function RootLayout() {
         toggleSidebar={handleToggleSidebar}
         showSidebar={showSidebar}
       />
+      {(showLoginModal || showSignupModal) && (
+        <div className="absolute inset-0 left-0 top-0 bg-black opacity-50" />
+      )}
+
       {showLoginModal && (
-        <LoginModal
-          toggleLoginModal={handleToggleLoginModal}
-          toggleSignupModal={handleToggleSignupModal}
-        />
+        <div
+          className="absolute inset-0 left-0 top-0 grid place-items-center"
+          onClick={() => setShowLoginModal(false)}
+        >
+          <LoginModal
+            toggleLoginModal={handleToggleLoginModal}
+            toggleSignupModal={handleToggleSignupModal}
+          />
+        </div>
       )}
       {showSignupModal && (
-        <SignupModal
-          toggleSignupModal={handleToggleSignupModal}
-          toggleLoginModal={handleToggleLoginModal}
-        />
+        <div
+          className="absolute inset-0 left-0 top-0 grid place-items-center"
+          onClick={() => setShowSignupModal(false)}
+        >
+          <SignupModal
+            toggleSignupModal={handleToggleSignupModal}
+            toggleLoginModal={handleToggleLoginModal}
+          />
+        </div>
       )}
     </>
   );
