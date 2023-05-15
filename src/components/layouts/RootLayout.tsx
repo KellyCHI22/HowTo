@@ -1,7 +1,13 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 import Button from '../elements/Button';
 import MobileSidebar from '../MobileSidebar';
-import { RiMenuFill, RiSearchLine, RiArrowRightLine } from 'react-icons/ri';
+import {
+  RiMenuFill,
+  RiSearchLine,
+  RiArrowRightLine,
+  RiCloseFill,
+} from 'react-icons/ri';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import { useState } from 'react';
 import LoginModal from '../LoginModal';
@@ -21,49 +27,63 @@ export default function RootLayout() {
   const handleToggleSignupModal = () => {
     setShowSignupModal((prev) => !prev);
   };
-  // textarea
-  // const [intro, setIntro] = useState('');
-  // const introRef = useRef<HTMLTextAreaElement>(null);
-  // useAutosizeTextArea(introRef.current, intro, 5);
-
-  // tag
-  // const [tags, setTags] = useState<string[]>(['apple', 'banana', 'orange']);
-  // const [newTag, setNewTag] = useState('');
-  // const [tagError, setTagError] = useState('');
-  // const removeTag = (indexToRemove: number) => {
-  //   setTags([...tags.filter((_, index) => index !== indexToRemove)]);
-  // };
-  // const addTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (event.key === 'Enter') {
-  //     if (newTag.length > 20) {
-  //       return setTagError('Tags cannot be longer than 20 characters');
-  //     } else if (tags.length >= 5) {
-  //       return setTagError('Cannot add more than 5 tags');
-  //     } else if (newTag !== '') {
-  //       setTags([...tags, newTag]);
-  //       setNewTag('');
-  //       setTagError('');
-  //     }
-  //   }
-  // };
 
   return (
     <>
       {!pathname.includes('search') && (
         <>
-          <nav className="flex h-[4.5rem] items-center justify-between gap-2 bg-white px-4 py-1 shadow-basic">
-            <button onClick={handleToggleSidebar}>
-              <RiMenuFill className="text-2xl" />
-            </button>
+          <nav
+            className={clsx('h-[4.5rem] bg-white px-4 py-1 shadow-basic', '')}
+          >
+            <div className="container mx-auto flex items-center justify-between">
+              <button onClick={handleToggleSidebar} className="md:hidden">
+                <RiMenuFill className="text-2xl" />
+              </button>
 
-            <div className="flex items-center">
-              <Logo className="h-16 w-16" />
-              <h1 className="font-slabo text-2xl text-teal-500">HowTo...</h1>
+              <div className="flex items-center">
+                <Logo className="h-16 w-16" />
+                <h1 className="font-slabo text-2xl text-teal-500">HowTo...</h1>
+              </div>
+
+              <Link to="/search" className="md:w-2/5">
+                <RiSearchLine className="text-2xl md:hidden" />
+                <div className="hidden md:block">
+                  <div className="flex items-center rounded-full bg-gray-200 px-2 focus-within:ring-2 focus-within:ring-teal-400">
+                    <button className="text-teal-500">
+                      <RiSearchLine className="text-2xl" />
+                    </button>
+                    <input
+                      type="text"
+                      className="w-full cursor-pointer border-none bg-gray-200 outline-none placeholder:text-gray-400"
+                      placeholder="search keywords, tags..."
+                    />
+                    <button className="text-gray-400">
+                      <RiCloseFill className="text-2xl " />
+                    </button>
+                  </div>
+                </div>
+              </Link>
+              <div className="hidden md:flex md:gap-2">
+                <Button
+                  loading={false}
+                  basic
+                  outline
+                  onClick={handleToggleLoginModal}
+                >
+                  Log in
+                </Button>
+                <Button
+                  loading={false}
+                  basic
+                  primary
+                  onClick={handleToggleSignupModal}
+                  className="font-bold"
+                >
+                  Get started
+                  <RiArrowRightLine className="text-xl" />
+                </Button>
+              </div>
             </div>
-
-            <Link to="/search">
-              <RiSearchLine className="text-2xl" />
-            </Link>
           </nav>
         </>
       )}
