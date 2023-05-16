@@ -1,5 +1,6 @@
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { useMediaQuery } from 'react-responsive';
 import Button from '../elements/Button';
 import MobileSidebar from '../MobileSidebar';
 import {
@@ -7,17 +8,22 @@ import {
   RiSearchLine,
   RiArrowRightLine,
   RiCloseFill,
+  RiArrowLeftLine,
 } from 'react-icons/ri';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
 
 export default function RootLayout() {
   const { pathname } = useLocation();
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [showSidebar, setShowSidebar] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+
   const handleToggleSidebar = () => {
     setShowSidebar((prev) => !prev);
   };
@@ -28,14 +34,53 @@ export default function RootLayout() {
     setShowSignupModal((prev) => !prev);
   };
 
+  useEffect(() => {
+    if (showLoginModal || showSignupModal) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showLoginModal, showSignupModal]);
+
   return (
     <>
-      {!pathname.includes('search') && (
-        <>
-          <nav
-            className={clsx('h-[4.5rem] bg-white px-4 py-1 shadow-basic', '')}
-          >
-            <div className="container mx-auto flex items-center justify-between">
+      <nav className={clsx('h-[4.5rem] bg-white px-4 py-1 shadow-basic', '')}>
+        <div className="container mx-auto flex h-full items-center justify-between md:px-5">
+          {pathname.includes('search') && isMobile ? (
+            <>
+              <button
+                className="mr-3 text-gray-400 md:absolute md:-left-9 md:top-2"
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                <RiArrowLeftLine className="text-2xl" />
+              </button>
+              <div className="flex w-full items-center rounded-full bg-gray-200 px-2 focus-within:ring-2 focus-within:ring-teal-400">
+                <button className="text-teal-500">
+                  <RiSearchLine className="text-2xl" />
+                </button>
+
+                <input
+                  type="text"
+                  id="searchQuery"
+                  value={searchQuery}
+                  placeholder="search keywords, tags..."
+                  className="flex-1 border-none bg-transparent placeholder-slate-400 focus:outline-none focus:ring-0"
+                  autoFocus
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button
+                  className="text-gray-400"
+                  onClick={() => setSearchQuery('')}
+                >
+                  <RiCloseFill className="text-2xl " />
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
               <button onClick={handleToggleSidebar} className="md:hidden">
                 <RiMenuFill className="text-2xl" />
               </button>
@@ -48,16 +93,24 @@ export default function RootLayout() {
               <Link to="/search" className="md:w-2/5">
                 <RiSearchLine className="text-2xl md:hidden" />
                 <div className="hidden md:block">
-                  <div className="flex items-center rounded-full bg-gray-200 px-2 focus-within:ring-2 focus-within:ring-teal-400">
+                  <div className="flex w-full items-center rounded-full bg-gray-200 px-2 focus-within:ring-2 focus-within:ring-teal-400">
                     <button className="text-teal-500">
                       <RiSearchLine className="text-2xl" />
                     </button>
+
                     <input
                       type="text"
-                      className="w-full cursor-pointer border-none bg-gray-200 outline-none placeholder:text-gray-400"
+                      id="searchQuery"
+                      value={searchQuery}
                       placeholder="search keywords, tags..."
+                      className="flex-1 border-none bg-transparent placeholder-slate-400 focus:outline-none focus:ring-0"
+                      autoFocus
+                      onChange={(e) => setSearchQuery(e.target.value)}
                     />
-                    <button className="text-gray-400">
+                    <button
+                      className="text-gray-400"
+                      onClick={() => setSearchQuery('')}
+                    >
                       <RiCloseFill className="text-2xl " />
                     </button>
                   </div>
@@ -83,10 +136,10 @@ export default function RootLayout() {
                   <RiArrowRightLine className="text-xl" />
                 </Button>
               </div>
-            </div>
-          </nav>
-        </>
-      )}
+            </>
+          )}
+        </div>
+      </nav>
 
       <Outlet context={{ handleToggleLoginModal, handleToggleSignupModal }} />
       <MobileSidebar
