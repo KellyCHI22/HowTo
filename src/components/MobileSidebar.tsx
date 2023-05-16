@@ -126,7 +126,7 @@ type AppNavLinkProps = {
   onClick?: () => void;
 };
 
-function AppNavLink({
+export function AppNavLink({
   to,
   label,
   defaultIcon,
