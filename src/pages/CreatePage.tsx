@@ -44,7 +44,7 @@ export default function CreatePage() {
   };
 
   return (
-    <div className="m-5">
+    <div className="my-5 md:my-12">
       {/* content part */}
       <div className="mb-5 rounded-xl bg-white p-5 shadow-basic">
         <button

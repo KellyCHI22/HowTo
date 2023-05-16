@@ -19,7 +19,7 @@ export default function SearchPage({ searchQuery }) {
   ];
   return (
     <>
-      <div className="m-5 md:my-12">
+      <div className="my-5 md:my-12">
         <div className="mb-3">
           <h2 className="ml-2 font-slabo text-2xl text-teal-500">
             Latest tags

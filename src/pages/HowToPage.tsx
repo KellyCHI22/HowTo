@@ -23,7 +23,7 @@ export default function HowToPage() {
   const handleShowOption = () => setShowOption((prev) => !prev);
 
   return (
-    <div className="m-5">
+    <div className="my-5 md:my-12">
       <div className="mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic">
         <div className="flex justify-between text-teal-500">
           <button>

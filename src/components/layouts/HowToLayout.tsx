@@ -16,8 +16,8 @@ import { AppNavLink } from '../MobileSidebar';
 export default function HowToLayout() {
   return (
     <>
-      <div className="container mx-auto flex items-start">
-        <aside className="hidden space-y-5 md:m-5 md:my-12 md:block">
+      <div className="container flex items-start md:space-x-5">
+        <aside className="hidden space-y-5 md:my-12 md:block">
           <AsideNavLinks />
           <AsideTopUsers />
           <AsideLatestHowTo />

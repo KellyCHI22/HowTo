@@ -3,6 +3,14 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    container: {
+      padding: {
+        DEFAULT: '1rem',
+        md: '1rem',
+        lg: '6rem',
+      },
+      center: true,
+    },
     extend: {
       fontFamily: {
         mulish: ['Mulish', 'sans-serif'],

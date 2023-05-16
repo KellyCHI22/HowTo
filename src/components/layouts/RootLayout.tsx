@@ -45,8 +45,8 @@ export default function RootLayout() {
 
   return (
     <>
-      <nav className={clsx('h-[4.5rem] bg-white px-4 py-1 shadow-basic', '')}>
-        <div className="container mx-auto flex h-full items-center justify-between md:px-5">
+      <nav className={clsx('h-[4.5rem] bg-white  shadow-basic', '')}>
+        <div className="container flex h-full items-center justify-between">
           {pathname.includes('search') && isMobile ? (
             <>
               <button
