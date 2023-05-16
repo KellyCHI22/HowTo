@@ -20,7 +20,7 @@ export default function UserPage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const handleEditMode = () => setIsEditMode((prev) => !prev);
   return (
-    <div className="m-5">
+    <div className="m-5 md:my-12">
       {isEditMode ? (
         <EditProfile handleEditMode={handleEditMode} />
       ) : (

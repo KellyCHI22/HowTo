@@ -5,7 +5,7 @@ import Button from '~/components/elements/Button';
 
 export default function BookmarksPage() {
   return (
-    <div className="m-5">
+    <div className="m-5 md:my-12">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="ml-2 font-slabo text-2xl text-teal-500">Bookmarks</h2>
         <button className="flex items-center rounded-full border border-teal-500 px-3 py-2 text-teal-500">

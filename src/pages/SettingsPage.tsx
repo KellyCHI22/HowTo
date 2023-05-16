@@ -18,7 +18,7 @@ export default function SettingsPage() {
   const handleChangeTab = (id) => setCurrentTab(id);
 
   return (
-    <div className="m-5">
+    <div className="m-5 md:my-12">
       <h2 className="mb-3 ml-2 font-slabo text-2xl text-teal-500">
         Account Settings
       </h2>
