@@ -24,7 +24,7 @@ export default function HowToPage() {
 
   return (
     <div className="my-5 md:my-12">
-      <div className="mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic">
+      <div className="mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic lg:space-y-0">
         <div className="flex justify-between text-teal-500">
           <button>
             <Link to="/howtos">
@@ -50,38 +50,47 @@ export default function HowToPage() {
             )}
           </button>
         </div>
-        <img
-          src="https://picsum.photos/id/200/500/300"
-          alt=""
-          className="w-full rounded-xl object-cover"
-        />
-        <div className="flex items-center justify-between text-sm ">
-          <div className="flex items-center gap-2">
-            <Link to={`/users/${id}`}>
-              <img
-                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
-                alt="author-avatar"
-                className="aspect-square h-8 w-8 rounded-full object-cover"
-              />
-            </Link>
-            <span>Betty Liang</span>
+        <div className="flex">
+          <div className="space-y-3">
+            <img
+              src="https://picsum.photos/id/200/500/300"
+              alt=""
+              className="w-full rounded-xl object-cover lg:hidden"
+            />
+            <div className="flex items-center justify-between text-sm md:justify-start md:gap-2 md:text-base">
+              <div className="flex items-center gap-2">
+                <Link to={`/users/${id}`}>
+                  <img
+                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+                    alt="author-avatar"
+                    className="aspect-square h-8 w-8 rounded-full object-cover"
+                  />
+                </Link>
+                <span className="font-bold">Betty Liang</span>
+              </div>
+              <span className="text-gray-400">3 hours ago</span>
+            </div>
+            <h2 className="text-2xl font-extrabold text-teal-500 md:text-4xl">
+              How To Turn Your Cat into a DJ?
+            </h2>
+            <div className="flex flex-wrap items-center gap-2 text-sm leading-3 md:text-base md:leading-4">
+              <Tag label="cat" />
+              <Tag label="music" />
+              <Tag label="funny" />
+            </div>
+            <p className="text-sm italic text-gray-600 md:text-base">
+              Turn your cat into a DJ! Train them to respond to sounds, attach a
+              collar with sensors to trigger turntables & mixer, watch them mix
+              beats & become internet famous.
+            </p>
           </div>
-          <span className="text-gray-400">3 hours ago</span>
+          <img
+            src="https://picsum.photos/id/200/500/300"
+            alt=""
+            className="ml-5 mt-3 hidden aspect-square w-[250px] flex-shrink-0 rounded-xl object-cover lg:block"
+          />
         </div>
-        <h2 className="text-2xl font-extrabold text-teal-500">
-          How To Turn Your Cat into a DJ?
-        </h2>
-        <div className="flex flex-wrap items-center gap-2 text-sm leading-3">
-          <Tag label="cat" />
-          <Tag label="music" />
-          <Tag label="funny" />
-        </div>
-        <p className="text-sm italic text-gray-600">
-          Turn your cat into a DJ! Train them to respond to sounds, attach a
-          collar with sensors to trigger turntables & mixer, watch them mix
-          beats & become internet famous.
-        </p>
-        <div className="space-y-3 pt-3 text-sm">
+        <div className="space-y-3 pt-3 text-sm md:text-base">
           <div className="flex items-center gap-2">
             <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
               1
@@ -113,17 +122,25 @@ export default function HowToPage() {
             <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
               5
             </span>
-            <p>Upload the videos to social media and become internet famous.</p>
+            <p>
+              Upload the videos to social media and become internet
+              famous.Vivamus eu dolor sodales, lacinia elit ac, pellentesque ex.
+              Sed varius mi quis massa
+            </p>
           </div>
         </div>
         <div className="flex items-end justify-between">
           <div>
             <div className="flex items-center justify-end gap-3 text-gray-400">
               <div className="flex items-center gap-1">
-                <RiChat1Line />5
+                <RiChat1Line className="md:text-2xl" />
+                <span>5</span>
+                <span className="hidden lg:block">comments</span>
               </div>
               <div className="flex items-center gap-1">
-                <RiHeartLine />6
+                <RiHeartLine className="md:text-2xl" />
+                <span>6</span>
+                <span className="hidden lg:block">likes</span>
               </div>
             </div>
           </div>
@@ -161,7 +178,7 @@ function CommentItem() {
   return (
     <>
       {isEditMode ? (
-        <div className="relative mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic">
+        <div className="relative mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
           <Link to="#" className="flex-shrink-0">
             <img
               src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
@@ -176,7 +193,7 @@ function CommentItem() {
               ref={commentEditRef}
               rows={3}
               placeholder="Edit your comment..."
-              className="text-sm"
+              className="text-sm md:text-base"
               onChange={(e) => setCommentEditInput(e.target.value)}
             />
             <div className="mt-2 flex justify-end gap-2">
@@ -204,7 +221,7 @@ function CommentItem() {
           </div>
         </div>
       ) : (
-        <div className="flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic">
+        <div className="flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
           <Link to="#" className="flex-shrink-0">
             <img
               src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
@@ -212,7 +229,7 @@ function CommentItem() {
               className="aspect-square h-8 w-8 rounded-full object-cover"
             />
           </Link>
-          <div>
+          <div className="w-full">
             <div className="relative space-x-2 text-gray-400">
               <span className="font-bold text-gray-900">Betty Liang</span>
               <span>3 hours ago</span>
@@ -240,8 +257,9 @@ function CommentItem() {
               </button>
             </div>
             <p className="mt-3 text-gray-900">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Expl
-              laboriosam veritatis nulla expedita placeat vel distinctio.
+              Vivamus eu dolor sodales, lacinia elit ac, pellentesque ex. Sed
+              varius mi quis massa tincidunt rutrum. Morbi molestie magna sed
+              accumsan facilisis.
             </p>
           </div>
         </div>
@@ -258,7 +276,7 @@ function CommentInput() {
   useAutosizeTextArea(commentRef.current, commentInput, 3);
 
   return (
-    <div className="mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic">
+    <div className="mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
       <Link to="#" className="flex-shrink-0">
         <img
           src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
@@ -273,7 +291,7 @@ function CommentInput() {
           ref={commentRef}
           rows={3}
           placeholder="Add a comment..."
-          className="text-sm"
+          className="text-sm md:text-base"
           onChange={(e) => setCommentInput(e.target.value)}
         />
         <Button loading={false} primary basic className="mt-2 self-end">
