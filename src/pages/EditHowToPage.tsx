@@ -48,7 +48,7 @@ export default function EditHowToPage() {
   };
 
   return (
-    <div className="m-5">
+    <div className="my-5 md:my-12">
       {/* content part */}
       <div className="mb-5 rounded-xl bg-white p-5 shadow-basic">
         <button
@@ -59,10 +59,10 @@ export default function EditHowToPage() {
         >
           <RiArrowLeftLine className="text-2xl" />
         </button>
-        <h2 className="my-5 text-center text-2xl font-extrabold text-teal-500">
+        <h2 className="my-5 text-center text-2xl font-extrabold text-teal-500 md:text-3xl">
           Edit How To...
         </h2>
-        <div className="relative my-3">
+        <div className="relative my-3 xl:hidden">
           <img
             src="https://picsum.photos/id/200/500/300"
             alt=""
@@ -76,26 +76,44 @@ export default function EditHowToPage() {
           </div>
         </div>
 
-        <Input
-          type="text"
-          id="title"
-          label="Title"
-          value={title}
-          limit={50}
-          placeholder="How to turn your cat into a DJ..."
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <div className="xl:flex xl:gap-5">
+          <div className="xl:flex-1">
+            <Input
+              type="text"
+              id="title"
+              label="Title"
+              value={title}
+              limit={50}
+              placeholder="How to turn your cat into a DJ..."
+              onChange={(e) => setTitle(e.target.value)}
+            />
 
-        <Textarea
-          id="intro"
-          ref={introRef}
-          label="Intro"
-          value={intro}
-          limit={200}
-          rows={5}
-          placeholder="Turn your cat into a DJ! Train them to respond to sounds, attach a collar with sensors..."
-          onChange={(e) => setIntro(e.target.value)}
-        />
+            <Textarea
+              id="intro"
+              ref={introRef}
+              label="Intro"
+              value={intro}
+              limit={200}
+              rows={5}
+              placeholder="Turn your cat into a DJ! Train them to respond to sounds, attach a collar with sensors..."
+              onChange={(e) => setIntro(e.target.value)}
+            />
+          </div>
+          <div className="relative my-3 hidden aspect-square w-[250px] xl:block">
+            <img
+              src="https://picsum.photos/id/200/500/300"
+              alt=""
+              className="h-full rounded-xl object-cover"
+            />
+            <div className="absolute inset-0 rounded-xl bg-black opacity-50"></div>
+            <div className="absolute inset-0 grid place-items-center">
+              <button className="text-white hover:text-teal-500">
+                <RiImageAddLine className="text-2xl " />
+              </button>
+            </div>
+          </div>
+        </div>
+
         <TagInput
           id="tags"
           label="Tags"

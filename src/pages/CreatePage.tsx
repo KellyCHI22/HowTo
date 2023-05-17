@@ -55,7 +55,7 @@ export default function CreatePage() {
         >
           <RiArrowLeftLine className="text-2xl" />
         </button>
-        <h2 className="my-5 text-center text-2xl font-extrabold text-teal-500">
+        <h2 className="my-5 text-center text-2xl font-extrabold text-teal-500 md:text-3xl">
           Create How To...
         </h2>
         <div className="relative my-3 xl:hidden">
