@@ -10,6 +10,7 @@ import {
 } from 'react-icons/ri';
 import Button from '~/components/elements/Button';
 import Input from '~/components/elements/Input';
+import { ReactComponent as CreativeIllustration } from '~/assets/illustration_creative.svg';
 
 export default function SettingsPage() {
   const [currentTab, setCurrentTab] = useState<'basic' | 'password' | 'other'>(
@@ -22,31 +23,39 @@ export default function SettingsPage() {
       <h2 className="mb-3 ml-2 font-slabo text-2xl text-teal-500">
         Account Settings
       </h2>
-      <div className="mb-5 rounded-xl bg-white p-5 pt-3 shadow-basic">
-        <div className="flex justify-around gap-3 font-bold">
-          <Tab
-            label="Basic"
-            id="basic"
-            currentTab={currentTab}
-            onChangeTab={handleChangeTab}
-          />
-          <Tab
-            label="Password"
-            id="password"
-            currentTab={currentTab}
-            onChangeTab={handleChangeTab}
-          />
-          <Tab
-            label="Other"
-            id="other"
-            currentTab={currentTab}
-            onChangeTab={handleChangeTab}
-          />
-        </div>
-        <div className="mt-10">
-          {currentTab === 'basic' && <BasicSettings />}
-          {currentTab === 'password' && <PasswordSettings />}
-          {currentTab === 'other' && <OtherSettings />}
+
+      <div className="mb-5 rounded-xl bg-white p-5 pt-3 shadow-basic ">
+        <div className="flex h-full">
+          <div className="flex-1">
+            <div className="flex justify-around gap-3 font-bold">
+              <Tab
+                label="Basic"
+                id="basic"
+                currentTab={currentTab}
+                onChangeTab={handleChangeTab}
+              />
+              <Tab
+                label="Password"
+                id="password"
+                currentTab={currentTab}
+                onChangeTab={handleChangeTab}
+              />
+              <Tab
+                label="Other"
+                id="other"
+                currentTab={currentTab}
+                onChangeTab={handleChangeTab}
+              />
+            </div>
+            <div className="mt-10">
+              {currentTab === 'basic' && <BasicSettings />}
+              {currentTab === 'password' && <PasswordSettings />}
+              {currentTab === 'other' && <OtherSettings />}
+            </div>
+          </div>
+          <div className="hidden place-items-center p-9 pl-16 xl:grid ">
+            <CreativeIllustration />
+          </div>
         </div>
       </div>
     </div>
