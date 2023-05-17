@@ -104,7 +104,6 @@ export default function RootLayout() {
                       value={searchQuery}
                       placeholder="search keywords, tags..."
                       className="flex-1 border-none bg-transparent placeholder-slate-400 focus:outline-none focus:ring-0"
-                      autoFocus
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                     <button
