@@ -48,52 +48,65 @@ type Props = {
 
 function UserProfile({ handleEditMode }: Props) {
   return (
-    <div className="mb-5 overflow-hidden rounded-xl bg-white shadow-basic">
-      <img
-        src="https://picsum.photos/id/999/800/500"
-        alt=""
-        className="aspect-video w-full object-cover"
-      />
-      <div className="relative p-5">
+    <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic">
+      <div>
         <img
-          src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+          src="https://picsum.photos/id/999/800/500"
           alt=""
-          className="aspect-square h-14 w-14 rounded-full object-cover"
+          className="aspect-video w-full object-cover xl:hidden"
         />
-        <Button
-          loading={false}
-          outline
-          basic
-          className="absolute right-5 top-5"
-          onClick={handleEditMode}
-        >
-          <RiEdit2Line className="text-2xl" />
-          Edit
-        </Button>
-        <p className="mt-2 font-bold">Betty Liang</p>
-        <p className="text-sm text-gray-400">Member since January 2023</p>
-        <p className="mb-5 mt-3">
-          Traveling the world one destination at a time. Passionate about
-          experiencing new cultures and making unforgettable memories.
-        </p>
-        <div className="flex w-full justify-between text-gray-400">
-          <div className="flex items-center gap-2">
-            <RiEdit2Line className="text-xl" />
-            <span className="font-bold text-teal-500">25</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <RiHeartLine className="text-xl" />
-            <span className="font-bold text-teal-500">50</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <RiChat1Line className="text-xl" />
-            <span className="font-bold text-teal-500">31</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <RiGroupLine className="text-xl" />
-            <span className="font-bold text-teal-500">5</span>
+        <div className="relative p-5">
+          <img
+            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+            alt=""
+            className="aspect-square h-14 w-14 rounded-full object-cover"
+          />
+          <Button
+            loading={false}
+            outline
+            basic
+            className="absolute right-5 top-5"
+            onClick={handleEditMode}
+          >
+            <RiEdit2Line className="text-2xl" />
+            Edit
+          </Button>
+          <p className="mt-2 font-bold xl:text-lg">Betty Liang</p>
+          <p className="text-sm text-gray-400">Member since January 2023</p>
+          <p className="mb-5 mt-3">
+            Traveling the world one destination at a time. Passionate about
+            experiencing new cultures and making unforgettable memories.
+          </p>
+          <div className="flex w-full justify-between text-gray-400 xl:grid xl:grid-cols-4 ">
+            <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
+              <RiEdit2Line className="text-xl xl:hidden" />
+              <span className="font-bold text-teal-500 xl:text-lg">25</span>
+              <span className="hidden xl:block">How To</span>
+            </div>
+            <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
+              <RiHeartLine className="text-xl xl:hidden" />
+              <span className="font-bold text-teal-500 xl:text-lg">50</span>
+              <span className="hidden xl:block">Likes</span>
+            </div>
+            <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
+              <RiChat1Line className="text-xl xl:hidden" />
+              <span className="font-bold text-teal-500 xl:text-lg">31</span>
+              <span className="hidden xl:block">Comments</span>
+            </div>
+            <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
+              <RiGroupLine className="text-xl xl:hidden" />
+              <span className="font-bold text-teal-500 xl:text-lg">5</span>
+              <span className="hidden xl:block">Followers</span>
+            </div>
           </div>
         </div>
+      </div>
+      <div>
+        <img
+          src="https://picsum.photos/id/999/800/500"
+          alt=""
+          className="hidden h-full object-cover xl:block"
+        />
       </div>
     </div>
   );
