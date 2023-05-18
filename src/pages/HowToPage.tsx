@@ -11,17 +11,18 @@ import {
   RiArrowGoBackLine,
   RiCheckLine,
 } from 'react-icons/ri';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Button from '~/components/elements/Button';
 import Tag from '~/components/elements/Tag';
 import Textarea from '~/components/elements/Textarea';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 
-import { posts, users, comments, Post, User, Comment } from '../dummyData';
+import { posts, users, comments, Comment } from '../dummyData';
 import ReactTimeAgo from 'react-time-ago';
 
 export default function HowToPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [showOption, setShowOption] = useState(false);
   const handleShowOption = () => setShowOption((prev) => !prev);
   const post = posts.find((post) => post.id === id);
@@ -32,10 +33,12 @@ export default function HowToPage() {
     <div className="my-5 md:my-12">
       <div className=" mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic lg:space-y-0 ">
         <div className="relative flex justify-between text-teal-500">
-          <button>
-            <Link to="/howtos">
-              <RiArrowLeftLine className="text-2xl" />
-            </Link>
+          <button
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <RiArrowLeftLine className="text-2xl" />
           </button>
 
           <button onClick={handleShowOption}>

@@ -15,14 +15,36 @@ import { useEffect, useState } from 'react';
 import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
 
+import { posts, Post } from '~/dummyData';
+
+type SearchResult = {
+  query: string;
+  results: Post[] | undefined | null;
+};
+
+export type ContextType = {
+  handleToggleLoginModal: () => void;
+  handleToggleSignupModal: () => void;
+  searchResults: SearchResult;
+  isSearching: boolean;
+  handleSearch: (query: string) => void;
+};
+
 export default function RootLayout() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+
   const [showSidebar, setShowSidebar] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
-  const navigate = useNavigate();
+
+  const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult>({
+    query: '',
+    results: [],
+  });
 
   const handleToggleSidebar = () => {
     setShowSidebar((prev) => !prev);
@@ -34,6 +56,17 @@ export default function RootLayout() {
     setShowSignupModal((prev) => !prev);
   };
 
+  const handleSearch = (query: string) => {
+    if (query === '') return;
+    setIsSearching(true);
+    const newSearchResults = posts.filter(
+      (post) =>
+        post.title.toLowerCase().includes(query.toLowerCase()) ||
+        post.tags.map((tag) => tag.toLowerCase()).includes(query.toLowerCase())
+    );
+    setSearchResults({ query: query, results: newSearchResults });
+  };
+
   useEffect(() => {
     if (showLoginModal || showSignupModal) {
       document.body.style.overflow = 'hidden';
@@ -42,6 +75,15 @@ export default function RootLayout() {
       document.body.style.overflow = 'unset';
     };
   }, [showLoginModal, showSignupModal]);
+
+  useEffect(() => {
+    setSearchQuery('');
+    setSearchResults({
+      query: '',
+      results: [],
+    });
+    setIsSearching(false);
+  }, [pathname]);
 
   return (
     <>
@@ -63,7 +105,10 @@ export default function RootLayout() {
                 <RiArrowLeftLine className="text-2xl" />
               </button>
               <div className="flex w-full items-center rounded-full bg-gray-200 px-2 focus-within:ring-2 focus-within:ring-teal-400">
-                <button className="text-teal-500">
+                <button
+                  className="text-teal-500"
+                  onClick={() => handleSearch(searchQuery)}
+                >
                   <RiSearchLine className="text-2xl" />
                 </button>
 
@@ -75,6 +120,11 @@ export default function RootLayout() {
                   className="flex-1 border-none bg-transparent placeholder-slate-400 focus:outline-none focus:ring-0"
                   autoFocus
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleSearch(searchQuery);
+                    }
+                  }}
                 />
                 <button
                   className="text-gray-400"
@@ -99,7 +149,10 @@ export default function RootLayout() {
                 <RiSearchLine className="text-2xl md:hidden" />
                 <div className="hidden md:block">
                   <div className="flex w-full items-center rounded-full bg-gray-200 px-2 focus-within:ring-2 focus-within:ring-teal-400">
-                    <button className="text-teal-500">
+                    <button
+                      className="text-teal-500"
+                      onClick={() => handleSearch(searchQuery)}
+                    >
                       <RiSearchLine className="text-2xl" />
                     </button>
 
@@ -110,6 +163,11 @@ export default function RootLayout() {
                       placeholder="search keywords, tags..."
                       className="flex-1 border-none bg-transparent placeholder-slate-400 focus:outline-none focus:ring-0"
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleSearch(searchQuery);
+                        }
+                      }}
                     />
                     <button
                       className="text-gray-400"
@@ -145,7 +203,15 @@ export default function RootLayout() {
         </div>
       </nav>
       <div className="mt-[4.5rem]">
-        <Outlet context={{ handleToggleLoginModal, handleToggleSignupModal }} />
+        <Outlet
+          context={{
+            handleToggleLoginModal,
+            handleToggleSignupModal,
+            isSearching,
+            searchResults,
+            handleSearch,
+          }}
+        />
       </div>
       <MobileSidebar
         toggleSidebar={handleToggleSidebar}

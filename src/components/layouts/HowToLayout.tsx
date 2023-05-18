@@ -10,10 +10,12 @@ import {
   RiHeartLine,
   RiChat1Line,
 } from 'react-icons/ri';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useOutletContext } from 'react-router-dom';
 import { AppNavLink } from '../MobileSidebar';
+import { ContextType } from './RootLayout';
 
 export default function HowToLayout() {
+  const context = useOutletContext<ContextType>();
   return (
     <>
       <div className="container flex items-start md:space-x-5">
@@ -23,7 +25,7 @@ export default function HowToLayout() {
           <AsideLatestHowTo />
         </aside>
         <main className="flex-1">
-          <Outlet />
+          <Outlet context={context} />
         </main>
       </div>
     </>
