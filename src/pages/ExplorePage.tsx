@@ -3,6 +3,8 @@ import { RiArrowDownSFill, RiEdit2Line } from 'react-icons/ri';
 import Button from '~/components/elements/Button';
 import HowToItem from '~/components/HowtoItem';
 
+import { posts } from '../dummyData';
+
 export default function ExplorePage() {
   return (
     <div className="my-5 md:my-12">
@@ -25,11 +27,9 @@ export default function ExplorePage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
+        {posts.map((post) => (
+          <HowToItem key={post.id} post={post} />
+        ))}
       </div>
 
       <Button

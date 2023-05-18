@@ -17,129 +17,112 @@ import Tag from '~/components/elements/Tag';
 import Textarea from '~/components/elements/Textarea';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 
+import { posts, users, comments, Post, User, Comment } from '../dummyData';
+import ReactTimeAgo from 'react-time-ago';
+
 export default function HowToPage() {
   const { id } = useParams();
   const [showOption, setShowOption] = useState(false);
   const handleShowOption = () => setShowOption((prev) => !prev);
+  const post = posts.find((post) => post.id === id);
+  const user = users.find((user) => user.id === post?.authorId);
+  const postComments = comments.filter((comment) => comment.postId === id);
 
   return (
     <div className="my-5 md:my-12">
-      <div className="mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic lg:space-y-0">
-        <div className="flex justify-between text-teal-500">
+      <div className=" mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic lg:space-y-0 ">
+        <div className="relative flex justify-between text-teal-500">
           <button>
             <Link to="/howtos">
               <RiArrowLeftLine className="text-2xl" />
             </Link>
           </button>
 
-          <button className="relative" onClick={handleShowOption}>
+          <button onClick={handleShowOption}>
             <RiMoreLine className="text-2xl" />
-            {showOption && (
-              <div className="absolute -left-16 top-6 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
-                <Link to={`/howtos/${id}/edit`}>
-                  <button className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50">
-                    <RiEdit2Line className="text-xl" />
-                    Edit
-                  </button>
-                </Link>
-                <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
-                  <RiDeleteBin6Line className="text-xl" />
-                  Delete
-                </button>
-              </div>
-            )}
           </button>
+          {showOption && (
+            <div className="absolute right-6 top-0 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
+              <Link to={`/howtos/${id}/edit`}>
+                <button className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50">
+                  <RiEdit2Line className="text-xl" />
+                  Edit
+                </button>
+              </Link>
+              <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
+                <RiDeleteBin6Line className="text-xl" />
+                Delete
+              </button>
+            </div>
+          )}
         </div>
         <div className="flex">
           <div className="space-y-3">
             <img
-              src="https://picsum.photos/id/200/500/300"
+              src={post?.image}
               alt=""
-              className="w-full rounded-xl object-cover lg:hidden"
+              className="aspect-video w-full rounded-xl object-cover lg:hidden"
             />
             <div className="flex items-center justify-between text-sm md:justify-start md:gap-2 md:text-base">
               <div className="flex items-center gap-2">
-                <Link to={`/users/${id}`}>
+                <Link to={`/users/${user?.id}`}>
                   <img
-                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+                    src={user?.avatar}
                     alt="author-avatar"
                     className="aspect-square h-8 w-8 rounded-full object-cover"
                   />
                 </Link>
-                <span className="font-bold">Betty Liang</span>
+                <span className="font-bold">{user?.name}</span>
               </div>
-              <span className="text-gray-400">3 hours ago</span>
+              <span className="text-gray-400">
+                <ReactTimeAgo
+                  date={post?.createdAt as unknown as Date}
+                  locale="en-US"
+                  timeStyle="round"
+                />
+              </span>
             </div>
             <h2 className="text-2xl font-extrabold text-teal-500 md:text-4xl">
-              How To Turn Your Cat into a DJ?
+              {post?.title}
             </h2>
             <div className="flex flex-wrap items-center gap-2 text-sm leading-3 md:text-base md:leading-4">
-              <Tag label="cat" />
-              <Tag label="music" />
-              <Tag label="funny" />
+              {post?.tags.map((tag, index) => (
+                <Tag label={tag} key={index} />
+              ))}
             </div>
             <p className="text-sm italic text-gray-600 md:text-base">
-              Turn your cat into a DJ! Train them to respond to sounds, attach a
-              collar with sensors to trigger turntables & mixer, watch them mix
-              beats & become internet famous.
+              {post?.introduction}
             </p>
           </div>
           <img
-            src="https://picsum.photos/id/200/500/300"
-            alt=""
+            src={post?.image}
+            alt="post-cover"
             className="ml-5 mt-3 hidden aspect-square w-[250px] flex-shrink-0 rounded-xl object-cover lg:block"
           />
         </div>
         <div className="space-y-3 pt-3 text-sm md:text-base">
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
-              1
-            </span>
-            <p>Buy a set of DJ turntables and a mixer.</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
-              2
-            </span>
-            <p>Train your cat to respond to certain sounds or commands.</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
-              3
-            </span>
-            <p>
-              Attach a special collar with sensors that can trigger the
-              turntables and mixer.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
-              4
-            </span>
-            <p>Play music and watch your cat scratch and mix the beats. </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
-              5
-            </span>
-            <p>
-              Upload the videos to social media and become internet
-              famous.Vivamus eu dolor sodales, lacinia elit ac, pellentesque ex.
-              Sed varius mi quis massa
-            </p>
-          </div>
+          {post?.steps.map((step, index) => {
+            return (
+              <div key={step.id} className="flex items-center gap-2">
+                <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
+                  {index + 1}
+                </span>
+                <p>{step.description}</p>
+              </div>
+            );
+          })}
         </div>
         <div className="flex items-end justify-between">
           <div>
             <div className="flex items-center justify-end gap-3 text-gray-400">
               <div className="flex items-center gap-1">
                 <RiChat1Line className="md:text-2xl" />
-                <span>5</span>
+                <span>{postComments.length}</span>
                 <span className="hidden lg:block">comments</span>
               </div>
               <div className="flex items-center gap-1">
                 <RiHeartLine className="md:text-2xl" />
-                <span>6</span>
+                <span>{post?.likesCount}</span>
                 <span className="hidden lg:block">likes</span>
               </div>
             </div>
@@ -156,8 +139,9 @@ export default function HowToPage() {
       </div>
       {/* comments */}
       <div className="space-y-3">
-        <CommentItem />
-        <CommentItem />
+        {postComments.map((comment) => (
+          <CommentItem key={comment.id} comment={comment} />
+        ))}
       </div>
 
       {/* comment input */}
@@ -166,7 +150,14 @@ export default function HowToPage() {
   );
 }
 
-function CommentItem() {
+type CommentItemProps = {
+  comment: Comment;
+};
+
+function CommentItem({ comment }: CommentItemProps) {
+  const { id, createdAt, commentContent, userId } = comment;
+  const user = users.find((user) => user.id === userId);
+
   const [showOption, setShowOption] = useState(false);
   const handleShowOption = () => setShowOption((prev) => !prev);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -181,7 +172,7 @@ function CommentItem() {
         <div className="relative mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
           <Link to="#" className="flex-shrink-0">
             <img
-              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+              src={user?.avatar}
               alt="author-avatar"
               className="aspect-square h-8 w-8 rounded-full object-cover"
             />
@@ -224,48 +215,48 @@ function CommentItem() {
         <div className="flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
           <Link to="#" className="flex-shrink-0">
             <img
-              src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+              src={user?.avatar}
               alt="author-avatar"
               className="aspect-square h-8 w-8 rounded-full object-cover"
             />
           </Link>
           <div className="w-full">
             <div className="relative space-x-2 text-gray-400">
-              <span className="font-bold text-gray-900">Betty Liang</span>
-              <span>3 hours ago</span>
+              <span className="font-bold text-gray-900">{user?.name}</span>
+              <span>
+                <ReactTimeAgo
+                  date={createdAt}
+                  locale="en-US"
+                  timeStyle="round"
+                />
+              </span>
 
               <button
                 className="absolute right-0 top-0 text-teal-500"
                 onClick={handleShowOption}
               >
                 <RiMoreLine className="text-2xl" />
-                {showOption && (
-                  <div className="absolute -left-16 top-6 rounded-lg bg-white p-1 text-left text-base shadow-2xl shadow-gray-400">
-                    <button
-                      className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50"
-                      onClick={handleEditMode}
-                    >
-                      <RiEdit2Line className="text-xl" />
-                      Edit
-                    </button>
-                    <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
-                      <RiDeleteBin6Line className="text-xl" />
-                      Delete
-                    </button>
-                  </div>
-                )}
               </button>
+              {showOption && (
+                <div className="absolute right-6 top-0 rounded-lg bg-white p-1 text-left text-base shadow-2xl shadow-gray-400">
+                  <button
+                    className="flex w-full items-center gap-2 rounded-lg p-2 text-teal-500 hover:bg-gray-50"
+                    onClick={handleEditMode}
+                  >
+                    <RiEdit2Line className="text-xl" />
+                    Edit
+                  </button>
+                  <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
+                    <RiDeleteBin6Line className="text-xl" />
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
-            <p className="mt-3 text-gray-900">
-              Vivamus eu dolor sodales, lacinia elit ac, pellentesque ex. Sed
-              varius mi quis massa tincidunt rutrum. Morbi molestie magna sed
-              accumsan facilisis.
-            </p>
+            <p className="mt-3 text-gray-900">{commentContent}</p>
           </div>
         </div>
       )}
-
-      {/* edit mode */}
     </>
   );
 }
