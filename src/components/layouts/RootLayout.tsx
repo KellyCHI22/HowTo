@@ -45,7 +45,12 @@ export default function RootLayout() {
 
   return (
     <>
-      <nav className={clsx('h-[4.5rem] bg-white  shadow-basic', '')}>
+      <nav
+        className={clsx(
+          'fixed top-0 h-[4.5rem] w-full bg-white  shadow-basic',
+          ''
+        )}
+      >
         <div className="container flex h-full items-center justify-between">
           {pathname.includes('search') && isMobile ? (
             <>
@@ -139,8 +144,9 @@ export default function RootLayout() {
           )}
         </div>
       </nav>
-
-      <Outlet context={{ handleToggleLoginModal, handleToggleSignupModal }} />
+      <div className="mt-[4.5rem]">
+        <Outlet context={{ handleToggleLoginModal, handleToggleSignupModal }} />
+      </div>
       <MobileSidebar
         toggleSidebar={handleToggleSidebar}
         showSidebar={showSidebar}
