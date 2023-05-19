@@ -1,5 +1,4 @@
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
 import { useMediaQuery } from 'react-responsive';
 import Button from '../elements/Button';
 import MobileSidebar from '../MobileSidebar';
@@ -87,12 +86,7 @@ export default function RootLayout() {
 
   return (
     <>
-      <nav
-        className={clsx(
-          'fixed top-0 h-[4.5rem] w-full bg-white  shadow-basic',
-          ''
-        )}
-      >
+      <nav className="fixed top-0 z-10 h-[4.5rem] w-full bg-white shadow-basic">
         <div className="container flex h-full items-center justify-between">
           {pathname.includes('search') && isMobile ? (
             <>
@@ -218,12 +212,12 @@ export default function RootLayout() {
         showSidebar={showSidebar}
       />
       {(showLoginModal || showSignupModal) && (
-        <div className="absolute inset-0 left-0 top-0 bg-black opacity-50" />
+        <div className="absolute inset-0 left-0 top-0 z-20 bg-black opacity-50" />
       )}
 
       {showLoginModal && (
         <div
-          className="absolute inset-0 left-0 top-0 grid place-items-center"
+          className="absolute inset-0 left-0 top-0 z-30 grid place-items-center"
           onClick={() => setShowLoginModal(false)}
         >
           <LoginModal
@@ -234,7 +228,7 @@ export default function RootLayout() {
       )}
       {showSignupModal && (
         <div
-          className="absolute inset-0 left-0 top-0 grid place-items-center"
+          className="absolute inset-0 left-0 top-0 z-30 grid place-items-center"
           onClick={() => setShowSignupModal(false)}
         >
           <SignupModal
