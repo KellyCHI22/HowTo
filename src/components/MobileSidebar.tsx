@@ -15,6 +15,8 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import Button from './elements/Button';
 
+import { currentUser } from '~/dummyData';
+
 type MobileSidebarProps = {
   showSidebar: boolean;
   toggleSidebar: () => void;
@@ -28,13 +30,13 @@ export default function MobileSidebar({
     <>
       {showSidebar && (
         <div
-          className="z-35 fixed left-0 top-0 h-screen w-screen bg-black opacity-50"
+          className="fixed left-0 top-0 z-40 h-screen w-screen bg-black opacity-50"
           onClick={toggleSidebar}
         />
       )}
       <div
         className={clsx(
-          'fixed left-0 top-0 z-40 h-screen w-64  overflow-y-auto bg-white p-5 font-bold transition-transform',
+          'fixed left-0 top-0 z-50 h-screen w-64  overflow-y-auto bg-white p-5 font-bold transition-transform',
           { '-translate-x-full': !showSidebar }
         )}
       >
@@ -45,11 +47,11 @@ export default function MobileSidebar({
         <div className=" overflow-y-auto py-4 pt-0">
           <div className="flex flex-col items-center justify-center gap-2 py-5">
             <img
-              src="https://images.unsplash.com/photo-1479936343636-73cdc5aae0c3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-              alt=""
-              className="h-16 w-16 overflow-hidden rounded-full"
+              src={currentUser.avatar}
+              alt="user-avatar"
+              className="h-16 w-16 overflow-hidden rounded-full object-cover"
             />
-            <p>Emily Chen</p>
+            <p>{currentUser.name}</p>
           </div>
           <ul className="space-y-2">
             <li>
@@ -72,7 +74,7 @@ export default function MobileSidebar({
             </li>
             <li>
               <AppNavLink
-                to="/users/123"
+                to={`/users/${currentUser.id}`}
                 label="Profile"
                 defaultIcon={<RiAccountCircleLine />}
                 activeIcon={<RiAccountCircleFill />}
