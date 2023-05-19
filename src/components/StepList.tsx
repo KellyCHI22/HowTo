@@ -49,7 +49,6 @@ export default function StepList() {
     items.splice(result.destination.index, 0, reorderedItem);
 
     updateSteps(items);
-    console.log(items);
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>, id: string) {

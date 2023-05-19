@@ -9,7 +9,6 @@ import { ContextType } from '~/components/layouts/RootLayout';
 export default function SearchPage() {
   const { isSearching, searchResults, handleSearch } =
     useOutletContext<ContextType>();
-  console.log(handleSearch);
 
   const tags = [
     'funny',
