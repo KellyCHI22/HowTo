@@ -635,5 +635,5 @@ export const currentUser: User = {
   followers: ['user_id_2', 'user_id_3', 'user_id_5'],
   following: ['user_id_2', 'user_id_3'],
   likedPosts: ['post_id_1', 'post_id_2'],
-  bookmarkedPosts: ['post_id_3', 'post_id_4'],
+  bookmarkedPosts: ['post_id_3', 'post_id_4', 'post_id_7', 'post_id_10'],
 };

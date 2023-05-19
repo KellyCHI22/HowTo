@@ -17,7 +17,14 @@ import Tag from '~/components/elements/Tag';
 import Textarea from '~/components/elements/Textarea';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 
-import { posts, users, comments, Comment } from '../dummyData';
+import {
+  posts,
+  users,
+  comments,
+  currentUser,
+  Comment,
+  Post,
+} from '../dummyData';
 import ReactTimeAgo from 'react-time-ago';
 
 export default function HowToPage() {
@@ -25,7 +32,7 @@ export default function HowToPage() {
   const navigate = useNavigate();
   const [showOption, setShowOption] = useState(false);
   const handleShowOption = () => setShowOption((prev) => !prev);
-  const post = posts.find((post) => post.id === id);
+  const post = posts.find((post) => post.id === id) as Post;
   const user = users.find((user) => user.id === post?.authorId);
   const postComments = comments.filter((comment) => comment.postId === id);
 
@@ -131,10 +138,20 @@ export default function HowToPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button loading={false} outline rounded>
+            <Button
+              loading={false}
+              primary={currentUser.likedPosts.includes(post?.id)}
+              outline={!currentUser.likedPosts.includes(post?.id)}
+              rounded
+            >
               <RiHeartLine className="text-2xl" />
             </Button>
-            <Button loading={false} outline rounded>
+            <Button
+              loading={false}
+              primary={currentUser.bookmarkedPosts.includes(post?.id)}
+              outline={!currentUser.bookmarkedPosts.includes(post?.id)}
+              rounded
+            >
               <RiBookmark2Line className="text-2xl" />
             </Button>
           </div>

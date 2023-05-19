@@ -14,6 +14,8 @@ import { Outlet, useOutletContext } from 'react-router-dom';
 import { AppNavLink } from '../MobileSidebar';
 import { ContextType } from './RootLayout';
 
+import { currentUser } from '~/dummyData';
+
 export default function HowToLayout() {
   const context = useOutletContext<ContextType>();
   return (
@@ -54,7 +56,7 @@ function AsideNavLinks() {
         </li>
         <li>
           <AppNavLink
-            to="/users/123"
+            to={`/users/${currentUser.id}`}
             label="Profile"
             defaultIcon={<RiAccountCircleLine />}
             activeIcon={<RiAccountCircleFill />}

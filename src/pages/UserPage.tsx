@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import HowToItem from '~/components/HowtoItem';
 import Button from '~/components/elements/Button';
 import {
-  RiUserAddLine,
   RiEdit2Line,
   RiHeartLine,
   RiChat1Line,
@@ -14,29 +13,32 @@ import {
 import Textarea from '~/components/elements/Textarea';
 import { useRef, useState } from 'react';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { User, posts, users } from '~/dummyData';
 
 export default function UserPage() {
   const { id } = useParams();
+  const user = users.find((user) => user.id === id) as User;
+  const userPosts = posts.filter((post) => post.authorId === id);
+
   const [isEditMode, setIsEditMode] = useState(false);
   const handleEditMode = () => setIsEditMode((prev) => !prev);
+
   return (
     <div className="my-5 md:my-12">
       {isEditMode ? (
-        <EditProfile handleEditMode={handleEditMode} />
+        <EditProfile handleEditMode={handleEditMode} user={user} />
       ) : (
-        <UserProfile handleEditMode={handleEditMode} />
+        <UserProfile handleEditMode={handleEditMode} user={user} />
       )}
       <div className="mb-5">
         <h3 className="text-center font-slabo text-2xl text-teal-500 ">
-          Betty Liang's How To...
+          {user?.name}'s How To...
         </h3>
       </div>
       <div className="space-y-3">
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
+        {userPosts.map((post) => (
+          <HowToItem key={post.id} post={post} />
+        ))}
       </div>
     </div>
   );
@@ -44,20 +46,21 @@ export default function UserPage() {
 
 type Props = {
   handleEditMode: React.MouseEventHandler<HTMLButtonElement>;
+  user: User;
 };
 
-function UserProfile({ handleEditMode }: Props) {
+function UserProfile({ handleEditMode, user }: Props) {
   return (
     <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic xl:h-[300px]">
       <div className="flex-1">
         <img
-          src="https://picsum.photos/id/999/800/500"
-          alt=""
+          src={user.cover_image}
+          alt="user-cover-image"
           className="aspect-video w-full object-cover xl:hidden"
         />
         <div className="relative p-5">
           <img
-            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+            src={user.avatar}
             alt=""
             className="aspect-square h-14 w-14 rounded-full object-cover"
           />
@@ -71,12 +74,9 @@ function UserProfile({ handleEditMode }: Props) {
             <RiEdit2Line className="text-2xl" />
             Edit
           </Button>
-          <p className="mt-2 font-bold xl:text-lg">Betty Liang</p>
+          <p className="mt-2 font-bold xl:text-lg">{user.name}</p>
           <p className="text-sm text-gray-400">Member since January 2023</p>
-          <p className="mb-5 mt-3 xl:mb-3">
-            Traveling the world one destination at a time. Passionate about
-            experiencing new cultures and making unforgettable memories.
-          </p>
+          <p className="mb-5 mt-3 xl:mb-3">{user.bio}</p>
           <div className="flex w-full justify-between text-gray-400 xl:grid xl:grid-cols-4 ">
             <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
               <RiEdit2Line className="text-xl xl:hidden" />
@@ -102,17 +102,13 @@ function UserProfile({ handleEditMode }: Props) {
         </div>
       </div>
       <div className="hidden w-[350px] flex-shrink-0 xl:block">
-        <img
-          src="https://picsum.photos/id/999/800/500"
-          alt=""
-          className="h-full object-cover "
-        />
+        <img src={user.cover_image} alt="" className="h-full object-cover " />
       </div>
     </div>
   );
 }
 
-function EditProfile({ handleEditMode }: Props) {
+function EditProfile({ handleEditMode, user }: Props) {
   const [bio, setBio] = useState(
     'Traveling the world one destination at a time. Passionate about   experiencing new cultures and making unforgettable memories.'
   );

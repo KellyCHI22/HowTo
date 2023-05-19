@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom';
 import HowToItem from '~/components/HowtoItem';
 import Button from '~/components/elements/Button';
 
+import { posts, currentUser } from '../dummyData';
+
 export default function BookmarksPage() {
+  const bookmarkedPosts = posts.filter((post) => {
+    return currentUser.bookmarkedPosts.includes(post.id);
+  });
   return (
     <div className="my-5 md:my-12">
       <div className="mb-3 flex items-center justify-between">
@@ -25,11 +30,9 @@ export default function BookmarksPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
-        <HowToItem />
+        {bookmarkedPosts.map((post) => (
+          <HowToItem key={post.id} post={post} />
+        ))}
       </div>
 
       <Button
