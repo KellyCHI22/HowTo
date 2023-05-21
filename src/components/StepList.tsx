@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useRef } from 'react';
+import { useState, ChangeEvent, useRef, Dispatch, SetStateAction } from 'react';
 import { DropResult, DragDropContext, Draggable } from 'react-beautiful-dnd';
 import {
   RiCloseFill,
@@ -13,33 +13,18 @@ import Textarea from './elements/Textarea';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import Button from './elements/Button';
 
-const dummySteps = [
-  {
-    id: 'step-001',
-    description: 'Buy a set of DJ turntables and a mixer.',
-  },
-  {
-    id: 'step-002',
-    description: 'Train your cat to respond to certain sounds or commands.',
-  },
-  {
-    id: 'step-003',
-    description:
-      'Attach a special collar with sensors that can trigger the turntables and mixer.',
-  },
-  {
-    id: 'step-004',
-    description: 'Play music and watch your cat scratch and mix the beats.',
-  },
-  {
-    id: 'step-005',
-    description:
-      'Upload the videos to social media and become internet famous.',
-  },
-];
+export type Step = {
+  id: string;
+  description: string;
+};
 
-export default function StepList() {
-  const [steps, updateSteps] = useState(dummySteps);
+type StepListPorps = {
+  steps: Step[];
+  handleStepsUpdate: (steps: Step[]) => void;
+};
+
+export default function StepList({ steps, handleStepsUpdate }: StepListPorps) {
+  // const [steps, updateSteps] = useState(steps);
 
   function handleOnDragEnd(result: DropResult) {
     if (!result.destination) return;
@@ -48,7 +33,7 @@ export default function StepList() {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    updateSteps(items);
+    handleStepsUpdate(items);
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement>, id: string) {
@@ -62,7 +47,7 @@ export default function StepList() {
         return step;
       }
     });
-    updateSteps(updatedSteps);
+    handleStepsUpdate(updatedSteps);
   }
 
   function handleAddStep() {
@@ -70,12 +55,12 @@ export default function StepList() {
       ...steps,
       { id: crypto.randomUUID(), description: '' },
     ];
-    updateSteps(updatedSteps);
+    handleStepsUpdate(updatedSteps);
   }
 
   function handleDeleteStep(id: string) {
     const updatedSteps = steps.filter((step) => step.id !== id);
-    updateSteps(updatedSteps);
+    handleStepsUpdate(updatedSteps);
   }
 
   return (
