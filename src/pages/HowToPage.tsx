@@ -182,7 +182,9 @@ function CommentItem({ comment }: CommentItemProps) {
   const handleShowOption = () => setShowOption((prev) => !prev);
   const [isEditMode, setIsEditMode] = useState(false);
   const handleEditMode = () => setIsEditMode((prev) => !prev);
-  const [commentEditInput, setCommentEditInput] = useState('');
+  const [commentEditInput, setCommentEditInput] = useState(
+    comment.commentContent
+  );
   const commentEditRef = useRef<HTMLTextAreaElement>(null);
   useAutosizeTextArea(commentEditRef.current, commentEditInput, 3);
 
@@ -224,7 +226,7 @@ function CommentItem({ comment }: CommentItemProps) {
               >
                 <RiArrowGoBackLine className="text-xl" />
               </Button>
-              <Button loading={false} primary basic className="">
+              <Button loading={false} primary basic className="font-bold">
                 <RiCheckLine className="text-xl" />
                 Save
               </Button>
@@ -305,7 +307,12 @@ function CommentInput() {
           className="text-sm md:text-base"
           onChange={(e) => setCommentInput(e.target.value)}
         />
-        <Button loading={false} primary basic className="mt-2 self-end">
+        <Button
+          loading={false}
+          primary
+          basic
+          className="mt-2 self-end font-bold"
+        >
           <RiSendPlaneFill />
           Send
         </Button>
