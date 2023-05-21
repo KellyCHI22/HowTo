@@ -46,14 +46,16 @@ export default function HowToItem({ post }: Props) {
               alt="author-avatar"
               className="aspect-square h-5 w-5 rounded-full object-cover md:h-8 md:w-8"
             />
-            <span>{user?.name}</span>
+            <span className="truncate">{user?.name}</span>
           </div>
-          <span>
+          <span className="flex-shrink-0">
             <ReactTimeAgo date={createdAt} locale="en-US" timeStyle="round" />
           </span>
         </div>
-        <h3 className="font-bold md:text-xl">{title}</h3>
-        <p className="hidden py-1 text-gray-400 xl:block">{introduction}</p>
+        <h3 className="line-clamp-2 font-bold md:text-xl">{title}</h3>
+        <p className="hidden py-1 text-gray-400 xl:line-clamp-2">
+          {introduction}
+        </p>
         <div className="flex justify-between">
           <div className="mt-1 flex gap-1 text-xs text-teal-500 md:text-sm">
             {tags.map((tag, index) => (
