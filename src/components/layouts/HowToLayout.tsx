@@ -14,7 +14,7 @@ import { Outlet, useOutletContext } from 'react-router-dom';
 import { AppNavLink } from '../MobileSidebar';
 import { ContextType } from './RootLayout';
 
-import { currentUser } from '~/dummyData';
+import { Post, currentUser, posts } from '~/dummyData';
 
 export default function HowToLayout() {
   const context = useOutletContext<ContextType>();
@@ -76,30 +76,35 @@ function AsideNavLinks() {
 }
 
 function AsideLatestHowTo() {
+  const latestHowTos = posts
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .slice(0, 3);
   return (
     <div className="w-64 rounded-xl bg-white shadow-basic">
       <h3 className="border-b border-b-gray-200 px-5 py-3 text-lg font-bold text-teal-500">
         Latest How To
       </h3>
       <div>
-        <LatestHowToItem />
-        <LatestHowToItem />
-        <LatestHowToItem />
+        {latestHowTos.map((howto) => (
+          <LatestHowToItem howto={howto} />
+        ))}
       </div>
     </div>
   );
 }
 
-function LatestHowToItem() {
+function LatestHowToItem({ howto }: { howto: Post }) {
   return (
     <div className="px-5 py-3">
-      <h4 className="mb-1 font-bold">How to turn your cat into a DJ?</h4>
+      <h4 className="mb-1 font-bold">{howto.title}</h4>
       <div className="flex items-center justify-start gap-3 text-gray-400">
         <div className="flex items-center gap-1">
-          <RiChat1Line />5
+          <RiChat1Line />
+          {howto.commentsCount}
         </div>
         <div className="flex items-center gap-1">
-          <RiHeartLine />6
+          <RiHeartLine />
+          {howto.likesCount}
         </div>
       </div>
     </div>
