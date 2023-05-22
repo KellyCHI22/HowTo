@@ -1,22 +1,41 @@
 import { Link } from 'react-router-dom';
-import { RiArrowDownSFill, RiEdit2Line } from 'react-icons/ri';
+import { RiEdit2Line } from 'react-icons/ri';
 import Button from '~/components/elements/Button';
 import HowToItem from '~/components/HowtoItem';
 
 import { posts } from '../dummyData';
+import { useState } from 'react';
+import SortOption from '~/components/SortOptions';
 
 export default function ExplorePage() {
+  const [renderedPosts, setRenderedPosts] = useState(posts);
+  const [sortOption, setSortOption] = useState('default');
+  const handleSortOptionSelect = (option: string) => {
+    setSortOption(option);
+    if (option === 'latest') {
+      const sortedPosts = [...posts].sort((a, b) => b.createdAt - a.createdAt);
+      setRenderedPosts(sortedPosts);
+    } else if (option === 'oldest') {
+      const sortedPosts = [...posts].sort((a, b) => a.createdAt - b.createdAt);
+      setRenderedPosts(sortedPosts);
+    } else if (option === 'popularity') {
+      const sortedPosts = [...posts].sort(
+        (a, b) =>
+          b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
+      );
+      setRenderedPosts(sortedPosts);
+    } else {
+      setRenderedPosts(posts);
+    }
+  };
   return (
     <div className="my-5 md:my-12">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="ml-2 font-slabo text-2xl text-teal-500 md:text-3xl">
           Explore
         </h2>
-        <div className="flex gap-3">
-          <button className="flex items-center rounded-full border border-teal-500 px-3 py-2 text-teal-500">
-            sort by
-            <RiArrowDownSFill className="text-2xl" />
-          </button>
+        <div className="flex md:gap-3">
+          <SortOption onSortOptionSelect={handleSortOptionSelect} />
           <Link to="/create">
             <Button loading={false} basic primary className="hidden md:flex">
               <RiEdit2Line className="text-2xl" />
@@ -27,7 +46,7 @@ export default function ExplorePage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {posts.map((post) => (
+        {renderedPosts.map((post) => (
           <HowToItem key={post.id} post={post} />
         ))}
       </div>

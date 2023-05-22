@@ -47,8 +47,8 @@ export const posts: Post[] = [
     authorId: 'user_id_1',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/cat_dj.jpg?alt=media&token=72dfe8e3-f90e-4e85-8344-777997c73db4',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 5,
+    likesCount: 5,
     steps: [
       {
         id: 'step-001',
@@ -85,8 +85,8 @@ export const posts: Post[] = [
     authorId: 'user_id_2',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/spacecar.jpg?alt=media&token=a09a6149-362b-4e10-991e-f38b7e5c6cc1',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 3,
+    likesCount: 5,
     steps: [
       {
         id: 'step-001',
@@ -124,8 +124,8 @@ export const posts: Post[] = [
     authorId: 'user_id_3',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/hair_plant.jpg?alt=media&token=01d3035b-0aeb-44ac-9241-4d85d3c7bd3f',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 3,
+    likesCount: 4,
     steps: [
       {
         id: 'step-001',
@@ -162,8 +162,8 @@ export const posts: Post[] = [
     authorId: 'user_id_4',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/fridge_time_machine.jpg?alt=media&token=3dc55deb-f064-41c5-9f16-b217d176dc49',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 3,
+    likesCount: 1,
     steps: [
       {
         id: 'step-001',
@@ -199,7 +199,7 @@ export const posts: Post[] = [
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/robot_bartender.jpg?alt=media&token=9f2b204c-4b94-4f12-8cbe-be5828e1f50e',
     commentsCount: 0,
-    likesCount: 0,
+    likesCount: 3,
     steps: [
       {
         id: 'step-001',
@@ -237,8 +237,8 @@ export const posts: Post[] = [
     authorId: 'user_id_1',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/goldfish.jpg?alt=media&token=ad6f80b6-22c8-482b-a11d-f7ea5e79611d',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 1,
+    likesCount: 2,
     steps: [
       {
         id: 'step-001',
@@ -276,8 +276,8 @@ export const posts: Post[] = [
     authorId: 'user_id_6',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/dog_painter.jpg?alt=media&token=cc426f2e-fd5a-43f1-b392-e5910f450df6',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 1,
+    likesCount: 2,
     steps: [
       {
         id: 'step-001',
@@ -316,8 +316,8 @@ export const posts: Post[] = [
     authorId: 'user_id_2',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/cheese_hat.jpg?alt=media&token=72561a29-ae26-4785-83fc-4c951bdfcd19',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 2,
+    likesCount: 3,
     steps: [
       {
         id: 'step-001',
@@ -352,8 +352,8 @@ export const posts: Post[] = [
     authorId: 'user_id_1',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/garden_mars.jpg?alt=media&token=fedc9000-0bbf-48c3-a21d-c929f2b886bf',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 5,
+    likesCount: 6,
     steps: [
       {
         id: 'step-001',
@@ -391,8 +391,8 @@ export const posts: Post[] = [
     authorId: 'user_id_4',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/frog_ninja.jpg?alt=media&token=06d1ad96-65c6-46f3-8ddb-cdd6ce1dc6ab',
-    commentsCount: 0,
-    likesCount: 0,
+    commentsCount: 2,
+    likesCount: 2,
     steps: [
       {
         id: 'step-001',
@@ -618,14 +618,14 @@ export const comments: Comment[] = [
     id: 'comment_id_15',
     createdAt: 1684391273000,
     commentContent: 'Very cool',
-    postId: 'post_id_5',
+    postId: 'post_id_9',
     userId: 'user_id_3',
   },
   {
     id: 'comment_id_16',
     createdAt: 1684391274000,
     commentContent: 'Wow, this is amazing!',
-    postId: 'post_id_6',
+    postId: 'post_id_9',
     userId: 'user_id_2',
   },
   {
@@ -639,7 +639,7 @@ export const comments: Comment[] = [
     id: 'comment_id_18',
     createdAt: 1684391276000,
     commentContent: 'This is so creative!',
-    postId: 'post_id_7',
+    postId: 'post_id_9',
     userId: 'user_id_1',
   },
   {
