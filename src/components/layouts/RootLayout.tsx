@@ -15,6 +15,7 @@ import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
 
 import { posts, Post } from '~/dummyData';
+import ScrollToTop from '~/utils/ScrollToTop';
 
 type SearchResult = {
   query: string;
@@ -86,6 +87,7 @@ export default function RootLayout() {
 
   return (
     <>
+      <ScrollToTop />
       <nav className="fixed top-0 z-10 h-[4.5rem] w-full bg-white shadow-basic">
         <div className="container flex h-full items-center justify-between">
           {pathname.includes('search') && isMobile ? (
