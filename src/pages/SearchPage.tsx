@@ -51,7 +51,7 @@ export default function SearchPage() {
             <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
               {tags.map((tag, index) => {
                 return (
-                  <button onClick={() => handleSearch(tag)}>
+                  <button onClick={() => handleSearch(tag)} className="my-1">
                     <Tag key={index} label={tag} />
                   </button>
                 );

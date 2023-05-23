@@ -57,7 +57,7 @@ export default function HowToItem({ post }: Props) {
           {introduction}
         </p>
         <div className="flex justify-between">
-          <div className="mt-1 flex gap-1 text-xs text-teal-500 md:text-sm">
+          <div className="mt-1 flex flex-wrap gap-1 text-xs text-teal-500 md:text-sm">
             {tags.map((tag, index) => (
               <span
                 key={index}

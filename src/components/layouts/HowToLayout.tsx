@@ -10,7 +10,7 @@ import {
   RiHeartLine,
   RiChat1Line,
 } from 'react-icons/ri';
-import { Outlet, useOutletContext } from 'react-router-dom';
+import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import { AppNavLink } from '../MobileSidebar';
 import { ContextType } from './RootLayout';
 
@@ -84,9 +84,9 @@ function AsideLatestHowTo() {
       <h3 className="border-b border-b-gray-200 px-5 py-3 text-lg font-bold text-teal-500">
         Latest How To
       </h3>
-      <div>
+      <div className="py-3">
         {latestHowTos.map((howto) => (
-          <LatestHowToItem howto={howto} />
+          <LatestHowToItem howto={howto} key={howto.id} />
         ))}
       </div>
     </div>
@@ -95,19 +95,21 @@ function AsideLatestHowTo() {
 
 function LatestHowToItem({ howto }: { howto: Post }) {
   return (
-    <div className="px-5 py-3">
-      <h4 className="mb-1 font-bold">{howto.title}</h4>
-      <div className="flex items-center justify-start gap-3 text-gray-400">
-        <div className="flex items-center gap-1">
-          <RiChat1Line />
-          {howto.commentsCount}
-        </div>
-        <div className="flex items-center gap-1">
-          <RiHeartLine />
-          {howto.likesCount}
+    <Link to={`/howtos/${howto.id}`} className="block px-3">
+      <div className="rounded-lg p-2 hover:bg-gray-100">
+        <h4 className="mb-1 font-bold">{howto.title}</h4>
+        <div className="flex items-center justify-start gap-3 text-gray-400">
+          <div className="flex items-center gap-1">
+            <RiChat1Line />
+            {howto.commentsCount}
+          </div>
+          <div className="flex items-center gap-1">
+            <RiHeartLine />
+            {howto.likesCount}
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

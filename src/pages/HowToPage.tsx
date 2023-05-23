@@ -235,7 +235,7 @@ function CommentItem({ comment }: CommentItemProps) {
         </div>
       ) : (
         <div className="flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
-          <Link to="#" className="flex-shrink-0">
+          <Link to={`/users/${user?.id}`} className="flex-shrink-0">
             <img
               src={user?.avatar}
               alt="author-avatar"
