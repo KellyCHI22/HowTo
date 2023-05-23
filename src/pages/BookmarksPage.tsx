@@ -1,6 +1,5 @@
-import { RiArrowDownSFill, RiEdit2Line } from 'react-icons/ri';
+import { RiEdit2Line } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import HowToItem from '~/components/HowtoItem';
 import Button from '~/components/elements/Button';
 
 import { posts, currentUser } from '../dummyData';
@@ -14,7 +13,8 @@ export default function BookmarksPage() {
   });
   const [renderedBookmarkedPosts, setRenderedBookmarkedPosts] =
     useState(bookmarkedPosts);
-  const [sortOption, setSortOption] = useState('default');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setSortOption] = useState('default');
   const handleSortOptionSelect = (option: string) => {
     setSortOption(option);
     if (option === 'latest') {
