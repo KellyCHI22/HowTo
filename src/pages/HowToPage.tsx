@@ -175,7 +175,7 @@ type CommentItemProps = {
 };
 
 function CommentItem({ comment }: CommentItemProps) {
-  const { createdAt, commentContent, userId } = comment;
+  const { id, createdAt, commentContent, userId } = comment;
   const user = users.find((user) => user.id === userId);
 
   const [showOption, setShowOption] = useState(false);

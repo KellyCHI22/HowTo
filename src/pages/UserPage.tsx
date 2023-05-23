@@ -120,8 +120,8 @@ function EditProfile({ handleEditMode, user }: Props) {
 
   // avatar & cover
   // ! need to compress, upload to db, get the url and then save to user data
-  // const defaultImage =
-  // ('https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668');
+  const defaultImage =
+    'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
   const [avatar, setAvatar] = useState<null | File>(null);
   const [avatarPreview, setAvatarPreview] = useState(user.avatar);
   const [cover, setCover] = useState<null | File>(null);

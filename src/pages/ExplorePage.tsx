@@ -10,7 +10,7 @@ import { posts } from '../dummyData';
 
 export default function ExplorePage() {
   const [renderedPosts, setRenderedPosts] = useState(posts);
-  const [_, setSortOption] = useState('default');
+  const [sortOption, setSortOption] = useState('default');
   const handleSortOptionSelect = (option: string) => {
     setSortOption(option);
     if (option === 'latest') {

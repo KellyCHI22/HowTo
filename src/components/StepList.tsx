@@ -1,6 +1,7 @@
-import { useState, ChangeEvent, useRef } from 'react';
+import { useState, ChangeEvent, useRef, Dispatch, SetStateAction } from 'react';
 import { DropResult, DragDropContext, Draggable } from 'react-beautiful-dnd';
 import {
+  RiCloseFill,
   RiAddFill,
   RiArrowDownSLine,
   RiArrowUpSLine,
