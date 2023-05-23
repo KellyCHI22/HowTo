@@ -1,11 +1,12 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
+
 import Button from '~/components/elements/Button';
-import HowToItem from '~/components/HowtoItem';
+import SortOption from '~/components/SortOptions';
+import PaginatedPosts from '~/components/PaginatedPosts';
 
 import { posts } from '../dummyData';
-import { useState } from 'react';
-import SortOption from '~/components/SortOptions';
 
 export default function ExplorePage() {
   const [renderedPosts, setRenderedPosts] = useState(posts);
@@ -46,9 +47,7 @@ export default function ExplorePage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {renderedPosts.map((post) => (
-          <HowToItem key={post.id} post={post} />
-        ))}
+        <PaginatedPosts posts={renderedPosts} postsPerPage={4} />
       </div>
 
       <Button

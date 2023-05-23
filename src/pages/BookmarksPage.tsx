@@ -6,6 +6,7 @@ import Button from '~/components/elements/Button';
 import { posts, currentUser } from '../dummyData';
 import { useState } from 'react';
 import SortOption from '~/components/SortOptions';
+import PaginatedPosts from '~/components/PaginatedPosts';
 
 export default function BookmarksPage() {
   const bookmarkedPosts = posts.filter((post) => {
@@ -55,9 +56,7 @@ export default function BookmarksPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {renderedBookmarkedPosts.map((post) => (
-          <HowToItem key={post.id} post={post} />
-        ))}
+        <PaginatedPosts posts={renderedBookmarkedPosts} postsPerPage={4} />
       </div>
 
       <Button
