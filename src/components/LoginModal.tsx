@@ -1,9 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Input from './elements/Input';
 import { RiCloseFill, RiLock2Fill, RiMailFill } from 'react-icons/ri';
 import Button from './elements/Button';
 import { ReactComponent as WorkingIllustration } from '~/assets/illustration_working.svg';
+import { auth } from '~/firebase';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+
+const FIREBASE_ERRORS = {
+  'Firebase: Error (auth/email-already-in-use).':
+    'A user with that email already exists',
+  'Firebase: Error (auth/user-not-found).': 'Invalid email or password',
+  'Firebase: Error (auth/wrong-password).': 'Invalid email or password',
+  'Firebase: Error (auth/invalid-email).': 'Invalid email or password',
+  'Firebase: Password should be at least 6 characters (auth/weak-password).':
+    'Password should be at least 6 characters ',
+};
 
 type LoginModalProps = {
   toggleLoginModal: () => void;
@@ -16,6 +28,38 @@ export default function LoginModal({
 }: LoginModalProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  const [
+    signInWithEmailAndPassword,
+    signedInUserCred,
+    loadingSignIn,
+    errorSignIn,
+  ] = useSignInWithEmailAndPassword(auth);
+
+  const handleLogin = async () => {
+    setLoginError('');
+    if (email.trim().length === 0) {
+      return setLoginError('Email cannot be blank');
+    } else if (password.trim().length === 0) {
+      return setLoginError('Password cannot be blank');
+    }
+
+    try {
+      await signInWithEmailAndPassword(email, password);
+    } catch {
+      return console.log(errorSignIn);
+    }
+  };
+
+  useEffect(() => {
+    if (signedInUserCred) {
+      console.log('useEffect runs');
+      setEmail('');
+      setPassword('');
+      toggleLoginModal();
+    }
+  }, [signedInUserCred]);
 
   return (
     <>
@@ -62,9 +106,22 @@ export default function LoginModal({
           </div>
 
           <p className="my-3 text-center text-red-500">
-            {'Wrong email format'}
+            {loginError
+              ? loginError
+              : errorSignIn &&
+                `${
+                  FIREBASE_ERRORS[
+                    errorSignIn.message as keyof typeof FIREBASE_ERRORS
+                  ]
+                }`}
           </p>
-          <Button loading={false} full primary className="font-bold">
+          <Button
+            loading={loadingSignIn}
+            full
+            primary
+            className="font-bold"
+            onClick={handleLogin}
+          >
             Log in
           </Button>
           <p className="mb-16 mt-3 text-center text-gray-400">
