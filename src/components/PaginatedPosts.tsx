@@ -3,6 +3,7 @@ import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
 import ReactPaginate from 'react-paginate';
 import { Post } from '~/dummyData';
 import HowToItem from './HowtoItem';
+import { useMediaQuery } from 'react-responsive';
 
 export type PaginatedPostsProps = {
   posts: Post[];
@@ -13,6 +14,7 @@ export default function PaginatedPosts({
   posts,
   postsPerPage,
 }: PaginatedPostsProps) {
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [itemOffset, setItemOffset] = useState(0);
 
   const endOffset = itemOffset + postsPerPage;
@@ -36,11 +38,12 @@ export default function PaginatedPosts({
           breakLabel="..."
           nextLabel={<RiArrowRightSLine className="text-xl" />}
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={isMobile ? 1 : 2}
+          marginPagesDisplayed={1}
           pageCount={pageCount}
           previousLabel={<RiArrowLeftSLine className="text-xl" />}
           renderOnZeroPageCount={null}
-          containerClassName="flex gap-3 mt-5 justify-center w-full"
+          containerClassName="flex gap-3 mt-5 mb-16 md:my-5 justify-center w-full"
           pageLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"
           pageClassName="text-teal-500"
           previousLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"

@@ -125,6 +125,7 @@ export default function RootLayout() {
                 </button>
 
                 <input
+                  size={18}
                   type="text"
                   id="searchQuery"
                   value={searchQuery}

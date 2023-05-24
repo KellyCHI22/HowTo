@@ -4,12 +4,14 @@ import clsx from 'clsx';
 import ReactTimeAgo from 'react-time-ago';
 
 import { users, comments, Post } from '../dummyData';
+import { useMediaQuery } from 'react-responsive';
 
 type Props = {
   post: Post;
 };
 
 export default function HowToItem({ post }: Props) {
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const {
     id,
     createdAt,
@@ -29,7 +31,7 @@ export default function HowToItem({ post }: Props) {
     <Link
       to={`/howtos/${id}`}
       className={clsx(
-        'flex h-32 gap-2 rounded-xl bg-white p-2 shadow-basic hover:bg-gray-50 hover:shadow-teal',
+        'flex h-40 gap-2 rounded-xl bg-white p-2 shadow-basic hover:bg-gray-50 hover:shadow-teal',
         'md:h-fit md:gap-3 md:p-3'
       )}
     >
@@ -49,7 +51,15 @@ export default function HowToItem({ post }: Props) {
             <span className="truncate">{user?.name}</span>
           </div>
           <span className="flex-shrink-0">
-            <ReactTimeAgo date={createdAt} locale="en-US" timeStyle="round" />
+            {isMobile ? (
+              <ReactTimeAgo date={createdAt} locale="en-US" timeStyle="mini" />
+            ) : (
+              <ReactTimeAgo
+                date={createdAt}
+                locale="en-US"
+                timeStyle="twitter"
+              />
+            )}
           </span>
         </div>
         <h3 className="line-clamp-2 font-bold md:text-xl">{title}</h3>
@@ -80,11 +90,11 @@ export default function HowToItem({ post }: Props) {
         </div>
         <div className="flex items-center justify-end gap-2 text-xs text-gray-400 xl:hidden">
           <div className="flex items-center gap-1">
-            <RiChat1Line />
+            <RiChat1Line className="text-base" />
             {commentsCount}
           </div>
           <div className="flex items-center gap-1">
-            <RiHeartLine />
+            <RiHeartLine className="text-base" />
             {likesCount}
           </div>
         </div>
