@@ -10,22 +10,39 @@ import {
   RiSettings5Fill,
   RiEdit2Line,
   RiLogoutBoxRLine,
+  RiArrowRightLine,
 } from 'react-icons/ri';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import Button from './elements/Button';
 
 import { currentUser } from '~/dummyData';
+import { auth } from '~/firebase';
+import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 
 type MobileSidebarProps = {
   showSidebar: boolean;
   toggleSidebar: () => void;
+  toggleLoginModal: () => void;
+  toggleSignupModal: () => void;
 };
 
 export default function MobileSidebar({
   showSidebar,
   toggleSidebar,
+  toggleLoginModal,
+  toggleSignupModal,
 }: MobileSidebarProps) {
+  const [currentUser, loadingCurrentUser, errorCurrentUser] =
+    useAuthState(auth);
+  const [signOut, loadingSignOut, errorSignOut] = useSignOut(auth);
+  const handleLogOut = async () => {
+    const success = await signOut();
+    if (success) {
+      alert('You are sign out');
+    }
+  };
+
   return (
     <>
       {showSidebar && (
@@ -47,73 +64,109 @@ export default function MobileSidebar({
         <div className=" overflow-y-auto py-4 pt-0">
           <div className="flex flex-col items-center justify-center gap-2 py-5">
             <img
-              src={currentUser.avatar}
+              src="https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668"
               alt="user-avatar"
               className="h-16 w-16 overflow-hidden rounded-full object-cover"
             />
-            <p>{currentUser.name}</p>
+            <p>{currentUser ? currentUser?.email : 'Visitor'}</p>
           </div>
-          <ul className="space-y-2">
-            <li>
-              <AppNavLink
-                to="/howtos"
-                label="Explore"
-                defaultIcon={<RiLightbulbFlashLine />}
-                activeIcon={<RiLightbulbFlashFill />}
-                onClick={toggleSidebar}
-              />
-            </li>
-            <li>
-              <AppNavLink
-                to="/bookmarks"
-                label="Bookmarks"
-                defaultIcon={<RiBookmark2Line />}
-                activeIcon={<RiBookmark2Fill />}
-                onClick={toggleSidebar}
-              />
-            </li>
-            <li>
-              <AppNavLink
-                to={`/users/${currentUser.id}`}
-                label="Profile"
-                defaultIcon={<RiAccountCircleLine />}
-                activeIcon={<RiAccountCircleFill />}
-                onClick={toggleSidebar}
-              />
-            </li>
-            <li>
-              <AppNavLink
-                to="/settings"
-                label="Settings"
-                defaultIcon={<RiSettings5Line />}
-                activeIcon={<RiSettings5Fill />}
-                onClick={toggleSidebar}
-              />
-            </li>
-          </ul>
-          <div className="mx-2 my-5">
-            <Link to="/create">
-              <Button
-                loading={false}
-                basic
-                full
-                primary
-                className="py-2.5 font-normal"
-                onClick={toggleSidebar}
-              >
-                <RiEdit2Line className="text-2xl" /> Create HowTo
-              </Button>
-            </Link>
-          </div>
-          <div className="absolute bottom-5">
-            <NavLink
-              to="#"
-              className="flex items-center rounded-lg p-2 hover:bg-gray-100 "
-            >
-              <RiLogoutBoxRLine className="text-2xl text-gray-400" />
-              <span className="ml-3 flex-1 whitespace-nowrap">Log out</span>
-            </NavLink>
-          </div>
+          {currentUser ? (
+            <>
+              <ul className="space-y-2">
+                <li>
+                  <AppNavLink
+                    to="/howtos"
+                    label="Explore"
+                    defaultIcon={<RiLightbulbFlashLine />}
+                    activeIcon={<RiLightbulbFlashFill />}
+                    onClick={toggleSidebar}
+                  />
+                </li>
+                <li>
+                  <AppNavLink
+                    to="/bookmarks"
+                    label="Bookmarks"
+                    defaultIcon={<RiBookmark2Line />}
+                    activeIcon={<RiBookmark2Fill />}
+                    onClick={toggleSidebar}
+                  />
+                </li>
+                <li>
+                  <AppNavLink
+                    to={`/users/${currentUser?.uid}`}
+                    label="Profile"
+                    defaultIcon={<RiAccountCircleLine />}
+                    activeIcon={<RiAccountCircleFill />}
+                    onClick={toggleSidebar}
+                  />
+                </li>
+                <li>
+                  <AppNavLink
+                    to="/settings"
+                    label="Settings"
+                    defaultIcon={<RiSettings5Line />}
+                    activeIcon={<RiSettings5Fill />}
+                    onClick={toggleSidebar}
+                  />
+                </li>
+              </ul>
+              <div className="mx-2 my-5">
+                <Link to="/create">
+                  <Button
+                    loading={false}
+                    basic
+                    full
+                    primary
+                    className="py-2.5 font-normal"
+                    onClick={toggleSidebar}
+                  >
+                    <RiEdit2Line className="text-2xl" /> Create HowTo
+                  </Button>
+                </Link>
+              </div>
+              <div className="absolute bottom-5">
+                <button
+                  onClick={handleLogOut}
+                  className="flex items-center rounded-lg p-2 hover:bg-gray-100 "
+                >
+                  <RiLogoutBoxRLine className="text-2xl text-gray-400" />
+                  <span className="ml-3 flex-1 whitespace-nowrap">Log out</span>
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="mx-2 space-y-3">
+                <Button
+                  loading={false}
+                  basic
+                  full
+                  outline
+                  className="py-2.5 font-normal"
+                  onClick={() => {
+                    toggleSidebar();
+                    toggleLoginModal();
+                  }}
+                >
+                  Log in
+                </Button>
+                <Button
+                  loading={false}
+                  basic
+                  full
+                  primary
+                  className="py-2.5 font-bold"
+                  onClick={() => {
+                    toggleSidebar();
+                    toggleSignupModal();
+                  }}
+                >
+                  Get started
+                  <RiArrowRightLine className="text-xl" />
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>
