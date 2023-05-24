@@ -32,7 +32,7 @@ export default function SearchPage() {
             <Link to="/create">
               <Button loading={false} basic primary className="hidden md:flex">
                 <RiEdit2Line className="text-2xl" />
-                Create How To
+                Create<span className="hidden xl:inline">How To</span>
               </Button>
             </Link>
           </div>
@@ -51,8 +51,12 @@ export default function SearchPage() {
             <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
               {tags.map((tag, index) => {
                 return (
-                  <button onClick={() => handleSearch(tag)} className="my-1">
-                    <Tag key={index} label={tag} />
+                  <button
+                    key={index}
+                    onClick={() => handleSearch(tag)}
+                    className="my-1"
+                  >
+                    <Tag label={tag} />
                   </button>
                 );
               })}

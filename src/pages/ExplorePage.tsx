@@ -40,7 +40,7 @@ export default function ExplorePage() {
           <Link to="/create">
             <Button loading={false} basic primary className="hidden md:flex">
               <RiEdit2Line className="text-2xl" />
-              Create How To
+              Create<span className="hidden xl:inline">How To</span>
             </Button>
           </Link>
         </div>
