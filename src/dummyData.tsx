@@ -15,8 +15,9 @@ export type Post = {
 };
 
 export type User = {
-  id: string;
-  createdAt: number;
+  id?: string;
+  uid?: string;
+  createdAt: number | string;
   name: string;
   email: string;
   bio: string;
@@ -348,7 +349,7 @@ export const posts: Post[] = [
     title: 'How to Start a Garden on Mars',
     introduction:
       'Embark on an interplanetary gardening adventure, building a Martian greenhouse, creating soil substitute, and simulating Earth-like conditions. Harvest Martian produce and become a space farmer.',
-    tags: ['garden', 'Mars', 'space', 'plant'],
+    tags: ['garden', 'Mars', 'space', 'plant', 'cool'],
     authorId: 'user_id_1',
     image:
       'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/garden_mars.jpg?alt=media&token=fedc9000-0bbf-48c3-a21d-c929f2b886bf',
