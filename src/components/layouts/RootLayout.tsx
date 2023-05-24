@@ -8,6 +8,7 @@ import {
   RiArrowRightLine,
   RiCloseFill,
   RiArrowLeftLine,
+  RiLogoutBoxRLine,
 } from 'react-icons/ri';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import { useEffect, useState } from 'react';
@@ -16,6 +17,8 @@ import SignupModal from '../SignupModal';
 
 import { posts, Post } from '~/dummyData';
 import ScrollToTop from '~/utils/ScrollToTop';
+import { auth } from '~/firebase';
+import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 
 type SearchResult = {
   query: string;
@@ -34,6 +37,10 @@ export default function RootLayout() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+
+  const [currentUser, loadingCurrentUser, errorCurrentUser] =
+    useAuthState(auth);
+  const [signOut, loadingSignOut, errorSignOut] = useSignOut(auth);
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -56,6 +63,13 @@ export default function RootLayout() {
     setShowSignupModal((prev) => !prev);
   };
 
+  const handleLogOut = async () => {
+    const success = await signOut();
+    if (success) {
+      alert('You are sign out');
+    }
+  };
+
   const handleSearch = (query: string) => {
     if (query === '') return;
     setIsSearching(true);
@@ -67,7 +81,9 @@ export default function RootLayout() {
     setSearchResults({ query: query, results: newSearchResults });
   };
 
+  // forbid scrolling on desktop when login or signup modal is shown
   useEffect(() => {
+    if (isMobile) return;
     if (showLoginModal || showSignupModal) {
       document.body.style.overflow = 'hidden';
     }
@@ -174,52 +190,90 @@ export default function RootLayout() {
                   </div>
                 </div>
               </Link>
-              <div className="hidden md:flex md:gap-2">
-                <Button
-                  loading={false}
-                  basic
-                  outline
-                  onClick={handleToggleLoginModal}
-                >
-                  Log in
-                </Button>
-                <Button
-                  loading={false}
-                  basic
-                  primary
-                  onClick={handleToggleSignupModal}
-                  className="font-bold"
-                >
-                  Get started
-                  <RiArrowRightLine className="text-xl" />
-                </Button>
+              <div className="hidden md:flex md:items-center md:gap-2">
+                {currentUser ? (
+                  <>
+                    <Button
+                      loading={loadingSignOut}
+                      basic
+                      outline
+                      onClick={handleLogOut}
+                    >
+                      <RiLogoutBoxRLine />
+                      Log out
+                    </Button>
+                    <img
+                      src="https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668"
+                      alt="user-avatar"
+                      className="h-12 w-12 overflow-hidden rounded-full"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      loading={false}
+                      basic
+                      outline
+                      onClick={handleToggleLoginModal}
+                    >
+                      Log in
+                    </Button>
+                    <Button
+                      loading={false}
+                      basic
+                      primary
+                      onClick={handleToggleSignupModal}
+                      className="font-bold"
+                    >
+                      Get started
+                      <RiArrowRightLine className="text-xl" />
+                    </Button>
+                  </>
+                )}
               </div>
             </>
           )}
         </div>
       </nav>
       <div className="mt-[4.5rem]">
-        <Outlet
-          context={{
-            handleToggleLoginModal,
-            handleToggleSignupModal,
-            isSearching,
-            searchResults,
-            handleSearch,
-          }}
-        />
+        {/* on mobile, if showing signup or login modal, dont render outlet, if not on mobile, render outlet no matter what */}
+        {isMobile ? (
+          showLoginModal || showSignupModal ? null : (
+            <Outlet
+              context={{
+                handleToggleLoginModal,
+                handleToggleSignupModal,
+                isSearching,
+                searchResults,
+                handleSearch,
+              }}
+            />
+          )
+        ) : (
+          <Outlet
+            context={{
+              handleToggleLoginModal,
+              handleToggleSignupModal,
+              isSearching,
+              searchResults,
+              handleSearch,
+            }}
+          />
+        )}
       </div>
       <MobileSidebar
         toggleSidebar={handleToggleSidebar}
         showSidebar={showSidebar}
+        toggleLoginModal={handleToggleLoginModal}
+        toggleSignupModal={handleToggleSignupModal}
       />
       {(showLoginModal || showSignupModal) && (
-        <div className="absolute inset-0 left-0 top-0 z-20 bg-black opacity-50" />
+        <div className="fixed inset-0 left-0 top-0 z-20 bg-black opacity-50" />
       )}
 
       {showLoginModal && (
         <div
-          className="absolute inset-0 left-0 top-0 z-30 grid place-items-center"
+          className="absolute inset-0 left-0 top-0 z-30 grid place-items-center md:fixed"
           onClick={() => setShowLoginModal(false)}
         >
           <LoginModal
@@ -230,7 +284,7 @@ export default function RootLayout() {
       )}
       {showSignupModal && (
         <div
-          className="absolute inset-0 left-0 top-0 z-30 grid place-items-center"
+          className="absolute inset-0 left-0 top-0 z-30 grid place-items-center md:fixed"
           onClick={() => setShowSignupModal(false)}
         >
           <SignupModal
