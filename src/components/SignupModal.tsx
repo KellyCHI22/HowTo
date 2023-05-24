@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { auth, db } from '../firebase';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import clsx from 'clsx';
 import Input from './elements/Input';
 import {
@@ -9,6 +11,20 @@ import {
 } from 'react-icons/ri';
 import Button from './elements/Button';
 import { ReactComponent as IdeaIllustration } from '~/assets/illustration_idea.svg';
+import { addDoc, collection } from 'firebase/firestore';
+import { User } from '~/dummyData';
+
+const FIREBASE_ERRORS = {
+  'Firebase: Error (auth/email-already-in-use).':
+    'A user with that email already exists',
+  'Firebase: Error (auth/user-not-found).': 'Invalid email or password',
+  'Firebase: Error (auth/wrong-password).': 'Invalid email or password',
+  'Firebase: Error (auth/invalid-email).': 'Invalid email or password',
+  'Firebase: Password should be at least 6 characters (auth/weak-password).':
+    'Password should be at least 6 characters ',
+};
+const defaultImage =
+  'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
 
 type SignupModalProps = {
   toggleSignupModal: () => void;
@@ -23,6 +39,63 @@ export default function LoginModal({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [signupError, setSignupError] = useState('');
+
+  const [
+    createUserWithEmailAndPassword,
+    createdUserCred,
+    loadingCreateUser,
+    errorCreateUser,
+  ] = useCreateUserWithEmailAndPassword(auth);
+
+  const handleSignup = async () => {
+    setSignupError('');
+    if (name.trim().length === 0) {
+      return setSignupError('Name cannot be blank');
+    } else if (name.trim().length > 50) {
+      return setSignupError('Name cannot be more than 50 characters long');
+    } else if (email.trim().length === 0) {
+      return setSignupError('Email cannot be blank');
+    } else if (password.trim().length === 0) {
+      return setSignupError('Password cannot be blank');
+    } else if (confirmPassword !== password) {
+      return setSignupError('Please confirm your password again');
+    }
+
+    try {
+      await createUserWithEmailAndPassword(email, password);
+    } catch {
+      return console.log(errorCreateUser);
+    }
+  };
+
+  const createUserDocument = async (user: User) => {
+    await addDoc(collection(db, 'users'), JSON.parse(JSON.stringify(user)));
+  };
+
+  useEffect(() => {
+    if (createdUserCred) {
+      console.log('useEffect runs');
+      createUserDocument({
+        uid: createdUserCred.user.uid,
+        createdAt: createdUserCred.user.metadata.creationTime as string,
+        name: name,
+        email: createdUserCred.user.email as string,
+        bio: 'I am happy to join the HowTo community!',
+        avatar: defaultImage,
+        cover_image: defaultImage,
+        followers: [],
+        following: [],
+        likedPosts: [],
+        bookmarkedPosts: [],
+      });
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setSignupError('');
+      toggleSignupModal();
+    }
+  }, [createdUserCred]);
 
   return (
     <div
@@ -87,8 +160,24 @@ export default function LoginModal({
           />
         </div>
 
-        <p className="my-3 text-center text-red-500">{'Wrong email format'}</p>
-        <Button loading={false} full primary className="font-bold">
+        <p className="my-3 text-center text-red-500">
+          {/* if there's signupError show signupError, if there's firebase error show firebase error instead */}
+          {signupError
+            ? signupError
+            : errorCreateUser &&
+              `${
+                FIREBASE_ERRORS[
+                  errorCreateUser.message as keyof typeof FIREBASE_ERRORS
+                ]
+              }`}
+        </p>
+        <Button
+          loading={loadingCreateUser}
+          full
+          primary
+          className="font-bold"
+          onClick={handleSignup}
+        >
           Sign up
         </Button>
         <p className="mb-10 mt-3 text-center text-gray-400">
