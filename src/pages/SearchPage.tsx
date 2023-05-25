@@ -5,8 +5,12 @@ import { Link, useOutletContext } from 'react-router-dom';
 import Button from '~/components/elements/Button';
 import HowToItem from '~/components/HowtoItem';
 import { ContextType } from '~/components/layouts/RootLayout';
+import { auth } from '~/firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function SearchPage() {
+  const [currentUser, loadingCurrentUser, errorCurrentUser] =
+    useAuthState(auth);
   const { isSearching, searchResults, handleSearch } =
     useOutletContext<ContextType>();
 
@@ -67,16 +71,18 @@ export default function SearchPage() {
           </>
         )}
 
-        <Button
-          loading={false}
-          rounded
-          primary
-          className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
-        >
-          <Link to="/create">
-            <RiEdit2Line className="text-2xl " />
-          </Link>
-        </Button>
+        {currentUser && (
+          <Button
+            loading={false}
+            rounded
+            primary
+            className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
+          >
+            <Link to="/create">
+              <RiEdit2Line className="text-2xl " />
+            </Link>
+          </Button>
+        )}
       </div>
     </>
   );

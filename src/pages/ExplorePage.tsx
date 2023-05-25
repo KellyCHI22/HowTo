@@ -7,8 +7,12 @@ import SortOption from '~/components/SortOptions';
 import PaginatedPosts from '~/components/PaginatedPosts';
 
 import { posts } from '../dummyData';
+import { auth } from '~/firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function ExplorePage() {
+  const [currentUser, loadingCurrentUser, errorCurrentUser] =
+    useAuthState(auth);
   const [renderedPosts, setRenderedPosts] = useState(posts);
   const [sortOption, setSortOption] = useState('default');
   const handleSortOptionSelect = (option: string) => {
@@ -50,16 +54,18 @@ export default function ExplorePage() {
         <PaginatedPosts posts={renderedPosts} postsPerPage={4} />
       </div>
 
-      <Button
-        loading={false}
-        rounded
-        primary
-        className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
-      >
-        <Link to="/create">
-          <RiEdit2Line className="text-2xl" />
-        </Link>
-      </Button>
+      {currentUser && (
+        <Button
+          loading={false}
+          rounded
+          primary
+          className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
+        >
+          <Link to="/create">
+            <RiEdit2Line className="text-2xl" />
+          </Link>
+        </Button>
+      )}
     </div>
   );
 }

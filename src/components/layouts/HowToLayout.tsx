@@ -9,12 +9,15 @@ import {
   RiSettings5Fill,
   RiHeartLine,
   RiChat1Line,
+  RiLock2Fill,
 } from 'react-icons/ri';
 import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import { AppNavLink } from '../MobileSidebar';
 import { ContextType } from './RootLayout';
 
 import { Post, currentUser, posts } from '~/dummyData';
+import { auth } from '~/firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function HowToLayout() {
   const context = useOutletContext<ContextType>();
@@ -35,9 +38,26 @@ export default function HowToLayout() {
 }
 
 function AsideNavLinks() {
+  const [currentUser, loadingCurrentUser, errorCurrentUser] =
+    useAuthState(auth);
   return (
     <div className="w-64 rounded-xl bg-white p-3 shadow-basic">
-      <ul className="space-y-2 font-bold">
+      <ul className="relative space-y-2 font-bold">
+        {currentUser === null && (
+          <>
+            <div className="absolute inset-0 top-0 bg-white opacity-90 blur"></div>
+            <div className="pointer-events-none absolute inset-0 top-0 grid place-items-center">
+              <div className="text-center">
+                <RiLock2Fill className="w-full text-4xl text-teal-500" />
+                <p>
+                  <span className="text-teal-500">Log in</span> to get the full
+                  experience of HowTo
+                </p>
+              </div>
+            </div>
+          </>
+        )}
+
         <li>
           <AppNavLink
             to="/howtos"
@@ -56,7 +76,7 @@ function AsideNavLinks() {
         </li>
         <li>
           <AppNavLink
-            to={`/users/${currentUser.id}`}
+            to={`/users/${currentUser?.uid}`}
             label="Profile"
             defaultIcon={<RiAccountCircleLine />}
             activeIcon={<RiAccountCircleFill />}

@@ -26,8 +26,12 @@ import {
   Post,
 } from '../dummyData';
 import ReactTimeAgo from 'react-time-ago';
+import { auth } from '~/firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function HowToPage() {
+  const [currentUser, loadingCurrentUser, errorCurrentUser] =
+    useAuthState(auth);
   const { id } = useParams();
   const navigate = useNavigate();
   const [showOption, setShowOption] = useState(false);
@@ -47,10 +51,12 @@ export default function HowToPage() {
           >
             <RiArrowLeftLine className="text-2xl" />
           </button>
-
-          <button onClick={handleShowOption}>
-            <RiMoreLine className="text-2xl" />
-          </button>
+          {/* // todo need to add if currentUser === post author check  */}
+          {currentUser && (
+            <button onClick={handleShowOption}>
+              <RiMoreLine className="text-2xl" />
+            </button>
+          )}
           {showOption && (
             <div className="absolute right-6 top-0 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
               <Link to={`/howtos/${id}/edit`}>
@@ -138,22 +144,27 @@ export default function HowToPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button
-              loading={false}
-              primary={currentUser.likedPosts.includes(post?.id)}
-              outline={!currentUser.likedPosts.includes(post?.id)}
-              rounded
-            >
-              <RiHeartLine className="text-2xl" />
-            </Button>
-            <Button
-              loading={false}
-              primary={currentUser.bookmarkedPosts.includes(post?.id)}
-              outline={!currentUser.bookmarkedPosts.includes(post?.id)}
-              rounded
-            >
-              <RiBookmark2Line className="text-2xl" />
-            </Button>
+            {/* // todo need to be fixed  */}
+            {currentUser && (
+              <>
+                <Button
+                  loading={false}
+                  // primary={currentUser?.likedPosts.includes(post?.id)}
+                  // outline={!currentUser?.likedPosts.includes(post?.id)}
+                  rounded
+                >
+                  <RiHeartLine className="text-2xl" />
+                </Button>
+                <Button
+                  loading={false}
+                  // primary={currentUser.bookmarkedPosts.includes(post?.id)}
+                  // outline={!currentUser.bookmarkedPosts.includes(post?.id)}
+                  rounded
+                >
+                  <RiBookmark2Line className="text-2xl" />
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -165,7 +176,7 @@ export default function HowToPage() {
       </div>
 
       {/* comment input */}
-      <CommentInput />
+      {currentUser && <CommentInput />}
     </div>
   );
 }
@@ -175,6 +186,8 @@ type CommentItemProps = {
 };
 
 function CommentItem({ comment }: CommentItemProps) {
+  const [currentUser, loadingCurrentUser, errorCurrentUser] =
+    useAuthState(auth);
   const { id, createdAt, commentContent, userId } = comment;
   const user = users.find((user) => user.id === userId);
 
@@ -252,13 +265,14 @@ function CommentItem({ comment }: CommentItemProps) {
                   timeStyle="round"
                 />
               </span>
-
-              <button
-                className="absolute right-0 top-0 text-teal-500"
-                onClick={handleShowOption}
-              >
-                <RiMoreLine className="text-2xl" />
-              </button>
+              {currentUser && (
+                <button
+                  className="absolute right-0 top-0 text-teal-500"
+                  onClick={handleShowOption}
+                >
+                  <RiMoreLine className="text-2xl" />
+                </button>
+              )}
               {showOption && (
                 <div className="absolute right-6 top-0 rounded-lg bg-white p-1 text-left text-base shadow-2xl shadow-gray-400">
                   <button
