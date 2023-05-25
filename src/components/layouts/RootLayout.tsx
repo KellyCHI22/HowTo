@@ -66,7 +66,7 @@ export default function RootLayout() {
   const handleLogOut = async () => {
     const success = await signOut();
     if (success) {
-      alert('You are sign out');
+      alert('You are signed out');
     }
   };
 

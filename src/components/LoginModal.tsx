@@ -46,9 +46,14 @@ export default function LoginModal({
     }
 
     try {
-      await signInWithEmailAndPassword(email, password);
-    } catch {
-      return console.log(errorSignIn);
+      const success = await signInWithEmailAndPassword(email, password);
+      if (success) {
+        alert('You are logged in');
+      } else {
+        console.log(errorSignIn?.message);
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 

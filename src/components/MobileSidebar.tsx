@@ -39,7 +39,7 @@ export default function MobileSidebar({
   const handleLogOut = async () => {
     const success = await signOut();
     if (success) {
-      alert('You are sign out');
+      alert('You are signed out');
     }
   };
 
@@ -68,7 +68,7 @@ export default function MobileSidebar({
               alt="user-avatar"
               className="h-16 w-16 overflow-hidden rounded-full object-cover"
             />
-            <p>{currentUser ? currentUser?.email : 'Visitor'}</p>
+            <p>{currentUser ? currentUser?.email : 'Unknown capybara'}</p>
           </div>
           {currentUser ? (
             <>

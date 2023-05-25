@@ -63,9 +63,14 @@ export default function LoginModal({
     }
 
     try {
-      await createUserWithEmailAndPassword(email, password);
-    } catch {
-      return console.log(errorCreateUser);
+      const success = await createUserWithEmailAndPassword(email, password);
+      if (success) {
+        alert('Account created, you are logged in');
+      } else {
+        console.log(errorCreateUser?.message);
+      }
+    } catch (err) {
+      return console.log(err);
     }
   };
 
