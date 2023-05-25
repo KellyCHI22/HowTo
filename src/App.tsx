@@ -15,6 +15,7 @@ import CreatePage from '~/pages/CreatePage';
 import SearchPage from '~/pages/SearchPage';
 import SettingsPage from '~/pages/SettingsPage';
 import UserPage from '~/pages/UserPage';
+import ProtectedRoutes from './components/ProtectedRoutes';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,14 +26,18 @@ const router = createBrowserRouter(
           <Route index element={<ExplorePage />} />
           <Route path=":id">
             <Route index element={<HowToPage />} />
-            <Route path="edit" element={<EditHowToPage />} />
+            <Route element={<ProtectedRoutes />}>
+              <Route path="edit" element={<EditHowToPage />} />
+            </Route>
           </Route>
         </Route>
-        <Route path="create" element={<CreatePage />} />
-        <Route path="bookmarks" element={<BookmarksPage />} />
-        <Route path="search" element={<SearchPage />} />
         <Route path="users/:id" element={<UserPage />} />
-        <Route path="settings" element={<SettingsPage />} />
+        <Route path="search" element={<SearchPage />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route path="create" element={<CreatePage />} />
+          <Route path="bookmarks" element={<BookmarksPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Route>
       </Route>
     </Route>
   )
