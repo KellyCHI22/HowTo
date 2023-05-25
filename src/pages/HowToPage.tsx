@@ -130,7 +130,7 @@ export default function HowToPage() {
         </div>
         <div className="flex items-end justify-between">
           <div>
-            <div className="flex items-center justify-end gap-3 text-gray-400">
+            <div className="mt-5  flex items-center justify-end gap-3 text-gray-400">
               <div className="flex items-center gap-1">
                 <RiChat1Line className="md:text-2xl" />
                 <span>{postComments.length}</span>
