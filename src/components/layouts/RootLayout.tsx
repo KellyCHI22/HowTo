@@ -19,6 +19,7 @@ import { posts, Post } from '~/dummyData';
 import ScrollToTop from '~/utils/ScrollToTop';
 import { auth } from '~/firebase';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
+import { useFetchUsersQuery } from '~/store/apis/usersApi';
 
 type SearchResult = {
   query: string;
@@ -38,9 +39,8 @@ export default function RootLayout() {
   const navigate = useNavigate();
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
-  const [currentUser, loadingCurrentUser, errorCurrentUser] =
-    useAuthState(auth);
-  const [signOut, loadingSignOut, errorSignOut] = useSignOut(auth);
+  const [currentUser] = useAuthState(auth);
+  const [signOut, loadingSignOut] = useSignOut(auth);
 
   const [showSidebar, setShowSidebar] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -203,11 +203,7 @@ export default function RootLayout() {
                       <RiLogoutBoxRLine />
                       Log out
                     </Button>
-                    <img
-                      src="https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668"
-                      alt="user-avatar"
-                      className="h-12 w-12 overflow-hidden rounded-full"
-                    />
+                    <UserAvatar />
                   </>
                 ) : (
                   <>
@@ -295,5 +291,21 @@ export default function RootLayout() {
         </div>
       )}
     </>
+  );
+}
+
+function UserAvatar() {
+  const [currentUser] = useAuthState(auth);
+  const { data, error, isFetching } = useFetchUsersQuery();
+  const defaultImage =
+    'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
+  const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
+
+  return (
+    <img
+      src={isFetching || error ? defaultImage : currentUserData?.avatar}
+      alt="user-avatar"
+      className="h-12 w-12 overflow-hidden rounded-full"
+    />
   );
 }

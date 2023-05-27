@@ -19,6 +19,7 @@ import Button from './elements/Button';
 import { currentUser } from '~/dummyData';
 import { auth } from '~/firebase';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
+import { useFetchUsersQuery } from '~/store/apis/usersApi';
 
 type MobileSidebarProps = {
   showSidebar: boolean;
@@ -63,12 +64,7 @@ export default function MobileSidebar({
 
         <div className=" overflow-y-auto py-4 pt-0">
           <div className="flex flex-col items-center justify-center gap-2 py-5">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668"
-              alt="user-avatar"
-              className="h-16 w-16 overflow-hidden rounded-full object-cover"
-            />
-            <p>{currentUser ? currentUser?.email : 'Unknown capybara'}</p>
+            <UserAvatarAndName />
           </div>
           {currentUser ? (
             <>
@@ -208,5 +204,32 @@ export function AppNavLink({
       </span>
       <span className="ml-3 flex-1 whitespace-nowrap">{label}</span>
     </NavLink>
+  );
+}
+
+function UserAvatarAndName() {
+  const [currentUser] = useAuthState(auth);
+  const { data, error, isFetching } = useFetchUsersQuery();
+  const defaultImage =
+    'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
+  const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
+
+  return (
+    <>
+      <img
+        src={
+          !currentUser || isFetching || error
+            ? defaultImage
+            : currentUserData?.avatar
+        }
+        alt="user-avatar"
+        className="h-16 w-16 overflow-hidden rounded-full object-cover"
+      />
+      <p>
+        {!currentUser || isFetching || error
+          ? 'Unknown Capybara'
+          : currentUserData?.name}
+      </p>
+    </>
   );
 }

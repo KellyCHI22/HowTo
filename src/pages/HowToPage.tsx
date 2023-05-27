@@ -28,6 +28,7 @@ import {
 import ReactTimeAgo from 'react-time-ago';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useFetchUsersQuery } from '~/store/apis/usersApi';
 
 export default function HowToPage() {
   const [currentUser, loadingCurrentUser, errorCurrentUser] =
@@ -298,6 +299,12 @@ function CommentItem({ comment }: CommentItemProps) {
 }
 
 function CommentInput() {
+  const [currentUser] = useAuthState(auth);
+  const { data, error, isFetching } = useFetchUsersQuery();
+  const defaultImage =
+    'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
+  const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
+
   const [commentInput, setCommentInput] = useState('');
   const commentRef = useRef<HTMLTextAreaElement>(null);
   useAutosizeTextArea(commentRef.current, commentInput, 3);
@@ -306,7 +313,7 @@ function CommentInput() {
     <div className="mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
       <Link to="#" className="flex-shrink-0">
         <img
-          src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
+          src={isFetching || error ? defaultImage : currentUserData?.avatar}
           alt="author-avatar"
           className="aspect-square h-8 w-8 rounded-full object-cover"
         />
