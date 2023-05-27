@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
 import ReactPaginate from 'react-paginate';
-import { Post } from '~/dummyData';
 import HowToItem from './HowtoItem';
 import { useMediaQuery } from 'react-responsive';
+import { Post } from '~/store/apis/postsApi';
 
 export type PaginatedPostsProps = {
   posts: Post[];

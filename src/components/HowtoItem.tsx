@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import ReactTimeAgo from 'react-time-ago';
 
-import { users, comments, Post } from '../dummyData';
+import { comments } from '../dummyData';
 import { useMediaQuery } from 'react-responsive';
+import { Post } from '~/store/apis/postsApi';
+import { useFetchUsersQuery } from '~/store/apis/usersApi';
 
 type Props = {
   post: Post;
@@ -22,7 +24,8 @@ export default function HowToItem({ post }: Props) {
     image,
     likesCount,
   } = post;
-  const user = users.find((user) => user.id === authorId);
+  const { data, error, isFetching } = useFetchUsersQuery();
+  const userData = data?.find((user) => user.uid === authorId);
   const commentsCount = comments.filter(
     (comment) => comment.postId === id
   ).length;
@@ -44,11 +47,11 @@ export default function HowToItem({ post }: Props) {
         <div className="flex items-center justify-between text-xs text-gray-400 md:text-base">
           <div className="flex items-center gap-2">
             <img
-              src={user?.avatar}
+              src={userData?.avatar}
               alt="author-avatar"
               className="aspect-square h-5 w-5 rounded-full object-cover md:h-8 md:w-8"
             />
-            <span className="truncate">{user?.name}</span>
+            <span className="truncate">{userData?.name}</span>
           </div>
           <span className="flex-shrink-0">
             {isMobile ? (

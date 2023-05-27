@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
 
@@ -6,31 +6,45 @@ import Button from '~/components/elements/Button';
 import SortOption from '~/components/SortOptions';
 import PaginatedPosts from '~/components/PaginatedPosts';
 
-import { posts } from '../dummyData';
+// import { posts } from '../dummyData';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useFetchPostsQuery } from '~/store';
+import { Post } from '~/store/apis/postsApi';
+import Spinner from '~/components/elements/Spinner';
 
 export default function ExplorePage() {
-  const [currentUser, loadingCurrentUser, errorCurrentUser] =
-    useAuthState(auth);
-  const [renderedPosts, setRenderedPosts] = useState(posts);
-  const [sortOption, setSortOption] = useState('default');
+  const [currentUser] = useAuthState(auth);
+  const { data, error, isFetching } = useFetchPostsQuery();
+  const [renderedPosts, setRenderedPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      setRenderedPosts(data);
+    }
+  }, [data]);
+
   const handleSortOptionSelect = (option: string) => {
-    setSortOption(option);
-    if (option === 'latest') {
-      const sortedPosts = [...posts].sort((a, b) => b.createdAt - a.createdAt);
-      setRenderedPosts(sortedPosts);
-    } else if (option === 'oldest') {
-      const sortedPosts = [...posts].sort((a, b) => a.createdAt - b.createdAt);
-      setRenderedPosts(sortedPosts);
-    } else if (option === 'popularity') {
-      const sortedPosts = [...posts].sort(
-        (a, b) =>
-          b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
-      );
-      setRenderedPosts(sortedPosts);
-    } else {
-      setRenderedPosts(posts);
+    if (data !== undefined) {
+      if (option === 'latest') {
+        const sortedPosts = [...data].sort(
+          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+        );
+        setRenderedPosts(sortedPosts);
+      } else if (option === 'oldest') {
+        const sortedPosts = [...data].sort(
+          (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+        );
+        setRenderedPosts(sortedPosts);
+      } else if (option === 'popularity') {
+        const sortedPosts = [...data].sort(
+          (a, b) =>
+            b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
+        );
+        setRenderedPosts(sortedPosts);
+      } else {
+        setRenderedPosts(renderedPosts);
+      }
     }
   };
   return (
@@ -51,7 +65,15 @@ export default function ExplorePage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <PaginatedPosts posts={renderedPosts} postsPerPage={4} />
+        {isFetching && (
+          <div className="grid h-72 w-full place-items-center">
+            <Spinner />
+          </div>
+        )}
+        {(error as ReactNode) && 'Error fetching posts'}
+        {renderedPosts !== undefined && (
+          <PaginatedPosts posts={renderedPosts} postsPerPage={4} />
+        )}
       </div>
 
       {currentUser && (
