@@ -1,40 +1,67 @@
-import { RiArrowDownSFill, RiEdit2Line } from 'react-icons/ri';
+import { ReactNode, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import HowToItem from '~/components/HowtoItem';
-import Button from '~/components/elements/Button';
+import { RiEdit2Line } from 'react-icons/ri';
 
-import { posts, currentUser } from '../dummyData';
-import { useState } from 'react';
+import { auth } from '~/firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+import Button from '~/components/elements/Button';
 import SortOption from '~/components/SortOptions';
 import PaginatedPosts from '~/components/PaginatedPosts';
+import Spinner from '~/components/elements/Spinner';
+
+import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
+import { Post } from '~/store/apis/postsApi';
 
 export default function BookmarksPage() {
-  const bookmarkedPosts = posts.filter((post) => {
-    return currentUser.bookmarkedPosts.includes(post.id);
-  });
-  const [renderedBookmarkedPosts, setRenderedBookmarkedPosts] =
-    useState(bookmarkedPosts);
-  const [sortOption, setSortOption] = useState('default');
+  // ! need to refactor this part in every page, too messy
+  const {
+    data: postsData,
+    error: errorPostsData,
+    isFetching: isFetchingPostsData,
+  } = useFetchPostsQuery();
+  const {
+    data: usersData,
+    error: errorUsersData,
+    isFetching: isFetchingUsersData,
+  } = useFetchUsersQuery();
+  const isLoading = isFetchingPostsData || isFetchingUsersData;
+  const isError = errorPostsData || errorUsersData;
+  const [currentUser] = useAuthState(auth);
+  // ! refactor above
+  const [bookmarkedPosts, setBookmarkPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    if (postsData && usersData) {
+      const user = usersData?.find((user) => user.uid === currentUser?.uid);
+      const bookmarkedPosts = postsData?.filter((post) => {
+        return user?.bookmarkedPosts.includes(post.id);
+      });
+      setBookmarkPosts(bookmarkedPosts);
+    }
+  }, [postsData, usersData]);
+
   const handleSortOptionSelect = (option: string) => {
-    setSortOption(option);
-    if (option === 'latest') {
-      const sortedPosts = [...bookmarkedPosts].sort(
-        (a, b) => b.createdAt - a.createdAt
-      );
-      setRenderedBookmarkedPosts(sortedPosts);
-    } else if (option === 'oldest') {
-      const sortedPosts = [...bookmarkedPosts].sort(
-        (a, b) => a.createdAt - b.createdAt
-      );
-      setRenderedBookmarkedPosts(sortedPosts);
-    } else if (option === 'popularity') {
-      const sortedPosts = [...bookmarkedPosts].sort(
-        (a, b) =>
-          b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
-      );
-      setRenderedBookmarkedPosts(sortedPosts);
-    } else {
-      setRenderedBookmarkedPosts(bookmarkedPosts);
+    if (bookmarkedPosts !== undefined) {
+      if (option === 'latest') {
+        const sortedPosts = [...bookmarkedPosts].sort(
+          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+        );
+        setBookmarkPosts(sortedPosts);
+      } else if (option === 'oldest') {
+        const sortedPosts = [...bookmarkedPosts].sort(
+          (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+        );
+        setBookmarkPosts(sortedPosts);
+      } else if (option === 'popularity') {
+        const sortedPosts = [...bookmarkedPosts].sort(
+          (a, b) =>
+            b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
+        );
+        setBookmarkPosts(sortedPosts);
+      } else {
+        setBookmarkPosts(bookmarkedPosts);
+      }
     }
   };
 
@@ -56,7 +83,15 @@ export default function BookmarksPage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <PaginatedPosts posts={renderedBookmarkedPosts} postsPerPage={4} />
+        {isLoading && (
+          <div className="grid h-96 w-full place-items-center rounded-lg bg-white">
+            <Spinner />
+          </div>
+        )}
+        {(isError as ReactNode) && 'error loading bookmarked posts'}
+        {bookmarkedPosts !== undefined && (
+          <PaginatedPosts posts={bookmarkedPosts} postsPerPage={4} />
+        )}
       </div>
 
       <Button
