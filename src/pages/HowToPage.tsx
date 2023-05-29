@@ -17,168 +17,184 @@ import Tag from '~/components/elements/Tag';
 import Textarea from '~/components/elements/Textarea';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 
-import {
-  posts,
-  users,
-  comments,
-  currentUser,
-  Comment,
-  Post,
-} from '../dummyData';
+import { comments, Comment } from '../dummyData';
 import ReactTimeAgo from 'react-time-ago';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useFetchUsersQuery } from '~/store/apis/usersApi';
+import { useFetchPostsQuery } from '~/store';
+import Spinner from '~/components/elements/Spinner';
 
 export default function HowToPage() {
-  const [currentUser, loadingCurrentUser, errorCurrentUser] =
-    useAuthState(auth);
+  const [currentUser] = useAuthState(auth);
   const { id } = useParams();
   const navigate = useNavigate();
   const [showOption, setShowOption] = useState(false);
   const handleShowOption = () => setShowOption((prev) => !prev);
-  const post = posts.find((post) => post.id === id) as Post;
-  const user = users.find((user) => user.id === post?.authorId);
-  const postComments = comments.filter((comment) => comment.postId === id);
+
+  const {
+    data: postsData,
+    error: errorPostsData,
+    isFetching: isFetchingPostsData,
+  } = useFetchPostsQuery();
+  const {
+    data: usersData,
+    error: errorUsersData,
+    isFetching: isFetchingUsersData,
+  } = useFetchUsersQuery();
+
+  const post = postsData?.find((post) => post.id === id);
+  const user = usersData?.find((user) => user.id === post?.authorId);
+  // const postComments = comments.filter((comment) => comment.postId === id);
+
+  const isLoading = isFetchingPostsData || isFetchingUsersData;
 
   return (
-    <div className="my-5 md:my-12">
-      <div className=" mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic lg:space-y-0 ">
-        <div className="relative flex justify-between text-teal-500">
-          <button
-            onClick={() => {
-              navigate(-1);
-            }}
-          >
-            <RiArrowLeftLine className="text-2xl" />
-          </button>
-          {/* // todo need to add if currentUser === post author check  */}
-          {currentUser && (
-            <button onClick={handleShowOption}>
-              <RiMoreLine className="text-2xl" />
-            </button>
-          )}
-          {showOption && (
-            <div className="absolute right-6 top-0 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
-              <Link to={`/howtos/${id}/edit`}>
-                <button className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50">
-                  <RiEdit2Line className="text-xl" />
-                  Edit
-                </button>
-              </Link>
-              <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
-                <RiDeleteBin6Line className="text-xl" />
-                Delete
+    <>
+      {isLoading ? (
+        <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="my-5 md:my-12">
+          <div className=" mb-5 space-y-3 rounded-xl bg-white p-5 shadow-basic lg:space-y-0 ">
+            <div className="relative flex justify-between text-teal-500">
+              <button
+                onClick={() => {
+                  navigate(-1);
+                }}
+              >
+                <RiArrowLeftLine className="text-2xl" />
               </button>
+              {/* // todo need to add if currentUser === post author check  */}
+              {currentUser && (
+                <button onClick={handleShowOption}>
+                  <RiMoreLine className="text-2xl" />
+                </button>
+              )}
+              {showOption && (
+                <div className="absolute right-6 top-0 rounded-lg bg-white p-1 text-left shadow-2xl shadow-gray-400">
+                  <Link to={`/howtos/${id}/edit`}>
+                    <button className="flex w-full items-center gap-2 rounded-lg p-2 hover:bg-gray-50">
+                      <RiEdit2Line className="text-xl" />
+                      Edit
+                    </button>
+                  </Link>
+                  <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
+                    <RiDeleteBin6Line className="text-xl" />
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        <div className="flex">
-          <div className="space-y-3">
-            <img
-              src={post?.image}
-              alt=""
-              className="aspect-video w-full rounded-xl object-cover lg:hidden"
-            />
-            <div className="flex items-center justify-between text-sm md:justify-start md:gap-2 md:text-base">
-              <div className="flex items-center gap-2">
-                <Link to={`/users/${user?.id}`}>
-                  <img
-                    src={user?.avatar}
-                    alt="author-avatar"
-                    className="aspect-square h-8 w-8 rounded-full object-cover"
-                  />
-                </Link>
-                <span className="font-bold">{user?.name}</span>
-              </div>
-              <span className="text-gray-400">
-                <ReactTimeAgo
-                  date={post?.createdAt as unknown as Date}
-                  locale="en-US"
-                  timeStyle="round"
+            <div className="flex">
+              <div className="space-y-3">
+                <img
+                  src={post?.image}
+                  alt=""
+                  className="aspect-video w-full rounded-xl object-cover lg:hidden"
                 />
-              </span>
-            </div>
-            <h2 className="text-2xl font-extrabold text-teal-500 md:text-4xl">
-              {post?.title}
-            </h2>
-            <div className="flex flex-wrap items-center gap-2 text-sm leading-3 md:text-base md:leading-4">
-              {post?.tags.map((tag, index) => (
-                <Tag label={tag} key={index} />
-              ))}
-            </div>
-            <p className="text-sm italic text-gray-600 md:text-base">
-              {post?.introduction}
-            </p>
-          </div>
-          <img
-            src={post?.image}
-            alt="post-cover"
-            className="ml-5 mt-3 hidden aspect-square w-[250px] flex-shrink-0 rounded-xl object-cover lg:block"
-          />
-        </div>
-        <div className="space-y-3 pt-3 text-sm md:text-base">
-          {post?.steps.map((step, index) => {
-            return (
-              <div key={step.id} className="flex items-center gap-2">
-                <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
-                  {index + 1}
-                </span>
-                <p>{step.description}</p>
+                <div className="flex items-center justify-between text-sm md:justify-start md:gap-2 md:text-base">
+                  <div className="flex items-center gap-2">
+                    <Link to={`/users/${user?.id}`}>
+                      <img
+                        src={user?.avatar}
+                        alt="author-avatar"
+                        className="aspect-square h-8 w-8 rounded-full object-cover"
+                      />
+                    </Link>
+                    <span className="font-bold">{user?.name}</span>
+                  </div>
+                  <span className="text-gray-400">
+                    <ReactTimeAgo
+                      date={post?.createdAt as unknown as Date}
+                      locale="en-US"
+                      timeStyle="round"
+                    />
+                  </span>
+                </div>
+                <h2 className="text-2xl font-extrabold text-teal-500 md:text-4xl">
+                  {post?.title}
+                </h2>
+                <div className="flex flex-wrap items-center gap-2 text-sm leading-3 md:text-base md:leading-4">
+                  {post?.tags.map((tag, index) => (
+                    <Tag label={tag} key={index} />
+                  ))}
+                </div>
+                <p className="text-sm italic text-gray-600 md:text-base">
+                  {post?.introduction}
+                </p>
               </div>
-            );
-          })}
-        </div>
-        <div className="flex items-end justify-between">
-          <div>
-            <div className="mt-5  flex items-center justify-end gap-3 text-gray-400">
-              <div className="flex items-center gap-1">
-                <RiChat1Line className="md:text-2xl" />
-                <span>{postComments.length}</span>
-                <span className="hidden lg:block">comments</span>
+              <img
+                src={post?.image}
+                alt="post-cover"
+                className="ml-5 mt-3 hidden aspect-square w-[250px] flex-shrink-0 rounded-xl object-cover lg:block"
+              />
+            </div>
+            <div className="space-y-3 pt-3 text-sm md:text-base">
+              {post?.steps.map((step, index) => {
+                return (
+                  <div key={step.id} className="flex items-center gap-2">
+                    <span className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-full border border-teal-500 text-teal-500">
+                      {index + 1}
+                    </span>
+                    <p>{step.description}</p>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex items-end justify-between">
+              <div>
+                <div className="mt-5  flex items-center justify-end gap-3 text-gray-400">
+                  <div className="flex items-center gap-1">
+                    <RiChat1Line className="md:text-2xl" />
+                    <span>{post?.commentsCount}</span>
+                    <span className="hidden lg:block">comments</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <RiHeartLine className="md:text-2xl" />
+                    <span>{post?.likesCount}</span>
+                    <span className="hidden lg:block">likes</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <RiHeartLine className="md:text-2xl" />
-                <span>{post?.likesCount}</span>
-                <span className="hidden lg:block">likes</span>
+              <div className="flex items-center gap-2">
+                {/* // todo need to be fixed  */}
+                {currentUser && (
+                  <>
+                    <Button
+                      loading={false}
+                      // primary={currentUser?.likedPosts.includes(post?.id)}
+                      // outline={!currentUser?.likedPosts.includes(post?.id)}
+                      rounded
+                    >
+                      <RiHeartLine className="text-2xl" />
+                    </Button>
+                    <Button
+                      loading={false}
+                      // primary={currentUser.bookmarkedPosts.includes(post?.id)}
+                      // outline={!currentUser.bookmarkedPosts.includes(post?.id)}
+                      rounded
+                    >
+                      <RiBookmark2Line className="text-2xl" />
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {/* // todo need to be fixed  */}
-            {currentUser && (
-              <>
-                <Button
-                  loading={false}
-                  // primary={currentUser?.likedPosts.includes(post?.id)}
-                  // outline={!currentUser?.likedPosts.includes(post?.id)}
-                  rounded
-                >
-                  <RiHeartLine className="text-2xl" />
-                </Button>
-                <Button
-                  loading={false}
-                  // primary={currentUser.bookmarkedPosts.includes(post?.id)}
-                  // outline={!currentUser.bookmarkedPosts.includes(post?.id)}
-                  rounded
-                >
-                  <RiBookmark2Line className="text-2xl" />
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-      {/* comments */}
-      <div className="space-y-3">
+          {/* comments */}
+          {/* <div className="space-y-3">
         {postComments.map((comment) => (
           <CommentItem key={comment.id} comment={comment} />
         ))}
-      </div>
+      </div> */}
 
-      {/* comment input */}
-      {currentUser && <CommentInput />}
-    </div>
+          {/* comment input */}
+          {currentUser && <CommentInput />}
+        </div>
+      )}
+    </>
   );
 }
 
