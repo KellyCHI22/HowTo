@@ -14,55 +14,86 @@ import {
 import Textarea from '~/components/elements/Textarea';
 import { ChangeEvent, useRef, useState } from 'react';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
-import { User, posts, users } from '~/dummyData';
+import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
+import { User } from '~/store/apis/usersApi';
+import Spinner from '~/components/elements/Spinner';
 
 export default function UserPage() {
   const { id } = useParams();
-  const user = users.find((user) => user.id === id) as User;
-  const userPosts = posts.filter((post) => post.authorId === id);
+  const {
+    data: postsData,
+    error: errorPostsData,
+    isFetching: isFetchingPostsData,
+  } = useFetchPostsQuery();
+  const {
+    data: usersData,
+    error: errorUsersData,
+    isFetching: isFetchingUsersData,
+  } = useFetchUsersQuery();
+
+  const user = usersData?.find((user) => user.uid === id);
+  const userPosts = postsData?.filter((post) => post.authorId === id);
 
   const [isEditMode, setIsEditMode] = useState(false);
   const handleEditMode = () => setIsEditMode((prev) => !prev);
 
+  const isLoading = isFetchingPostsData || isFetchingUsersData;
+
   return (
-    <div className="my-5 md:my-12">
-      {isEditMode ? (
-        <EditProfile handleEditMode={handleEditMode} user={user} />
+    <>
+      {isLoading ? (
+        <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
+          <Spinner />
+        </div>
       ) : (
-        <UserProfile handleEditMode={handleEditMode} user={user} />
+        <div className="my-5 md:my-12">
+          {isEditMode ? (
+            <EditProfile handleEditMode={handleEditMode} user={user} />
+          ) : (
+            <UserProfile handleEditMode={handleEditMode} user={user} />
+          )}
+          <div className="mb-5">
+            <h3 className="text-center font-slabo text-2xl text-teal-500 ">
+              {user?.name}'s How To...
+            </h3>
+          </div>
+          <div className="space-y-3">
+            {userPosts?.map((post) => (
+              <HowToItem key={post.id} post={post} />
+            ))}
+          </div>
+        </div>
       )}
-      <div className="mb-5">
-        <h3 className="text-center font-slabo text-2xl text-teal-500 ">
-          {user?.name}'s How To...
-        </h3>
-      </div>
-      <div className="space-y-3">
-        {userPosts.map((post) => (
-          <HowToItem key={post.id} post={post} />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 
 type Props = {
   handleEditMode: React.MouseEventHandler<HTMLButtonElement>;
-  user: User;
+  user: User | undefined;
 };
 
 function UserProfile({ handleEditMode, user }: Props) {
+  let joinedTime;
+  if (user) {
+    joinedTime = new Date(user?.createdAt).toLocaleString('en-us', {
+      month: 'long',
+      year: 'numeric',
+    });
+  }
+
   return (
     <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic xl:min-h-[325px]">
       <div className="flex-1">
         <img
-          src={user.cover_image}
+          src={user?.cover_image}
           alt="user-cover-image"
           className="aspect-video w-full object-cover xl:hidden"
         />
         <div className="relative h-full p-5 xl:flex xl:flex-col xl:justify-between">
           <div>
             <img
-              src={user.avatar}
+              src={user?.avatar}
               alt=""
               className="aspect-square h-20 w-20 rounded-full object-cover"
             />
@@ -76,9 +107,9 @@ function UserProfile({ handleEditMode, user }: Props) {
               <RiEdit2Line className="text-2xl" />
               Edit
             </Button>
-            <p className="mt-2 font-bold xl:text-lg">{user.name}</p>
-            <p className="text-sm text-gray-400">Member since January 2023</p>
-            <p className="mb-5 mt-3 xl:mb-3">{user.bio}</p>
+            <p className="mt-2 font-bold xl:text-lg">{user?.name}</p>
+            <p className="text-sm text-gray-400">Member since {joinedTime}</p>
+            <p className="mb-5 mt-3 xl:mb-3">{user?.bio}</p>
           </div>
 
           <div className="flex w-full justify-between text-gray-400 xl:grid xl:grid-cols-4 ">
@@ -106,7 +137,7 @@ function UserProfile({ handleEditMode, user }: Props) {
         </div>
       </div>
       <div className="hidden w-[350px] flex-shrink-0 xl:block">
-        <img src={user.cover_image} alt="" className="h-full object-cover " />
+        <img src={user?.cover_image} alt="" className="h-full object-cover " />
       </div>
     </div>
   );
@@ -114,18 +145,18 @@ function UserProfile({ handleEditMode, user }: Props) {
 
 function EditProfile({ handleEditMode, user }: Props) {
   const [errorMessage, setErrorMessage] = useState('');
-  const [bio, setBio] = useState(user.bio);
+  const [bio, setBio] = useState(user?.bio);
   const bioRef = useRef<HTMLTextAreaElement>(null);
-  useAutosizeTextArea(bioRef.current, bio, 5);
+  useAutosizeTextArea(bioRef.current, bio as string, 5);
 
   // avatar & cover
   // ! need to compress, upload to db, get the url and then save to user data
   const defaultImage =
     'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
   const [avatar, setAvatar] = useState<null | File>(null);
-  const [avatarPreview, setAvatarPreview] = useState(user.avatar);
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar);
   const [cover, setCover] = useState<null | File>(null);
-  const [coverPreview, setCoverPreview] = useState(user.cover_image);
+  const [coverPreview, setCoverPreview] = useState(user?.cover_image);
   const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedImage = e.target.files[0];
@@ -136,7 +167,7 @@ function EditProfile({ handleEditMode, user }: Props) {
   };
   const handleRemoveAvatar = () => {
     setAvatar(null);
-    setAvatarPreview(user.avatar);
+    setAvatarPreview(user?.avatar);
   };
   const handleCoverChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -148,15 +179,15 @@ function EditProfile({ handleEditMode, user }: Props) {
   };
   const handleRemoveCover = () => {
     setCover(null);
-    setCoverPreview(user.cover_image);
+    setCoverPreview(user?.cover_image);
   };
 
   // submit
   const handleSubmit = () => {
     console.log({ bio, avatar, cover });
-    if (bio.trim().length === 0) {
+    if (bio?.trim().length === 0) {
       setErrorMessage('Bio should not be blank');
-    } else if (bio.length > 200) {
+    } else if (bio && bio?.length > 200) {
       setErrorMessage('Bio cannot be more than 200 characters');
     } else {
       setErrorMessage('');
@@ -260,7 +291,7 @@ function EditProfile({ handleEditMode, user }: Props) {
             id="bio"
             label="Bio"
             ref={bioRef}
-            value={bio}
+            value={bio as string}
             limit={200}
             rows={5}
             placeholder="Say something about yourself..."
