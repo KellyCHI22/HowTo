@@ -15,9 +15,11 @@ import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import { AppNavLink } from '../MobileSidebar';
 import { ContextType } from './RootLayout';
 
-import { Post, currentUser, posts } from '~/dummyData';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useFetchPostsQuery } from '~/store';
+import Spinner from '../elements/Spinner';
+import { Post } from '~/store/apis/postsApi';
 
 export default function HowToLayout() {
   const context = useOutletContext<ContextType>();
@@ -38,8 +40,7 @@ export default function HowToLayout() {
 }
 
 function AsideNavLinks() {
-  const [currentUser, loadingCurrentUser, errorCurrentUser] =
-    useAuthState(auth);
+  const [currentUser] = useAuthState(auth);
   return (
     <div className="w-64 rounded-xl bg-white p-3 shadow-basic">
       <ul className="relative space-y-2 font-bold">
@@ -96,19 +97,34 @@ function AsideNavLinks() {
 }
 
 function AsideLatestHowTo() {
-  const latestHowTos = posts
-    .sort((a, b) => b.createdAt - a.createdAt)
-    .slice(0, 3);
+  const {
+    data: postsData,
+    error: errorPostsData,
+    isFetching: isFetchingPostsData,
+  } = useFetchPostsQuery();
+
+  let latestHowTos;
+  if (postsData) {
+    latestHowTos = [...postsData]
+      ?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(0, 3);
+  }
   return (
     <div className="w-64 rounded-xl bg-white shadow-basic">
       <h3 className="border-b border-b-gray-200 px-5 py-3 text-lg font-bold text-teal-500">
         Latest How To
       </h3>
-      <div className="py-3">
-        {latestHowTos.map((howto) => (
-          <LatestHowToItem howto={howto} key={howto.id} />
-        ))}
-      </div>
+      {isFetchingPostsData ? (
+        <div className="grid h-72 place-items-center">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="py-3">
+          {latestHowTos?.map((howto) => (
+            <LatestHowToItem howto={howto} key={howto.id} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
