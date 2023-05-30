@@ -11,7 +11,7 @@ export default function SortOption({ onSortOptionSelect }: SortOptionProps) {
         id="sort-options"
         className="cursor-pointer appearance-none rounded-full border border-teal-500 bg-white text-teal-500 placeholder-teal-500 focus:border-teal-500 focus:border-transparent focus:ring-2 focus:ring-teal-400"
         onChange={(e) => onSortOptionSelect(e.target.value)}
-        defaultValue="none"
+        defaultValue="latest"
       >
         <option value="none">Sort By</option>
         <option value="latest">Latest</option>

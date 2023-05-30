@@ -19,7 +19,10 @@ export default function ExplorePage() {
 
   useEffect(() => {
     if (data) {
-      setRenderedPosts(data);
+      const sortedPosts = [...data].sort(
+        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+      );
+      setRenderedPosts(sortedPosts);
     }
   }, [data]);
 
