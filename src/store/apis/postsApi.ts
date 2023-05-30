@@ -1,6 +1,12 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import { User } from 'firebase/auth';
-import { FieldValue, Timestamp, collection, getDocs } from 'firebase/firestore';
+import {
+  FieldValue,
+  Timestamp,
+  addDoc,
+  collection,
+  getDocs,
+} from 'firebase/firestore';
 import { db } from '~/firebase';
 
 export type Post = {
@@ -29,6 +35,7 @@ const postsApi = createApi({
           const tags = result?.map((post: Post) => {
             return { type: 'Post', id: post.id };
           });
+          tags?.push({ type: 'Posts', id: 'LIST' });
           return tags as any;
         },
         queryFn: async () => {
@@ -48,9 +55,23 @@ const postsApi = createApi({
           }
         },
       }),
+      addPost: builder.mutation({
+        invalidatesTags: () => {
+          return [{ type: 'Posts', id: 'LIST' }] as any;
+        },
+        queryFn: async (newPost) => {
+          try {
+            const postsColRef = collection(db, 'posts');
+            const docRef = await addDoc(postsColRef, newPost);
+            return { data: { ...newPost, id: docRef.id } };
+          } catch (error) {
+            return { error: error };
+          }
+        },
+      }),
     };
   },
 });
 
-export const { useFetchPostsQuery } = postsApi;
+export const { useFetchPostsQuery, useAddPostMutation } = postsApi;
 export { postsApi };

@@ -26,5 +26,5 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export { useFetchUsersQuery } from './apis/usersApi';
-export { useFetchPostsQuery } from './apis/postsApi';
+export { useFetchPostsQuery, useAddPostMutation } from './apis/postsApi';
 export { useFetchCommentsQuery } from './apis/commentsApi';

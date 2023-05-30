@@ -14,9 +14,15 @@ import {
 import { useNavigate } from 'react-router-dom';
 import StepList, { Step } from '~/components/StepList';
 import Button from '~/components/elements/Button';
+import { useAddPostMutation } from '~/store';
+import { serverTimestamp } from 'firebase/firestore';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, storage } from '~/firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 export default function CreatePage() {
   const navigate = useNavigate();
+  const [currentUser] = useAuthState(auth);
   const [errorMessage, setErrorMessage] = useState('');
 
   // title and intro
@@ -26,7 +32,6 @@ export default function CreatePage() {
   useAutosizeTextArea(introRef.current, intro, 5);
 
   // image
-  // ! need to be saved as a url to the database, not file
   const defaultImage =
     'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
   const [image, setImage] = useState<null | File>(null);
@@ -72,24 +77,67 @@ export default function CreatePage() {
   const handleStepsUpdate = (steps: Step[]) => setSteps(steps);
 
   // submit
-  const handleSubmit = () => {
-    console.log({ title, intro, tags, steps, image });
+  const [addPost, results] = useAddPostMutation();
+  const handleSubmit = async () => {
     if (title.trim().length === 0) {
-      setErrorMessage('Title should not be blank');
+      return setErrorMessage('Title should not be blank');
     } else if (title.length > 50) {
-      setErrorMessage('Title cannot be more than 50 characters');
+      return setErrorMessage('Title cannot be more than 50 characters');
     } else if (intro.trim().length === 0) {
-      setErrorMessage('Introduction should not be blank');
+      return setErrorMessage('Introduction should not be blank');
     } else if (intro.length > 200) {
-      setErrorMessage('Introduction cannot be more than 200 characters');
+      return setErrorMessage('Introduction cannot be more than 200 characters');
     } else if (tags.length < 1) {
-      setErrorMessage('Please add at least one tag');
+      return setErrorMessage('Please add at least one tag');
     } else if (steps.length < 1) {
-      setErrorMessage('Please add at least one step');
+      return setErrorMessage('Please add at least one step');
     } else if (steps.some((step) => step.description.trim().length === 0)) {
-      setErrorMessage('One or more steps are still empty');
+      return setErrorMessage('One or more steps are still empty');
     } else {
       setErrorMessage('');
+    }
+
+    if (currentUser) {
+      if (image !== null) {
+        try {
+          const imageRef = ref(
+            storage,
+            `posts-image/${image.name + crypto.randomUUID()}`
+          );
+          const snapshot = await uploadBytes(imageRef, image);
+          const url = await getDownloadURL(snapshot.ref);
+          const success = await addPost({
+            createdAt: serverTimestamp(),
+            title: title,
+            introduction: intro,
+            tags: tags,
+            authorId: currentUser?.uid,
+            image: url,
+            commentsCount: 0,
+            likesCount: 0,
+            steps: steps,
+          });
+          if (success) return navigate('/explore');
+        } catch {
+          return setErrorMessage('Something went wrong, please try again');
+        }
+      }
+      try {
+        const success = await addPost({
+          createdAt: serverTimestamp(),
+          title: title,
+          introduction: intro,
+          tags: tags,
+          authorId: currentUser?.uid,
+          image: defaultImage,
+          commentsCount: 0,
+          likesCount: 0,
+          steps: steps,
+        });
+        if (success) return navigate('/howtos');
+      } catch {
+        return setErrorMessage('Something went wrong, please try again');
+      }
     }
   };
 
@@ -239,7 +287,7 @@ export default function CreatePage() {
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
           <Button
-            loading={false}
+            loading={results.isLoading}
             primary
             basic
             onClick={handleSubmit}
