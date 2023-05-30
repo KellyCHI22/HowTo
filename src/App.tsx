@@ -12,7 +12,7 @@ import ExplorePage from '~/pages/ExplorePage';
 import HowToPage from '~/pages/HowToPage';
 import BookmarksPage from '~/pages/BookmarksPage';
 import CreatePage from '~/pages/CreatePage';
-import SearchPage, { SearchResults } from '~/pages/SearchPage';
+import SearchPage from '~/pages/SearchPage';
 import SettingsPage from '~/pages/SettingsPage';
 import UserPage from '~/pages/UserPage';
 import ProtectedRoutes from './components/ProtectedRoutes';

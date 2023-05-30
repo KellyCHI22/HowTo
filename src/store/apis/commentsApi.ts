@@ -35,7 +35,6 @@ const commentsApi = createApi({
                 createdAt: doc.data().createdAt.toDate(),
               } as Comment;
             });
-            console.log(filteredData);
             return { data: filteredData };
           } catch (error) {
             return { error: error };
