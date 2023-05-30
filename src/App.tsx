@@ -12,10 +12,11 @@ import ExplorePage from '~/pages/ExplorePage';
 import HowToPage from '~/pages/HowToPage';
 import BookmarksPage from '~/pages/BookmarksPage';
 import CreatePage from '~/pages/CreatePage';
-import SearchPage from '~/pages/SearchPage';
+import SearchPage, { SearchResults } from '~/pages/SearchPage';
 import SettingsPage from '~/pages/SettingsPage';
 import UserPage from '~/pages/UserPage';
 import ProtectedRoutes from './components/ProtectedRoutes';
+import SearchResultsPage from './pages/SearchResultsPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
         </Route>
         <Route path="users/:id" element={<UserPage />} />
         <Route path="search" element={<SearchPage />} />
+        <Route path="search/:query" element={<SearchResultsPage />} />
         <Route element={<ProtectedRoutes />}>
           <Route path="create" element={<CreatePage />} />
           <Route path="bookmarks" element={<BookmarksPage />} />

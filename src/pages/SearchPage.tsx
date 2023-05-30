@@ -3,16 +3,13 @@ import Tag from '~/components/elements/Tag';
 import { ReactComponent as SearchIllustration } from '~/assets/illustration_search.svg';
 import { Link, useOutletContext } from 'react-router-dom';
 import Button from '~/components/elements/Button';
-import HowToItem from '~/components/HowtoItem';
 import { ContextType } from '~/components/layouts/RootLayout';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 export default function SearchPage() {
-  const [currentUser, loadingCurrentUser, errorCurrentUser] =
-    useAuthState(auth);
-  const { isSearching, searchResults, handleSearch } =
-    useOutletContext<ContextType>();
+  const [currentUser] = useAuthState(auth);
+  const { handleSearch } = useOutletContext<ContextType>();
 
   const tags = [
     'funny',
@@ -28,9 +25,7 @@ export default function SearchPage() {
       <div className="my-5 md:my-12">
         <div className="mb-3 flex items-center justify-between">
           <h2 className="ml-2 font-slabo text-2xl text-teal-500 md:text-3xl">
-            {isSearching
-              ? `Found ${searchResults?.results?.length} result for "${searchResults.query}"`
-              : 'Latest tags'}
+            Latest tags
           </h2>
           <div className="flex gap-3">
             <Link to="/create">
@@ -42,34 +37,22 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {isSearching ? (
-          <>
-            <div className="space-y-3">
-              {searchResults?.results?.map((post) => (
-                <HowToItem key={post.id} post={post} />
-              ))}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
-              {tags.map((tag, index) => {
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleSearch(tag)}
-                    className="my-1"
-                  >
-                    <Tag label={tag} />
-                  </button>
-                );
-              })}
-            </div>
-            <div className="mt-24 grid place-items-center">
-              <SearchIllustration />
-            </div>
-          </>
-        )}
+        <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
+          {tags.map((tag, index) => {
+            return (
+              <button
+                key={index}
+                onClick={() => handleSearch(tag)}
+                className="my-1"
+              >
+                <Tag label={tag} />
+              </button>
+            );
+          })}
+        </div>
+        <div className="mt-24 grid place-items-center">
+          <SearchIllustration />
+        </div>
 
         {currentUser && (
           <Button

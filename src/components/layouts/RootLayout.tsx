@@ -15,22 +15,14 @@ import { useEffect, useState } from 'react';
 import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
 
-import { posts, Post } from '~/dummyData';
 import ScrollToTop from '~/utils/ScrollToTop';
 import { auth } from '~/firebase';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
-import { useFetchUsersQuery } from '~/store/apis/usersApi';
-
-type SearchResult = {
-  query: string;
-  results: Post[] | undefined | null;
-};
+import { useFetchUsersQuery } from '~/store';
 
 export type ContextType = {
   handleToggleLoginModal: () => void;
   handleToggleSignupModal: () => void;
-  searchResults: SearchResult;
-  isSearching: boolean;
   handleSearch: (query: string) => void;
 };
 
@@ -46,12 +38,7 @@ export default function RootLayout() {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
 
-  const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchResult>({
-    query: '',
-    results: [],
-  });
 
   const handleToggleSidebar = () => {
     setShowSidebar((prev) => !prev);
@@ -72,13 +59,7 @@ export default function RootLayout() {
 
   const handleSearch = (query: string) => {
     if (query === '') return;
-    setIsSearching(true);
-    const newSearchResults = posts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(query.toLowerCase()) ||
-        post.tags.map((tag) => tag.toLowerCase()).includes(query.toLowerCase())
-    );
-    setSearchResults({ query: query, results: newSearchResults });
+    navigate(`/search/${query}`);
   };
 
   // forbid scrolling on desktop when login or signup modal is shown
@@ -93,12 +74,9 @@ export default function RootLayout() {
   }, [showLoginModal, showSignupModal]);
 
   useEffect(() => {
-    setSearchQuery('');
-    setSearchResults({
-      query: '',
-      results: [],
-    });
-    setIsSearching(false);
+    if (!pathname.includes('search')) {
+      setSearchQuery('');
+    }
   }, [pathname]);
 
   return (
@@ -153,12 +131,15 @@ export default function RootLayout() {
                 <RiMenuFill className="text-2xl" />
               </button>
 
-              <div className="flex items-center">
+              <Link to="/" className="flex items-center">
                 <Logo className="h-16 w-16" />
                 <h1 className="font-slabo text-2xl text-teal-500">HowTo...</h1>
-              </div>
+              </Link>
 
-              <Link to="/search" className="md:w-2/5">
+              <Link
+                to={pathname.includes('search') ? '#' : '/search'}
+                className="md:w-2/5"
+              >
                 <RiSearchLine className="text-2xl md:hidden" />
                 <div className="hidden md:block">
                   <div className="flex w-full items-center rounded-full bg-gray-200 px-2 focus-within:ring-2 focus-within:ring-teal-400">
@@ -178,7 +159,7 @@ export default function RootLayout() {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          handleSearch(searchQuery);
+                          return handleSearch(searchQuery);
                         }
                       }}
                     />
@@ -240,8 +221,6 @@ export default function RootLayout() {
               context={{
                 handleToggleLoginModal,
                 handleToggleSignupModal,
-                isSearching,
-                searchResults,
                 handleSearch,
               }}
             />
@@ -251,8 +230,6 @@ export default function RootLayout() {
             context={{
               handleToggleLoginModal,
               handleToggleSignupModal,
-              isSearching,
-              searchResults,
               handleSearch,
             }}
           />
