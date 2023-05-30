@@ -36,14 +36,12 @@ const postsApi = createApi({
             const postsColRef = collection(db, 'posts');
             const docSnapshot = await getDocs(postsColRef);
             const filteredData = docSnapshot.docs.map((doc) => {
-              console.log(doc.data().createdAt.toDate().toString());
               return {
                 id: doc.id,
                 ...doc.data(),
                 createdAt: doc.data().createdAt.toDate(),
               } as Post;
             });
-            console.log(filteredData);
             return { data: filteredData };
           } catch (error) {
             return { error: error };

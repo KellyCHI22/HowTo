@@ -6,7 +6,6 @@ import Button from '~/components/elements/Button';
 import SortOption from '~/components/SortOptions';
 import PaginatedPosts from '~/components/PaginatedPosts';
 
-// import { posts } from '../dummyData';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useFetchPostsQuery } from '~/store';
@@ -66,7 +65,7 @@ export default function ExplorePage() {
 
       <div className="flex flex-col gap-3">
         {isFetching && (
-          <div className="grid h-72 w-full place-items-center">
+          <div className="grid h-96 w-full place-items-center rounded-lg bg-white">
             <Spinner />
           </div>
         )}
