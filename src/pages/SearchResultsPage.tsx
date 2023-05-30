@@ -37,14 +37,14 @@ export default function SearchResultsPage() {
             <div className="mb-3 flex items-center justify-between">
               <div className="flex">
                 <button
-                  className="text-teal-500"
+                  className="hidden text-teal-500 md:block"
                   onClick={() => {
                     navigate('/search');
                   }}
                 >
                   <RiArrowLeftLine className="text-2xl" />
                 </button>
-                <h2 className="ml-5 font-slabo text-2xl text-teal-500 md:text-3xl">
+                <h2 className="ml-2 font-slabo text-2xl text-teal-500 md:text-3xl lg:ml-5">
                   Found {searchResults?.length}{' '}
                   {searchResults && searchResults?.length > 1
                     ? 'results'

@@ -6,20 +6,34 @@ import Button from '~/components/elements/Button';
 import { ContextType } from '~/components/layouts/RootLayout';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useFetchPostsQuery } from '~/store';
+import Spinner from '~/components/elements/Spinner';
 
 export default function SearchPage() {
   const [currentUser] = useAuthState(auth);
   const { handleSearch } = useOutletContext<ContextType>();
+  const {
+    data: postsData,
+    error: errorPostsData,
+    isFetching: isFetchingPostsData,
+  } = useFetchPostsQuery();
+  let renderedTags;
 
-  const tags = [
-    'funny',
-    'daily life',
-    'cat',
-    'animal',
-    'plant',
-    'space',
-    'car',
-  ];
+  if (postsData) {
+    const sortedPosts = [...postsData].sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+    );
+    const tags = Array.from(
+      new Set(
+        sortedPosts
+          ?.map((post) => [...post.tags])
+          .join()
+          .split(',')
+      )
+    );
+    renderedTags = tags.splice(0, 10);
+  }
+
   return (
     <>
       <div className="my-5 md:my-12">
@@ -37,22 +51,30 @@ export default function SearchPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
-          {tags.map((tag, index) => {
-            return (
-              <button
-                key={index}
-                onClick={() => handleSearch(tag)}
-                className="my-1"
-              >
-                <Tag label={tag} />
-              </button>
-            );
-          })}
-        </div>
-        <div className="mt-24 grid place-items-center">
-          <SearchIllustration />
-        </div>
+        {isFetchingPostsData ? (
+          <div className="grid h-96 w-full place-items-center">
+            <Spinner />
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
+              {renderedTags?.map((tag, index) => {
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleSearch(tag)}
+                    className="my-1"
+                  >
+                    <Tag label={tag} />
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-24 grid place-items-center">
+              <SearchIllustration />
+            </div>
+          </>
+        )}
 
         {currentUser && (
           <Button
