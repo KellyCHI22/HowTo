@@ -9,10 +9,18 @@ import {
 } from 'react-icons/ri';
 import Button from './elements/Button';
 import { ContextType } from './layouts/RootLayout';
+import Spinner from './elements/Spinner';
 
 export default function ProtectedRoutes() {
   const [currentUser, loadingCurrentUser, errorCurrentUser] =
     useAuthState(auth);
+
+  if (loadingCurrentUser)
+    return (
+      <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
+        <Spinner />
+      </div>
+    );
 
   return currentUser ? <Outlet /> : <ShouldLogIn />;
 }
