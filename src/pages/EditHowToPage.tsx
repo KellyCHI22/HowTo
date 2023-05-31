@@ -1,4 +1,5 @@
-import { useState, useRef, ChangeEvent } from 'react';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { useState, useRef, ChangeEvent, useLayoutEffect } from 'react';
 import {
   RiArrowLeftLine,
   RiImageAddLine,
@@ -12,30 +13,28 @@ import { useNavigate, useParams } from 'react-router-dom';
 import StepList, { Step } from '~/components/StepList';
 import Button from '~/components/elements/Button';
 import Input from '~/components/elements/Input';
+import Spinner from '~/components/elements/Spinner';
 import TagInput from '~/components/elements/TagInput';
 import Textarea from '~/components/elements/Textarea';
+import { storage } from '~/firebase';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
-
-import { posts, Post } from '../dummyData';
+import { useFetchPostsQuery, useUpdatePostMutation } from '~/store';
+import { Post } from '~/store/apis/postsApi';
 
 export default function EditHowToPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const post = posts.find((post) => post.id === id) as Post;
   const [errorMessage, setErrorMessage] = useState('');
 
-  // title and intro
-  const [title, setTitle] = useState(post.title);
-  const [intro, setIntro] = useState(post.introduction);
+  // * title and intro
+  const [title, setTitle] = useState('');
+  const [intro, setIntro] = useState('');
   const introRef = useRef<HTMLTextAreaElement>(null);
   useAutosizeTextArea(introRef.current, intro, 5);
 
-  // image
-  // ! need to be saved as a url to the database, not file
-  const defaultImage =
-    'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
+  // * image
   const [image, setImage] = useState<null | File>(null);
-  const [imagePreview, setImagePreview] = useState(post.image);
+  const [imagePreview, setImagePreview] = useState('');
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedImage = e.target.files[0];
@@ -46,11 +45,11 @@ export default function EditHowToPage() {
   };
   const handleRemoveImage = () => {
     setImage(null);
-    setImagePreview(defaultImage);
+    setImagePreview(post?.image);
   };
 
-  // tags
-  const [tags, setTags] = useState<string[]>(post.tags);
+  // * tags
+  const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [tagError, setTagError] = useState('');
   const handleTagInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,31 +71,102 @@ export default function EditHowToPage() {
       }
     }
   };
-  // steps
-  const [steps, setSteps] = useState<Step[]>(post.steps);
+  // * steps
+  const [steps, setSteps] = useState<Step[]>([]);
   const handleStepsUpdate = (steps: Step[]) => setSteps(steps);
 
-  // submit
-  const handleSubmit = () => {
-    console.log({ title, intro, tags, steps, image });
-    if (title.trim().length === 0) {
-      setErrorMessage('Title should not be blank');
-    } else if (title.length > 50) {
-      setErrorMessage('Title cannot be more than 50 characters');
-    } else if (intro.trim().length === 0) {
-      setErrorMessage('Introduction should not be blank');
-    } else if (intro.length > 200) {
-      setErrorMessage('Introduction cannot be more than 200 characters');
-    } else if (tags.length < 1) {
-      setErrorMessage('Please add at least one tag');
-    } else if (steps.length < 1) {
-      setErrorMessage('Please add at least one step');
-    } else if (steps.some((step) => step.description.trim().length === 0)) {
-      setErrorMessage('One or more steps are still empty');
-    } else {
-      setErrorMessage('');
+  // * load post data
+  const {
+    data: postsData,
+    error: errorPostsData,
+    isFetching: isFetchingPostsData,
+  } = useFetchPostsQuery();
+
+  const post = postsData?.find((post) => post.id === id) as Post;
+  const isLoading = isFetchingPostsData;
+
+  useLayoutEffect(() => {
+    if (postsData) {
+      setTitle(post?.title);
+      setIntro(post?.introduction);
+      setImagePreview(post?.image);
+      setTags(post?.tags);
+      setSteps(post?.steps);
+    }
+  }, [postsData, post]);
+
+  // * submit
+  const [updatePost, results] = useUpdatePostMutation();
+  const handleSubmit = async () => {
+    if (post) {
+      if (title.trim().length === 0) {
+        return setErrorMessage('Title should not be blank');
+      } else if (title.length > 50) {
+        return setErrorMessage('Title cannot be more than 50 characters');
+      } else if (intro.trim().length === 0) {
+        return setErrorMessage('Introduction should not be blank');
+      } else if (intro.length > 200) {
+        return setErrorMessage(
+          'Introduction cannot be more than 200 characters'
+        );
+      } else if (tags.length < 1) {
+        return setErrorMessage('Please add at least one tag');
+      } else if (steps.length < 1) {
+        return setErrorMessage('Please add at least one step');
+      } else if (steps.some((step) => step.description.trim().length === 0)) {
+        return setErrorMessage('One or more steps are still empty');
+      } else {
+        setErrorMessage('');
+      }
+
+      if (image !== null) {
+        try {
+          const imageRef = ref(
+            storage,
+            `posts-image/${image.name + crypto.randomUUID()}`
+          );
+          const snapshot = await uploadBytes(imageRef, image);
+          const url = await getDownloadURL(snapshot.ref);
+          const success = await updatePost([
+            post.id,
+            {
+              title: title,
+              introduction: intro,
+              tags: tags,
+              image: url,
+              steps: steps,
+            },
+          ]);
+          if (success) return navigate('/howtos');
+        } catch {
+          return setErrorMessage('Something went wrong, please try again');
+        }
+      }
+      try {
+        const success = await updatePost([
+          post.id,
+          {
+            title: title,
+            introduction: intro,
+            tags: tags,
+            image: post.image,
+            steps: steps,
+          },
+        ]);
+        if (success) return navigate('/howtos');
+      } catch {
+        return setErrorMessage('Something went wrong, please try again');
+      }
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className="my-5 md:my-12">
@@ -249,7 +319,7 @@ export default function EditHowToPage() {
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
           <Button
-            loading={false}
+            loading={results.isLoading}
             primary
             basic
             onClick={handleSubmit}

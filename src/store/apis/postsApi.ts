@@ -5,6 +5,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '~/firebase';
 
@@ -78,11 +79,24 @@ const postsApi = createApi({
           return { data: post };
         },
       }),
-      // updatePost: builder.mutation({}),
+      updatePost: builder.mutation({
+        invalidatesTags: (result, error, { postId, updatedPost }) => {
+          return [{ type: 'Post', id: postId }] as any;
+        },
+        queryFn: async ([postId, updatedPost]) => {
+          const postDoc = doc(db, 'posts', postId);
+          await updateDoc(postDoc, updatedPost);
+          return { data: updatedPost };
+        },
+      }),
     };
   },
 });
 
-export const { useFetchPostsQuery, useAddPostMutation, useRemovePostMutation } =
-  postsApi;
+export const {
+  useFetchPostsQuery,
+  useAddPostMutation,
+  useRemovePostMutation,
+  useUpdatePostMutation,
+} = postsApi;
 export { postsApi };

@@ -30,5 +30,6 @@ export {
   useFetchPostsQuery,
   useAddPostMutation,
   useRemovePostMutation,
+  useUpdatePostMutation,
 } from './apis/postsApi';
 export { useFetchCommentsQuery } from './apis/commentsApi';
