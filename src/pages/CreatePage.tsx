@@ -117,7 +117,7 @@ export default function CreatePage() {
             likesCount: 0,
             steps: steps,
           });
-          if (success) return navigate('/explore');
+          if (success) return navigate('/howtos');
         } catch {
           return setErrorMessage('Something went wrong, please try again');
         }

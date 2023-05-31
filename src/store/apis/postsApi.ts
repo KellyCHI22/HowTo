@@ -1,10 +1,9 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { User } from 'firebase/auth';
 import {
-  FieldValue,
-  Timestamp,
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   getDocs,
 } from 'firebase/firestore';
 import { db } from '~/firebase';
@@ -69,9 +68,21 @@ const postsApi = createApi({
           }
         },
       }),
+      removePost: builder.mutation({
+        invalidatesTags: (result, error, post: Post) => {
+          return [{ type: 'Post', id: post.id }] as any;
+        },
+        queryFn: async (post: Post) => {
+          const postDoc = doc(db, 'posts', post.id);
+          await deleteDoc(postDoc);
+          return { data: post };
+        },
+      }),
+      // updatePost: builder.mutation({}),
     };
   },
 });
 
-export const { useFetchPostsQuery, useAddPostMutation } = postsApi;
+export const { useFetchPostsQuery, useAddPostMutation, useRemovePostMutation } =
+  postsApi;
 export { postsApi };

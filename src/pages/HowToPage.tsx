@@ -23,9 +23,11 @@ import {
   useFetchUsersQuery,
   useFetchCommentsQuery,
   useFetchPostsQuery,
+  useRemovePostMutation,
 } from '~/store';
 import { Comment } from '~/store/apis/commentsApi';
 import Spinner from '~/components/elements/Spinner';
+import clsx from 'clsx';
 
 export default function HowToPage() {
   const [currentUser] = useAuthState(auth);
@@ -58,6 +60,22 @@ export default function HowToPage() {
 
   const isLoading =
     isFetchingPostsData || isFetchingUsersData || isFetchingCommentsData;
+
+  // delete post
+  const [removePost, results] = useRemovePostMutation();
+  const handleDeletePost = async () => {
+    if (post) {
+      const result = confirm('Are you sure to delete this post?');
+      if (result) {
+        try {
+          const success = await removePost(post);
+          if (success) return navigate('/howtos');
+        } catch {
+          alert('something went wrong, please try again');
+        }
+      }
+    }
+  };
 
   if (isLoading) {
     return (
@@ -92,7 +110,13 @@ export default function HowToPage() {
                   Edit
                 </button>
               </Link>
-              <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
+              <button
+                className={clsx(
+                  'flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50',
+                  { 'pointer-events-none opacity-80': results.isLoading }
+                )}
+                onClick={handleDeletePost}
+              >
                 <RiDeleteBin6Line className="text-xl" />
                 Delete
               </button>
