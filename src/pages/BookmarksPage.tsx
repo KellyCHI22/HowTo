@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
 
@@ -31,13 +31,16 @@ export default function BookmarksPage() {
   // ! refactor above
   const [bookmarkedPosts, setBookmarkPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (postsData && usersData) {
       const user = usersData?.find((user) => user.uid === currentUser?.uid);
       const bookmarkedPosts = postsData?.filter((post) => {
         return user?.bookmarkedPosts.includes(post.id);
       });
-      setBookmarkPosts(bookmarkedPosts);
+      const sortedPosts = [...bookmarkedPosts].sort(
+        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+      );
+      setBookmarkPosts(sortedPosts);
     }
   }, [postsData, usersData]);
 

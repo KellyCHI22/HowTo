@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
 
@@ -17,7 +17,7 @@ export default function ExplorePage() {
   const { data, error, isFetching } = useFetchPostsQuery();
   const [renderedPosts, setRenderedPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (data) {
       const sortedPosts = [...data].sort(
         (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
