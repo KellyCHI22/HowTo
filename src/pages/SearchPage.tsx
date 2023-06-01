@@ -77,16 +77,16 @@ export default function SearchPage() {
         )}
 
         {currentUser && (
-          <Button
-            loading={false}
-            rounded
-            primary
-            className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
-          >
-            <Link to="/create">
+          <Link to="/create">
+            <Button
+              loading={false}
+              rounded
+              primary
+              className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
+            >
               <RiEdit2Line className="text-2xl " />
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         )}
       </div>
     </>

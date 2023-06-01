@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import ReactTimeAgo from 'react-time-ago';
 
-import { comments } from '../dummyData';
 import { useMediaQuery } from 'react-responsive';
 import { Post } from '~/store/apis/postsApi';
 import { useFetchUsersQuery } from '~/store/apis/usersApi';
@@ -23,6 +22,7 @@ export default function HowToItem({ post }: Props) {
     authorId,
     image,
     likesCount,
+    commentsCount,
   } = post;
   const {
     data: usersData,
@@ -30,9 +30,6 @@ export default function HowToItem({ post }: Props) {
     isFetching: isFetchingUsersData,
   } = useFetchUsersQuery();
   const user = usersData?.find((user) => user.uid === authorId);
-  const commentsCount = comments.filter(
-    (comment) => comment.postId === id
-  ).length;
 
   if (isFetchingUsersData) {
     return <>{'loading'}</>;

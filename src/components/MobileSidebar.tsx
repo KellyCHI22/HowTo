@@ -15,8 +15,6 @@ import {
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 import Button from './elements/Button';
-
-import { currentUser } from '~/dummyData';
 import { auth } from '~/firebase';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import { useFetchUsersQuery } from '~/store/apis/usersApi';

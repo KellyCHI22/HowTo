@@ -12,7 +12,7 @@ import {
 import Button from './elements/Button';
 import { ReactComponent as IdeaIllustration } from '~/assets/illustration_idea.svg';
 import { addDoc, collection } from 'firebase/firestore';
-import { User } from '~/dummyData';
+import { User } from '../store/apis/usersApi.ts';
 
 const FIREBASE_ERRORS = {
   'Firebase: Error (auth/email-already-in-use).':
@@ -74,7 +74,7 @@ export default function LoginModal({
     }
   };
 
-  const createUserDocument = async (user: User) => {
+  const createUserDocument = async (user: Partial<User>) => {
     await addDoc(collection(db, 'users'), JSON.parse(JSON.stringify(user)));
   };
 

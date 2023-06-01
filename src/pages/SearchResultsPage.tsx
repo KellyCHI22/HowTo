@@ -1,14 +1,16 @@
+import { useAuthState } from 'react-firebase-hooks/auth';
 import { RiArrowLeftLine, RiEdit2Line } from 'react-icons/ri';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import HowToItem from '~/components/HowtoItem';
 import Button from '~/components/elements/Button';
 import Spinner from '~/components/elements/Spinner';
-import { currentUser } from '~/dummyData';
+import { auth } from '~/firebase';
 import { useFetchPostsQuery } from '~/store';
 
 export default function SearchResultsPage() {
   const { query } = useParams();
   const navigate = useNavigate();
+  const [currentUser] = useAuthState(auth);
   const {
     data: postsData,
     error: errorPostsData,

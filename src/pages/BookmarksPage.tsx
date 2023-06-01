@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useLayoutEffect, useState } from 'react';
+import { ReactNode, useLayoutEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
 
@@ -96,17 +96,16 @@ export default function BookmarksPage() {
           <PaginatedPosts posts={bookmarkedPosts} postsPerPage={4} />
         )}
       </div>
-
-      <Button
-        loading={false}
-        rounded
-        primary
-        className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
-      >
-        <Link to="/create">
+      <Link to="/create">
+        <Button
+          loading={false}
+          rounded
+          primary
+          className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
+        >
           <RiEdit2Line className="text-2xl" />
-        </Link>
-      </Button>
+        </Button>
+      </Link>
     </div>
   );
 }

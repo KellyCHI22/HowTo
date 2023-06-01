@@ -10,6 +10,7 @@ import {
   RiArrowGoBackLine,
   RiImageAddLine,
   RiCloseFill,
+  RiUserAddLine,
 } from 'react-icons/ri';
 import Textarea from '~/components/elements/Textarea';
 import { ChangeEvent, useRef, useState } from 'react';
@@ -17,6 +18,9 @@ import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
 import { User } from '~/store/apis/usersApi';
 import Spinner from '~/components/elements/Spinner';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '~/firebase';
+import { Post } from '~/store/apis/postsApi';
 
 export default function UserPage() {
   const { id } = useParams();
@@ -50,7 +54,11 @@ export default function UserPage() {
           {isEditMode ? (
             <EditProfile handleEditMode={handleEditMode} user={user} />
           ) : (
-            <UserProfile handleEditMode={handleEditMode} user={user} />
+            <UserProfile
+              handleEditMode={handleEditMode}
+              user={user}
+              userPosts={userPosts}
+            />
           )}
           <div className="mb-5">
             <h3 className="text-center font-slabo text-2xl text-teal-500 ">
@@ -68,12 +76,14 @@ export default function UserPage() {
   );
 }
 
-type Props = {
+type UserProfileProps = {
   handleEditMode: React.MouseEventHandler<HTMLButtonElement>;
   user: User | undefined;
+  userPosts: Post[] | undefined;
 };
 
-function UserProfile({ handleEditMode, user }: Props) {
+function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
+  const [currentUser] = useAuthState(auth);
   let joinedTime;
   if (user) {
     joinedTime = new Date(user?.createdAt).toLocaleString('en-us', {
@@ -82,9 +92,14 @@ function UserProfile({ handleEditMode, user }: Props) {
     });
   }
 
+  const totalLikes = userPosts?.reduce(
+    (acc, current) => acc + current.likesCount,
+    0
+  );
+
   return (
-    <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic xl:min-h-[325px]">
-      <div className="flex-1">
+    <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic">
+      <div className="flex-1 xl:min-h-[350px]">
         <img
           src={user?.cover_image}
           alt="user-cover-image"
@@ -97,16 +112,29 @@ function UserProfile({ handleEditMode, user }: Props) {
               alt=""
               className="aspect-square h-20 w-20 rounded-full object-cover"
             />
-            <Button
-              loading={false}
-              outline
-              basic
-              className="absolute right-5 top-5"
-              onClick={handleEditMode}
-            >
-              <RiEdit2Line className="text-2xl" />
-              Edit
-            </Button>
+            {currentUser?.uid === user?.uid ? (
+              <Button
+                loading={false}
+                outline
+                basic
+                className="absolute right-5 top-5"
+                onClick={handleEditMode}
+              >
+                <RiEdit2Line className="text-2xl" />
+                Edit
+              </Button>
+            ) : (
+              <Button
+                loading={false}
+                outline
+                basic
+                className="absolute right-5 top-5"
+              >
+                <RiUserAddLine className="text-2xl" />
+                Follow
+              </Button>
+            )}
+
             <p className="mt-2 font-bold xl:text-lg">{user?.name}</p>
             <p className="text-sm text-gray-400">Member since {joinedTime}</p>
             <p className="mb-5 mt-3 xl:mb-3">{user?.bio}</p>
@@ -115,12 +143,16 @@ function UserProfile({ handleEditMode, user }: Props) {
           <div className="flex w-full justify-between text-gray-400 xl:grid xl:grid-cols-4 ">
             <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
               <RiEdit2Line className="text-xl xl:hidden" />
-              <span className="font-bold text-teal-500 xl:text-lg">25</span>
+              <span className="font-bold text-teal-500 xl:text-lg">
+                {userPosts?.length}
+              </span>
               <span className="hidden xl:block">How Tos</span>
             </div>
             <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
               <RiHeartLine className="text-xl xl:hidden" />
-              <span className="font-bold text-teal-500 xl:text-lg">50</span>
+              <span className="font-bold text-teal-500 xl:text-lg">
+                {totalLikes}
+              </span>
               <span className="hidden xl:block">Likes</span>
             </div>
             <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
@@ -136,18 +168,23 @@ function UserProfile({ handleEditMode, user }: Props) {
           </div>
         </div>
       </div>
-      <div className="hidden w-[350px] flex-shrink-0 xl:block">
-        <img src={user?.cover_image} alt="" className="h-full object-cover " />
+      <div className="hidden max-h-[350px] w-[350px]  flex-shrink-0 xl:block">
+        <img src={user?.cover_image} alt="" className="h-full object-cover" />
       </div>
     </div>
   );
 }
 
-function EditProfile({ handleEditMode, user }: Props) {
+type EditProfileProps = {
+  handleEditMode: React.MouseEventHandler<HTMLButtonElement>;
+  user: User | undefined;
+};
+
+function EditProfile({ handleEditMode, user }: EditProfileProps) {
   const [errorMessage, setErrorMessage] = useState('');
   const [bio, setBio] = useState(user?.bio);
   const bioRef = useRef<HTMLTextAreaElement>(null);
-  useAutosizeTextArea(bioRef.current, bio as string, 5);
+  useAutosizeTextArea(bioRef.current, bio as string, 6);
 
   // avatar & cover
   // ! need to compress, upload to db, get the url and then save to user data
@@ -195,7 +232,7 @@ function EditProfile({ handleEditMode, user }: Props) {
   };
 
   return (
-    <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic xl:min-h-[325px]">
+    <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic xl:min-h-[350px]">
       <div className="flex-1">
         <div className="relative xl:hidden">
           <div className="absolute inset-0 bg-black opacity-50" />
@@ -293,13 +330,13 @@ function EditProfile({ handleEditMode, user }: Props) {
             ref={bioRef}
             value={bio as string}
             limit={200}
-            rows={5}
+            rows={6}
             placeholder="Say something about yourself..."
             onChange={(e) => setBio(e.target.value)}
           />
         </div>
       </div>
-      <div className="relative hidden w-[350px] flex-shrink-0 xl:block">
+      <div className="relative hidden max-h-[350px] w-[350px] flex-shrink-0 xl:block">
         <div className="absolute inset-0 bg-black opacity-50" />
         <img
           src={coverPreview}
