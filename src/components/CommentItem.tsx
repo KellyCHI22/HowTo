@@ -1,6 +1,15 @@
-import clsx from 'clsx';
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import {
+  useFetchUsersQuery,
+  useUpdatePostMutation,
+  useRemoveCommentMutation,
+} from '~/store';
+import { Post } from '~/store/apis/postsApi.ts';
+import { Comment, useUpdateCommentMutation } from '~/store/apis/commentsApi.ts';
+import clsx from 'clsx';
 import {
   RiDeleteBin6Line,
   RiArrowGoBackLine,
@@ -8,17 +17,8 @@ import {
   RiMoreLine,
   RiEdit2Line,
 } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
 import ReactTimeAgo from 'react-time-ago';
-import { auth } from '~/firebase';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
-import {
-  useFetchUsersQuery,
-  useRemoveCommentMutation,
-  useUpdatePostMutation,
-} from '~/store';
-import { Post } from '~/store/apis/postsApi.ts';
-import { Comment } from '~/store/apis/commentsApi.ts';
 import Button from './elements/Button';
 import Textarea from './elements/Textarea';
 
@@ -46,7 +46,7 @@ export default function CommentItem({ comment, post }: CommentItemProps) {
   useAutosizeTextArea(commentEditRef.current, commentEditInput, 3);
   const [commentEditError, setCommentEditError] = useState('');
 
-  // delete comment
+  // * delete comment
   const [removeComment, removeCommentResults] = useRemoveCommentMutation();
   const [updatePost, updatePostResults] = useUpdatePostMutation();
   const handleDeleteComment = async () => {
@@ -61,9 +61,28 @@ export default function CommentItem({ comment, post }: CommentItemProps) {
           const success = await removeComment(comment);
           if (success) return;
         } catch {
-          setCommentEditError('something went wrong, please try again');
+          setCommentEditError('Something went wrong, please try again');
         }
       }
+    }
+  };
+
+  // * update comment
+  const [updateComment, updateCommentResults] = useUpdateCommentMutation();
+  const handleSubmit = async () => {
+    if (commentEditInput.trim().length === 0) {
+      return setCommentEditError('Comment should not be blank');
+    } else {
+      setCommentEditError('');
+    }
+    try {
+      const success = await updateComment([
+        comment,
+        { content: commentEditInput },
+      ]);
+      if (success) return;
+    } catch {
+      setCommentEditError('Something went wrong, please try again');
     }
   };
 
@@ -115,7 +134,13 @@ export default function CommentItem({ comment, post }: CommentItemProps) {
                 >
                   <RiArrowGoBackLine className="text-xl" />
                 </Button>
-                <Button loading={false} primary basic className="font-bold">
+                <Button
+                  loading={updateCommentResults.isLoading}
+                  primary
+                  basic
+                  className="font-bold"
+                  onClick={handleSubmit}
+                >
                   <RiCheckLine className="text-xl" />
                   Save
                 </Button>

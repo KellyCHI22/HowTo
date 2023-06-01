@@ -7,6 +7,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { db } from '~/firebase';
@@ -70,6 +71,19 @@ const commentsApi = createApi({
           return { data: comment };
         },
       }),
+      updateComment: builder.mutation({
+        invalidatesTags: (result, error, [comment, updatedComment]) => {
+          return [{ type: 'PostComments', id: comment.postId }] as any;
+        },
+        queryFn: async ([comment, updatedComment]: [
+          Comment,
+          Partial<Comment>
+        ]) => {
+          const commentDoc = doc(db, 'comments', comment.id);
+          await updateDoc(commentDoc, updatedComment);
+          return { data: updatedComment };
+        },
+      }),
     };
   },
 });
@@ -78,5 +92,6 @@ export const {
   useFetchCommentsQuery,
   useAddCommentMutation,
   useRemoveCommentMutation,
+  useUpdateCommentMutation,
 } = commentsApi;
 export { commentsApi };
