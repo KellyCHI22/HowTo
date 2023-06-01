@@ -19,6 +19,7 @@ import {
   useFetchCommentsQuery,
   useFetchPostsQuery,
   useRemovePostMutation,
+  useUpdateUserMutation,
 } from '~/store';
 import Spinner from '~/components/elements/Spinner';
 import clsx from 'clsx';
@@ -57,8 +58,8 @@ export default function HowToPage() {
   const isLoading =
     isFetchingPostsData || isFetchingUsersData || isFetchingCommentsData;
 
-  // delete post
-  const [removePost, results] = useRemovePostMutation();
+  // * delete post
+  const [removePost, removePostResults] = useRemovePostMutation();
   const handleDeletePost = async () => {
     if (post) {
       const result = confirm('Are you sure to delete this post?');
@@ -69,6 +70,37 @@ export default function HowToPage() {
         } catch {
           alert('something went wrong, please try again');
         }
+      }
+    }
+  };
+
+  // * add to/remove from bookmarks
+  const [updateUser, updateUserResults] = useUpdateUserMutation();
+  const handleBookmarks = async () => {
+    if (currentUserData && post) {
+      try {
+        if (currentUserData.bookmarkedPosts.includes(post.id)) {
+          const updatedBookmarkedPosts = currentUserData.bookmarkedPosts.filter(
+            (bookmarkedPost) => bookmarkedPost !== post.id
+          );
+          const success = await updateUser([
+            currentUserData,
+            {
+              bookmarkedPosts: updatedBookmarkedPosts,
+            },
+          ]);
+          if (success) return;
+        } else {
+          const success = await updateUser([
+            currentUserData,
+            {
+              bookmarkedPosts: [...currentUserData.bookmarkedPosts, post.id],
+            },
+          ]);
+          if (success) return;
+        }
+      } catch {
+        alert('something went wrong, please try again');
       }
     }
   };
@@ -108,7 +140,10 @@ export default function HowToPage() {
               <button
                 className={clsx(
                   'flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50',
-                  { 'pointer-events-none opacity-80': results.isLoading }
+                  {
+                    'pointer-events-none opacity-80':
+                      removePostResults.isLoading,
+                  }
                 )}
                 onClick={handleDeletePost}
               >
@@ -180,12 +215,16 @@ export default function HowToPage() {
               <div className="flex items-center gap-1">
                 <RiChat1Line className="md:text-2xl" />
                 <span>{post?.commentsCount}</span>
-                <span className="hidden lg:block">comments</span>
+                <span className="hidden lg:block">
+                  {post && post?.commentsCount > 1 ? 'comments' : 'comment'}
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <RiHeartLine className="md:text-2xl" />
                 <span>{post?.likesCount}</span>
-                <span className="hidden lg:block">likes</span>
+                <span className="hidden lg:block">
+                  {post && post?.likesCount > 1 ? 'likes' : 'like'}
+                </span>
               </div>
             </div>
           </div>
@@ -205,7 +244,7 @@ export default function HowToPage() {
                   <RiHeartLine className="text-2xl" />
                 </Button>
                 <Button
-                  loading={false}
+                  loading={updateUserResults.isLoading}
                   primary={currentUserData?.bookmarkedPosts.includes(
                     post?.id as string
                   )}
@@ -215,6 +254,7 @@ export default function HowToPage() {
                     )
                   }
                   rounded
+                  onClick={handleBookmarks}
                 >
                   <RiBookmark2Line className="text-2xl" />
                 </Button>
