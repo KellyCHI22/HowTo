@@ -1,5 +1,6 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
+  FieldValue,
   addDoc,
   collection,
   deleteDoc,
@@ -11,7 +12,7 @@ import { db } from '~/firebase';
 
 export type Post = {
   id: string;
-  createdAt: Date;
+  createdAt: Date | FieldValue;
   title: string;
   introduction: string;
   tags: string[];
@@ -59,7 +60,7 @@ const postsApi = createApi({
         invalidatesTags: () => {
           return [{ type: 'Posts', id: 'LIST' }] as any;
         },
-        queryFn: async (newPost) => {
+        queryFn: async (newPost: Partial<Post>) => {
           try {
             const postsColRef = collection(db, 'posts');
             const docRef = await addDoc(postsColRef, newPost);
@@ -80,10 +81,10 @@ const postsApi = createApi({
         },
       }),
       updatePost: builder.mutation({
-        invalidatesTags: (result, error, { postId, updatedPost }) => {
+        invalidatesTags: (result, error, [postId, updatedPost]) => {
           return [{ type: 'Post', id: postId }] as any;
         },
-        queryFn: async ([postId, updatedPost]) => {
+        queryFn: async ([postId, updatedPost]: [string, Partial<Post>]) => {
           const postDoc = doc(db, 'posts', postId);
           await updateDoc(postDoc, updatedPost);
           return { data: updatedPost };
