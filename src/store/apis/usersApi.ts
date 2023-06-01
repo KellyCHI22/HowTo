@@ -1,10 +1,10 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '~/firebase';
 
 export type User = {
-  id?: string;
-  uid?: string;
+  id: string;
+  uid: string;
   createdAt: number | string;
   name: string;
   email: string;
@@ -41,9 +41,19 @@ const usersApi = createApi({
           return { data: filteredData };
         },
       }),
+      updateUser: builder.mutation({
+        invalidatesTags: (result, error, [user, updatedUser]) => {
+          return [{ type: 'User', id: user.uid }] as any;
+        },
+        queryFn: async ([user, updatedUser]: [User, Partial<User>]) => {
+          const userDoc = doc(db, 'users', user.id);
+          await updateDoc(userDoc, updatedUser);
+          return { data: updatedUser };
+        },
+      }),
     };
   },
 });
 
-export const { useFetchUsersQuery } = usersApi;
+export const { useFetchUsersQuery, useUpdateUserMutation } = usersApi;
 export { usersApi };
