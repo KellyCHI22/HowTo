@@ -20,6 +20,7 @@ import {
   useFetchPostsQuery,
   useRemovePostMutation,
   useUpdateUserMutation,
+  useUpdatePostMutation,
 } from '~/store';
 import Spinner from '~/components/elements/Spinner';
 import clsx from 'clsx';
@@ -95,6 +96,39 @@ export default function HowToPage() {
             currentUserData,
             {
               bookmarkedPosts: [...currentUserData.bookmarkedPosts, post.id],
+            },
+          ]);
+          if (success) return;
+        }
+      } catch {
+        alert('something went wrong, please try again');
+      }
+    }
+  };
+
+  // * add/remove like
+  const [updatePost, updatePostResults] = useUpdatePostMutation();
+  const handleLike = async () => {
+    if (currentUserData && post) {
+      try {
+        if (currentUserData.likedPosts.includes(post.id)) {
+          await updatePost([post.id, { likesCount: post.likesCount - 1 }]);
+          const updatedLikedPosts = currentUserData.likedPosts.filter(
+            (likedPost) => likedPost !== post.id
+          );
+          const success = await updateUser([
+            currentUserData,
+            {
+              likedPosts: updatedLikedPosts,
+            },
+          ]);
+          if (success) return;
+        } else {
+          await updatePost([post.id, { likesCount: post.likesCount + 1 }]);
+          const success = await updateUser([
+            currentUserData,
+            {
+              likedPosts: [...currentUserData.likedPosts, post.id],
             },
           ]);
           if (success) return;
@@ -232,7 +266,9 @@ export default function HowToPage() {
             {currentUser && (
               <>
                 <Button
-                  loading={false}
+                  loading={
+                    updatePostResults.isLoading || updateUserResults.isLoading
+                  }
                   primary={currentUserData?.likedPosts.includes(
                     post?.id as string
                   )}
@@ -240,6 +276,7 @@ export default function HowToPage() {
                     !currentUserData?.likedPosts.includes(post?.id as string)
                   }
                   rounded
+                  onClick={handleLike}
                 >
                   <RiHeartLine className="text-2xl" />
                 </Button>
