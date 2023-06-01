@@ -97,6 +97,11 @@ function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
     0
   );
 
+  const totalComments = userPosts?.reduce(
+    (acc, current) => acc + current.commentsCount,
+    0
+  );
+
   return (
     <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic">
       <div className="flex-1 xl:min-h-[350px]">
@@ -157,12 +162,16 @@ function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
             </div>
             <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
               <RiChat1Line className="text-xl xl:hidden" />
-              <span className="font-bold text-teal-500 xl:text-lg">31</span>
+              <span className="font-bold text-teal-500 xl:text-lg">
+                {totalComments}
+              </span>
               <span className="hidden xl:block">Comments</span>
             </div>
             <div className="flex items-center gap-2 xl:flex-col xl:items-start xl:gap-0">
               <RiGroupLine className="text-xl xl:hidden" />
-              <span className="font-bold text-teal-500 xl:text-lg">5</span>
+              <span className="font-bold text-teal-500 xl:text-lg">
+                {user?.followers.length}
+              </span>
               <span className="hidden xl:block">Followers</span>
             </div>
           </div>
