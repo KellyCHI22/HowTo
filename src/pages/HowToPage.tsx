@@ -1,21 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import {
   RiArrowLeftLine,
   RiChat1Line,
   RiEdit2Line,
   RiHeartLine,
   RiBookmark2Line,
-  RiSendPlaneFill,
   RiMoreLine,
   RiDeleteBin6Line,
-  RiArrowGoBackLine,
-  RiCheckLine,
 } from 'react-icons/ri';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Button from '~/components/elements/Button';
 import Tag from '~/components/elements/Tag';
-import Textarea from '~/components/elements/Textarea';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import ReactTimeAgo from 'react-time-ago';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -25,9 +20,10 @@ import {
   useFetchPostsQuery,
   useRemovePostMutation,
 } from '~/store';
-import { Comment } from '~/store/apis/commentsApi';
 import Spinner from '~/components/elements/Spinner';
 import clsx from 'clsx';
+import CommentItem from '~/components/CommentItem';
+import CommentInput from './CommentInput';
 
 export default function HowToPage() {
   const [currentUser] = useAuthState(auth);
@@ -96,8 +92,7 @@ export default function HowToPage() {
           >
             <RiArrowLeftLine className="text-2xl" />
           </button>
-          {/* // todo need to add if currentUser === post author check  */}
-          {currentUser && (
+          {currentUser && currentUser.uid === user?.uid && (
             <button onClick={handleShowOption}>
               <RiMoreLine className="text-2xl" />
             </button>
@@ -143,7 +138,7 @@ export default function HowToPage() {
               </div>
               <span className="text-gray-400">
                 <ReactTimeAgo
-                  date={post?.createdAt as unknown as Date}
+                  date={post?.createdAt as Date}
                   locale="en-US"
                   timeStyle="round"
                 />
@@ -195,7 +190,6 @@ export default function HowToPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {/* // todo need to be fixed  */}
             {currentUser && (
               <>
                 <Button
@@ -232,181 +226,12 @@ export default function HowToPage() {
       {/* comments */}
       <div className="space-y-3">
         {commentsData?.map((comment) => (
-          <CommentItem key={comment.id} comment={comment} />
+          <CommentItem key={comment.id} comment={comment} post={post} />
         ))}
       </div>
 
       {/* comment input */}
-      {currentUser && <CommentInput />}
-    </div>
-  );
-}
-
-type CommentItemProps = {
-  comment: Comment;
-};
-
-function CommentItem({ comment }: CommentItemProps) {
-  const [currentUser] = useAuthState(auth);
-  const { createdAt, content, userId } = comment;
-  const {
-    data: usersData,
-    error: errorUsersData,
-    isFetching: isFetchingUsersData,
-  } = useFetchUsersQuery();
-  const user = usersData?.find((user) => user.uid === userId);
-
-  const [showOption, setShowOption] = useState(false);
-  const handleShowOption = () => setShowOption((prev) => !prev);
-  const [isEditMode, setIsEditMode] = useState(false);
-  const handleEditMode = () => setIsEditMode((prev) => !prev);
-  const [commentEditInput, setCommentEditInput] = useState(comment.content);
-  const commentEditRef = useRef<HTMLTextAreaElement>(null);
-  useAutosizeTextArea(commentEditRef.current, commentEditInput, 3);
-
-  if (isFetchingUsersData) {
-    return <>{'loading'}</>;
-  }
-
-  return (
-    <>
-      {isEditMode ? (
-        <div className="relative mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
-          <Link to="#" className="flex-shrink-0">
-            <img
-              src={user?.avatar}
-              alt="author-avatar"
-              className="aspect-square h-8 w-8 rounded-full object-cover"
-            />
-          </Link>
-          <div className="flex flex-1 flex-col">
-            <Textarea
-              id="commentInput"
-              value={commentEditInput}
-              ref={commentEditRef}
-              rows={3}
-              placeholder="Edit your comment..."
-              className="text-sm md:text-base"
-              onChange={(e) => setCommentEditInput(e.target.value)}
-            />
-            <div className="mt-2 flex justify-end gap-2">
-              <Button
-                loading={false}
-                danger
-                rounded
-                className="absolute left-4"
-              >
-                <RiDeleteBin6Line className="text-xl" />
-              </Button>
-              <Button
-                loading={false}
-                secondary
-                rounded
-                onClick={() => {
-                  handleEditMode();
-                  setShowOption(false);
-                }}
-              >
-                <RiArrowGoBackLine className="text-xl" />
-              </Button>
-              <Button loading={false} primary basic className="font-bold">
-                <RiCheckLine className="text-xl" />
-                Save
-              </Button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
-          <Link to={`/users/${user?.id}`} className="flex-shrink-0">
-            <img
-              src={user?.avatar}
-              alt="author-avatar"
-              className="aspect-square h-8 w-8 rounded-full object-cover"
-            />
-          </Link>
-          <div className="w-full">
-            <div className="relative space-x-2 text-gray-400">
-              <span className="font-bold text-gray-900">{user?.name}</span>
-              <span>
-                <ReactTimeAgo
-                  date={createdAt}
-                  locale="en-US"
-                  timeStyle="round"
-                />
-              </span>
-              {currentUser && currentUser.uid === comment?.userId && (
-                <button
-                  className="absolute right-0 top-0 text-teal-500"
-                  onClick={handleShowOption}
-                >
-                  <RiMoreLine className="text-2xl" />
-                </button>
-              )}
-              {showOption && (
-                <div className="absolute right-6 top-0 rounded-lg bg-white p-1 text-left text-base shadow-2xl shadow-gray-400">
-                  <button
-                    className="flex w-full items-center gap-2 rounded-lg p-2 text-teal-500 hover:bg-gray-50"
-                    onClick={handleEditMode}
-                  >
-                    <RiEdit2Line className="text-xl" />
-                    Edit
-                  </button>
-                  <button className="flex items-center gap-2 rounded-lg p-2 text-red-400 hover:bg-gray-50">
-                    <RiDeleteBin6Line className="text-xl" />
-                    Delete
-                  </button>
-                </div>
-              )}
-            </div>
-            <p className="mt-3 text-gray-900">{content}</p>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
-
-function CommentInput() {
-  const [currentUser] = useAuthState(auth);
-  const { data, error, isFetching } = useFetchUsersQuery();
-  const defaultImage =
-    'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
-  const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
-
-  const [commentInput, setCommentInput] = useState('');
-  const commentRef = useRef<HTMLTextAreaElement>(null);
-  useAutosizeTextArea(commentRef.current, commentInput, 3);
-
-  return (
-    <div className="mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
-      <Link to="#" className="flex-shrink-0">
-        <img
-          src={isFetching || error ? defaultImage : currentUserData?.avatar}
-          alt="author-avatar"
-          className="aspect-square h-8 w-8 rounded-full object-cover"
-        />
-      </Link>
-      <div className="flex flex-1 flex-col">
-        <Textarea
-          id="commentInput"
-          value={commentInput}
-          ref={commentRef}
-          rows={3}
-          placeholder="Add a comment..."
-          className="text-sm md:text-base"
-          onChange={(e) => setCommentInput(e.target.value)}
-        />
-        <Button
-          loading={false}
-          primary
-          basic
-          className="mt-2 self-end font-bold"
-        >
-          <RiSendPlaneFill />
-          Send
-        </Button>
-      </div>
+      {currentUser && <CommentInput post={post} />}
     </div>
   );
 }
