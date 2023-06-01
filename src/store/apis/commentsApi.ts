@@ -1,10 +1,19 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  FieldValue,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 import { db } from '~/firebase';
 
 export type Comment = {
   id: string;
-  createdAt: Date;
+  createdAt: Date | FieldValue;
   content: string;
   postId: string;
   userId: string;
@@ -41,9 +50,33 @@ const commentsApi = createApi({
           }
         },
       }),
+      addComment: builder.mutation({
+        invalidatesTags: (result, error, newComment) => {
+          return [{ type: 'PostComments', id: newComment.postId }] as any;
+        },
+        queryFn: async (newComment: Partial<Comment>) => {
+          const commentsColRef = collection(db, 'comments');
+          const docRef = await addDoc(commentsColRef, newComment);
+          return { data: { id: docRef.id, ...newComment } };
+        },
+      }),
+      removeComment: builder.mutation({
+        invalidatesTags: (result, error, comment) => {
+          return [{ type: 'PostComments', id: comment.postId }] as any;
+        },
+        queryFn: async (comment: Comment) => {
+          const commentDoc = doc(db, 'comments', comment.id);
+          await deleteDoc(commentDoc);
+          return { data: comment };
+        },
+      }),
     };
   },
 });
 
-export const { useFetchCommentsQuery } = commentsApi;
+export const {
+  useFetchCommentsQuery,
+  useAddCommentMutation,
+  useRemoveCommentMutation,
+} = commentsApi;
 export { commentsApi };

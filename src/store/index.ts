@@ -32,4 +32,8 @@ export {
   useRemovePostMutation,
   useUpdatePostMutation,
 } from './apis/postsApi';
-export { useFetchCommentsQuery } from './apis/commentsApi';
+export {
+  useFetchCommentsQuery,
+  useAddCommentMutation,
+  useRemoveCommentMutation,
+} from './apis/commentsApi';
