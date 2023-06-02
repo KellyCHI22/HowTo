@@ -11,6 +11,7 @@ import {
   RiImageAddLine,
   RiCloseFill,
   RiUserAddLine,
+  RiUserFollowLine,
 } from 'react-icons/ri';
 import Textarea from '~/components/elements/Textarea';
 import { ChangeEvent, useRef, useState } from 'react';
@@ -25,6 +26,7 @@ import getImageUrl from '~/utils/getImageUrl';
 
 export default function UserPage() {
   const { id } = useParams();
+  const [currentUser] = useAuthState(auth);
   const {
     data: postsData,
     error: errorPostsData,
@@ -38,6 +40,9 @@ export default function UserPage() {
 
   const user = usersData?.find((user) => user.uid === id);
   const userPosts = postsData?.filter((post) => post.authorId === id);
+  const currentUserData = usersData?.find(
+    (user) => user.uid === currentUser?.uid
+  );
 
   const [isEditMode, setIsEditMode] = useState(false);
   const handleEditMode = () => setIsEditMode((prev) => !prev);
@@ -59,6 +64,7 @@ export default function UserPage() {
               handleEditMode={handleEditMode}
               user={user}
               userPosts={userPosts}
+              currentUserData={currentUserData}
             />
           )}
           <div className="mb-5">
@@ -81,10 +87,15 @@ type UserProfileProps = {
   handleEditMode: () => void;
   user: User | undefined;
   userPosts: Post[] | undefined;
+  currentUserData: User | undefined;
 };
 
-function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
-  const [currentUser] = useAuthState(auth);
+function UserProfile({
+  handleEditMode,
+  user,
+  userPosts,
+  currentUserData,
+}: UserProfileProps) {
   let joinedTime;
   if (user) {
     joinedTime = new Date(user?.createdAt).toLocaleString('en-us', {
@@ -103,6 +114,57 @@ function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
     0
   );
 
+  // * follow / unfollow user
+  const isFollowing = user?.followers.includes(currentUserData?.uid as string);
+  const [updateUser, updateUserResults] = useUpdateUserMutation();
+  const handleFollow = async () => {
+    if (user && currentUserData) {
+      if (isFollowing) {
+        try {
+          const updatedFollowers = user.followers.filter(
+            (follower) => follower !== currentUserData.uid
+          );
+          const updatedFollowing = currentUserData.following.filter(
+            (following) => following !== user.uid
+          );
+          await updateUser([
+            user,
+            {
+              followers: updatedFollowers,
+            },
+          ]);
+          const success = await updateUser([
+            currentUserData,
+            {
+              following: updatedFollowing,
+            },
+          ]);
+          if (success) return;
+        } catch {
+          return alert('Something went wrong, please try again');
+        }
+      } else {
+        try {
+          await updateUser([
+            user,
+            {
+              followers: [...user.followers, currentUserData.uid],
+            },
+          ]);
+          const success = await updateUser([
+            currentUserData,
+            {
+              following: [...currentUserData.following, user.uid],
+            },
+          ]);
+          if (success) return;
+        } catch {
+          return alert('Something went wrong, please try again');
+        }
+      }
+    }
+  };
+
   return (
     <div className="mb-5 flex overflow-hidden rounded-xl bg-white shadow-basic">
       <div className="flex-1 xl:min-h-[350px]">
@@ -118,7 +180,7 @@ function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
               alt=""
               className="aspect-square h-20 w-20 rounded-full object-cover"
             />
-            {currentUser?.uid === user?.uid ? (
+            {currentUserData?.uid === user?.uid ? (
               <Button
                 loading={false}
                 outline
@@ -131,13 +193,24 @@ function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
               </Button>
             ) : (
               <Button
-                loading={false}
-                outline
+                loading={updateUserResults.isLoading}
+                outline={!isFollowing}
+                primary={isFollowing}
                 basic
                 className="absolute right-5 top-5"
+                onClick={handleFollow}
               >
-                <RiUserAddLine className="text-2xl" />
-                Follow
+                {isFollowing ? (
+                  <>
+                    <RiUserFollowLine className="text-2xl" />
+                    Following
+                  </>
+                ) : (
+                  <>
+                    <RiUserAddLine className="text-2xl" />
+                    Follow
+                  </>
+                )}
               </Button>
             )}
 
@@ -197,9 +270,6 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
   useAutosizeTextArea(bioRef.current, bio as string, 6);
 
   // avatar & cover
-  // ! need to compress, upload to db, get the url and then save to user data
-  const defaultImage =
-    'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
   const [avatar, setAvatar] = useState<null | File>(null);
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar);
   const [cover, setCover] = useState<null | File>(null);
