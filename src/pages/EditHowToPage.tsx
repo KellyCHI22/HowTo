@@ -1,4 +1,3 @@
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { useState, useRef, ChangeEvent, useLayoutEffect } from 'react';
 import {
   RiArrowLeftLine,
@@ -16,10 +15,10 @@ import Input from '~/components/elements/Input';
 import Spinner from '~/components/elements/Spinner';
 import TagInput from '~/components/elements/TagInput';
 import Textarea from '~/components/elements/Textarea';
-import { storage } from '~/firebase';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import { useFetchPostsQuery, useUpdatePostMutation } from '~/store';
 import { Post } from '~/store/apis/postsApi';
+import getImageUrl from '~/utils/getImageUrl';
 
 export default function EditHowToPage() {
   const { id } = useParams();
@@ -119,37 +118,15 @@ export default function EditHowToPage() {
         setErrorMessage('');
       }
 
-      if (image !== null) {
-        try {
-          const imageRef = ref(
-            storage,
-            `posts-image/${image.name + crypto.randomUUID()}`
-          );
-          const snapshot = await uploadBytes(imageRef, image);
-          const url = await getDownloadURL(snapshot.ref);
-          const success = await updatePost([
-            post.id,
-            {
-              title: title,
-              introduction: intro,
-              tags: tags,
-              image: url,
-              steps: steps,
-            },
-          ]);
-          if (success) return navigate('/howtos');
-        } catch {
-          return setErrorMessage('Something went wrong, please try again');
-        }
-      }
       try {
+        const url = await getImageUrl(image, 'posts-image');
         const success = await updatePost([
           post.id,
           {
             title: title,
             introduction: intro,
             tags: tags,
-            image: post.image,
+            image: url ? url : post.image,
             steps: steps,
           },
         ]);
