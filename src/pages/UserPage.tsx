@@ -16,11 +16,12 @@ import Textarea from '~/components/elements/Textarea';
 import { ChangeEvent, useRef, useState } from 'react';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
-import { User } from '~/store/apis/usersApi';
+import { User, useUpdateUserMutation } from '~/store/apis/usersApi';
 import Spinner from '~/components/elements/Spinner';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '~/firebase';
 import { Post } from '~/store/apis/postsApi';
+import getImageUrl from '~/utils/getImageUrl';
 
 export default function UserPage() {
   const { id } = useParams();
@@ -77,7 +78,7 @@ export default function UserPage() {
 }
 
 type UserProfileProps = {
-  handleEditMode: React.MouseEventHandler<HTMLButtonElement>;
+  handleEditMode: () => void;
   user: User | undefined;
   userPosts: Post[] | undefined;
 };
@@ -185,7 +186,7 @@ function UserProfile({ handleEditMode, user, userPosts }: UserProfileProps) {
 }
 
 type EditProfileProps = {
-  handleEditMode: React.MouseEventHandler<HTMLButtonElement>;
+  handleEditMode: () => void;
   user: User | undefined;
 };
 
@@ -228,15 +229,34 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
     setCoverPreview(user?.cover_image);
   };
 
-  // submit
-  const handleSubmit = () => {
+  // * submit
+  const [updateUser, updateUserResults] = useUpdateUserMutation();
+  const handleSubmit = async () => {
     console.log({ bio, avatar, cover });
-    if (bio?.trim().length === 0) {
-      setErrorMessage('Bio should not be blank');
-    } else if (bio && bio?.length > 200) {
-      setErrorMessage('Bio cannot be more than 200 characters');
-    } else {
-      setErrorMessage('');
+    if (user) {
+      if (bio?.trim().length === 0) {
+        return setErrorMessage('Bio should not be blank');
+      } else if (bio && bio?.length > 200) {
+        return setErrorMessage('Bio cannot be more than 200 characters');
+      } else {
+        setErrorMessage('');
+      }
+
+      try {
+        const avatarUrl = await getImageUrl(avatar, 'user-image');
+        const coverUrl = await getImageUrl(cover, 'user-image');
+        const success = await updateUser([
+          user,
+          {
+            bio: bio,
+            avatar: avatarUrl ? avatarUrl : user?.avatar,
+            cover_image: coverUrl ? coverUrl : user.cover_image,
+          },
+        ]);
+        if (success) return handleEditMode();
+      } catch {
+        return setErrorMessage('Something went wrong, please try again');
+      }
     }
   };
 
@@ -319,7 +339,7 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
                 <RiArrowGoBackLine className="text-2xl" />
               </Button>
               <Button
-                loading={false}
+                loading={updateUserResults.isLoading}
                 primary
                 basic
                 className="font-bold"
