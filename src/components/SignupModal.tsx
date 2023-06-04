@@ -75,30 +75,43 @@ export default function LoginModal({
   };
 
   const createUserDocument = async (user: Partial<User>) => {
-    await addDoc(collection(db, 'users'), JSON.parse(JSON.stringify(user)));
+    try {
+      const success = await addDoc(
+        collection(db, 'users'),
+        JSON.parse(JSON.stringify(user))
+      );
+      if (success) return success;
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     if (createdUserCred) {
-      console.log('useEffect runs');
-      createUserDocument({
-        uid: createdUserCred.user.uid,
-        createdAt: createdUserCred.user.metadata.creationTime as string,
-        name: name,
-        email: createdUserCred.user.email as string,
-        bio: 'I am happy to join the HowTo community!',
-        avatar: defaultImage,
-        cover_image: defaultImage,
-        followers: [],
-        following: [],
-        likedPosts: [],
-        bookmarkedPosts: [],
-      });
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
-      setSignupError('');
-      toggleSignupModal();
+      const createUserDocAsync = async () => {
+        const successCreateUserDoc = await createUserDocument({
+          uid: createdUserCred.user.uid,
+          createdAt: createdUserCred.user.metadata.creationTime as string,
+          name: name,
+          email: createdUserCred.user.email as string,
+          bio: 'I am happy to join the HowTo community!',
+          avatar: defaultImage,
+          cover_image: defaultImage,
+          followers: [],
+          following: [],
+          likedPosts: [],
+          bookmarkedPosts: [],
+        });
+        if (successCreateUserDoc) {
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+          setSignupError('');
+          toggleSignupModal();
+          window.location.reload();
+        }
+      };
+      createUserDocAsync();
     }
   }, [createdUserCred]);
 
