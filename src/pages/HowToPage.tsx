@@ -196,7 +196,7 @@ export default function HowToPage() {
             />
             <div className="flex items-center justify-between text-sm md:justify-start md:gap-2 md:text-base">
               <div className="flex items-center gap-2">
-                <Link to={`/users/${user?.id}`}>
+                <Link to={`/users/${user?.uid}`}>
                   <img
                     src={user?.avatar}
                     alt="author-avatar"

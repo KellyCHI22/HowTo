@@ -33,7 +33,6 @@ export default function CommentInput({ post }: CommentInputProps) {
   const [addComment, addCommentResults] = useAddCommentMutation();
   const [updatePost, updatePostResults] = useUpdatePostMutation();
   const handleSubmitComment = async () => {
-    console.log('submit');
     if (commentInput.trim().length === 0) {
       return setCommentInputError('Comment should not be blank');
     } else {

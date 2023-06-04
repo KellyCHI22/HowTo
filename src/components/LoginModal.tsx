@@ -59,7 +59,6 @@ export default function LoginModal({
 
   useEffect(() => {
     if (signedInUserCred) {
-      console.log('useEffect runs');
       setEmail('');
       setPassword('');
       toggleLoginModal();
