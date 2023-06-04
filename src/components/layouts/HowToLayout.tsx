@@ -17,9 +17,12 @@ import { ContextType } from './RootLayout';
 
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useFetchPostsQuery } from '~/store';
+import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
 import Spinner from '../elements/Spinner';
 import { Post } from '~/store/apis/postsApi';
+import { User } from '~/store/apis/usersApi';
+import { useEffect, useState } from 'react';
+import getTopUsers from '~/utils/getTopUsers';
 
 export default function HowToLayout() {
   const context = useOutletContext<ContextType>();
@@ -150,31 +153,61 @@ function LatestHowToItem({ howto }: { howto: Post }) {
 }
 
 function AsideTopUsers() {
+  const {
+    data: postsData,
+    error: errorPostsData,
+    isFetching: isFetchingPostsData,
+  } = useFetchPostsQuery();
+  const {
+    data: usersData,
+    error: errorUsersData,
+    isFetching: isFetchingUsersData,
+  } = useFetchUsersQuery();
+
+  const isLoading = isFetchingPostsData || isFetchingUsersData;
+  const [topUsers, setTopUsers] = useState<User[]>([]);
+  useEffect(() => {
+    if (postsData && usersData) {
+      const topThreeUsers = getTopUsers(postsData, usersData, 3);
+      setTopUsers(topThreeUsers);
+    }
+  }, [postsData, usersData]);
+
   return (
-    <div className="w-64 rounded-xl bg-white shadow-basic">
-      <h3 className="border-b border-b-gray-200 px-5 py-3 text-lg font-bold text-teal-500">
-        Top Users
-      </h3>
-      <div>
-        <AsideTopUserItem />
-        <AsideTopUserItem />
-        <AsideTopUserItem />
-      </div>
-    </div>
+    <>
+      {isLoading ? (
+        <div className="grid h-72 place-items-center">
+          <Spinner />
+        </div>
+      ) : (
+        <div className="w-64 rounded-xl bg-white shadow-basic">
+          <h3 className="border-b border-b-gray-200 px-5 py-3 text-lg font-bold text-teal-500">
+            Top Users
+          </h3>
+          <div className="space-y-1 py-3">
+            {topUsers.map((user) => (
+              <AsideTopUserItem user={user} key={user.uid} />
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
-function AsideTopUserItem() {
+function AsideTopUserItem({ user }: { user: User }) {
   return (
-    <div className="flex items-center gap-2 px-5 py-3">
-      <img
-        src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=688&q=80"
-        alt=""
-        className="aspect-square h-9 w-9 rounded-full object-cover"
-      />
-      <div>
-        <p className="font-bold">Betty Liang</p>
+    <Link to={`/users/${user?.uid}`}>
+      <div className="mx-3 flex items-center gap-2 rounded-lg px-2 py-2 hover:bg-gray-100">
+        <img
+          src={user.avatar}
+          alt="user-avatar"
+          className="aspect-square h-9 w-9 rounded-full object-cover"
+        />
+        <div>
+          <p className="font-bold">{user.name}</p>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }
