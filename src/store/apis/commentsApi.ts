@@ -9,8 +9,10 @@ import {
   query,
   updateDoc,
   where,
+  writeBatch,
 } from 'firebase/firestore';
 import { db } from '~/firebase';
+import { User } from './usersApi';
 
 export type Comment = {
   id: string;
@@ -84,6 +86,30 @@ const commentsApi = createApi({
           return { data: updatedComment };
         },
       }),
+      deleteUserComments: builder.mutation({
+        invalidatesTags: (result, error) => {
+          const tags = result?.map((comment: Comment) => {
+            return { type: 'Comment', id: comment.id };
+          });
+          return tags as any;
+        },
+        queryFn: async (user: User) => {
+          const batch = writeBatch(db);
+          const commentsColRef = collection(db, 'comments');
+          const q = query(commentsColRef, where('userId', '==', user.uid));
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => batch.delete(doc.ref));
+          batch.commit();
+          const filteredData = querySnapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+              createdAt: doc.data().createdAt.toDate(),
+            } as Comment;
+          });
+          return { data: filteredData };
+        },
+      }),
     };
   },
 });
@@ -93,5 +119,6 @@ export const {
   useAddCommentMutation,
   useRemoveCommentMutation,
   useUpdateCommentMutation,
+  useDeleteUserCommentsMutation,
 } = commentsApi;
 export { commentsApi };

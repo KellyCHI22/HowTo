@@ -1,5 +1,11 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from 'firebase/firestore';
 import { db } from '~/firebase';
 
 export type User = {
@@ -51,9 +57,23 @@ const usersApi = createApi({
           return { data: updatedUser };
         },
       }),
+      deleteUser: builder.mutation({
+        invalidatesTags: (result, error, user) => {
+          return [{ type: 'User', id: user.uid }] as any;
+        },
+        queryFn: async (user) => {
+          const userDoc = doc(db, 'users', user.id);
+          await deleteDoc(userDoc);
+          return { data: user };
+        },
+      }),
     };
   },
 });
 
-export const { useFetchUsersQuery, useUpdateUserMutation } = usersApi;
+export const {
+  useFetchUsersQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} = usersApi;
 export { usersApi };

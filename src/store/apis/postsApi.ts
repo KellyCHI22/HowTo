@@ -6,9 +6,13 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  query,
   updateDoc,
+  where,
+  writeBatch,
 } from 'firebase/firestore';
 import { db } from '~/firebase';
+import { User } from './usersApi';
 
 export type Post = {
   id: string;
@@ -90,6 +94,31 @@ const postsApi = createApi({
           return { data: updatedPost };
         },
       }),
+      deleteUserPosts: builder.mutation({
+        invalidatesTags: (result, error) => {
+          const tags = result?.map((post: Post) => {
+            return { type: 'Post', id: post.id };
+          });
+          tags?.push({ type: 'Posts', id: 'LIST' });
+          return tags as any;
+        },
+        queryFn: async (user: User) => {
+          const batch = writeBatch(db);
+          const postsColRef = collection(db, 'posts');
+          const q = query(postsColRef, where('authorId', '==', user.uid));
+
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => batch.delete(doc.ref));
+          batch.commit(); // * delete multiple docs at once
+          const filteredData = querySnapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            } as Post;
+          });
+          return { data: filteredData };
+        },
+      }),
     };
   },
 });
@@ -99,5 +128,6 @@ export const {
   useAddPostMutation,
   useRemovePostMutation,
   useUpdatePostMutation,
+  useDeleteUserPostsMutation,
 } = postsApi;
 export { postsApi };

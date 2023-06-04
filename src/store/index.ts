@@ -25,16 +25,22 @@ setupListeners(store.dispatch);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export { useFetchUsersQuery, useUpdateUserMutation } from './apis/usersApi';
+export {
+  useFetchUsersQuery,
+  useUpdateUserMutation,
+  useDeleteUserMutation,
+} from './apis/usersApi';
 export {
   useFetchPostsQuery,
   useAddPostMutation,
   useRemovePostMutation,
   useUpdatePostMutation,
+  useDeleteUserPostsMutation,
 } from './apis/postsApi';
 export {
   useFetchCommentsQuery,
   useAddCommentMutation,
   useRemoveCommentMutation,
   useUpdateCommentMutation,
+  useDeleteUserCommentsMutation,
 } from './apis/commentsApi';
