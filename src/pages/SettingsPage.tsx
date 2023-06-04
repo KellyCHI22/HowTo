@@ -11,9 +11,15 @@ import {
 import Button from '~/components/elements/Button';
 import Input from '~/components/elements/Input';
 import { ReactComponent as CreativeIllustration } from '~/assets/illustration_creative.svg';
-import { useFetchUsersQuery } from '~/store';
+import {
+  useFetchUsersQuery,
+  useDeleteUserMutation,
+  useDeleteUserPostsMutation,
+  useDeleteUserCommentsMutation,
+} from '~/store';
 import {
   useAuthState,
+  useDeleteUser,
   useUpdateEmail,
   useUpdatePassword,
 } from 'react-firebase-hooks/auth';
@@ -21,6 +27,7 @@ import { auth } from '~/firebase';
 import { User, useUpdateUserMutation } from '~/store/apis/usersApi';
 import Spinner from '~/components/elements/Spinner';
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 type SettingOptionType = 'basic' | 'password' | 'other';
 
@@ -77,7 +84,9 @@ export default function SettingsPage() {
                     <BasicSettings currentUserData={currentUserData as User} />
                   )}
                   {currentTab === 'password' && <PasswordSettings />}
-                  {currentTab === 'other' && <OtherSettings />}
+                  {currentTab === 'other' && (
+                    <OtherSettings currentUserData={currentUserData as User} />
+                  )}
                 </div>
               </div>
               <div className="hidden place-items-center p-9 pl-16 xl:grid ">
@@ -268,6 +277,9 @@ function PasswordSettings() {
           const successUpdatePassword = await updatePassword(newPassword);
           if (successUpdatePassword) {
             alert('Password updated successfully!');
+            setOldPassword('');
+            setNewPassword('');
+            setConfirmNewPassword('');
             currentUser?.reload();
           } else {
             return setErrorMessage(
@@ -334,9 +346,66 @@ function PasswordSettings() {
   );
 }
 
-function OtherSettings() {
+function OtherSettings({ currentUserData }: { currentUserData: User }) {
+  const navigate = useNavigate();
+  const [currentUser] = useAuthState(auth);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  // * submit
+  const [deleteUser, loadingDeleteUser, errorDeleteUser] = useDeleteUser(auth);
+  const [deleteUserData, deleteUserDataResults] = useDeleteUserMutation();
+  const [deleteUserPosts, deleteUserPostsResults] =
+    useDeleteUserPostsMutation();
+  const [deleteUserComments, deleteUserCommentsResults] =
+    useDeleteUserCommentsMutation();
+  const isLoading =
+    loadingDeleteUser ||
+    deleteUserDataResults.isLoading ||
+    deleteUserPostsResults.isLoading ||
+    deleteUserCommentsResults.isLoading;
+
+  const handleSubmit = async () => {
+    if (currentUser) {
+      // * check if inputs are correct
+      if (password.trim().length === 0) {
+        return setErrorMessage('Password should not be blank');
+      } else if (confirmPassword.trim().length === 0) {
+        return setErrorMessage('Please confirm your new password');
+      } else if (password !== confirmPassword) {
+        return setErrorMessage('Please confirm your password again');
+      } else {
+        setErrorMessage('');
+      }
+
+      try {
+        const credential = EmailAuthProvider.credential(
+          currentUser.email as string,
+          password
+        );
+        const reauthenticateResult = await reauthenticateWithCredential(
+          currentUser,
+          credential
+        );
+        if (reauthenticateResult) {
+          await deleteUserData(currentUserData);
+          await deleteUserPosts(currentUserData);
+          await deleteUserComments(currentUserData);
+          const success = await deleteUser();
+          if (success) {
+            alert('Account deleted successfully!');
+            navigate('/howtos');
+            return window.location.reload();
+          } else {
+            return setErrorMessage('Something went wrong, please try again');
+          }
+        }
+      } catch {
+        setErrorMessage('Invalid password, please try again');
+      }
+    }
+  };
 
   return (
     <div>
@@ -370,14 +439,17 @@ function OtherSettings() {
           placeholder=""
         />
       </div>
-      <div className="mt-16 flex justify-end gap-3">
-        <Button loading={false} secondary rounded>
-          <RiArrowGoBackLine className="text-2xl" />
-        </Button>
-        <Button loading={false} danger basic className="">
-          <RiDeleteBin6Line className="text-2xl" />
-          Delete account
-        </Button>
+      <div className="mt-16 flex items-center justify-between">
+        <p className="mr-5 text-red-500">{errorMessage}</p>
+        <div className="flex flex-shrink-0 gap-3">
+          <Button loading={false} secondary rounded>
+            <RiArrowGoBackLine className="text-2xl" />
+          </Button>
+          <Button loading={isLoading} danger basic onClick={handleSubmit}>
+            <RiDeleteBin6Line className="text-2xl" />
+            Delete account
+          </Button>
+        </div>
       </div>
     </div>
   );
