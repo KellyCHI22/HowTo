@@ -14,6 +14,7 @@ import Spinner from './elements/Spinner';
 export default function ProtectedRoutes() {
   const [currentUser, loadingCurrentUser, errorCurrentUser] =
     useAuthState(auth);
+  const context = useOutletContext<ContextType>();
 
   if (loadingCurrentUser)
     return (
@@ -22,7 +23,7 @@ export default function ProtectedRoutes() {
       </div>
     );
 
-  return currentUser ? <Outlet /> : <ShouldLogIn />;
+  return currentUser ? <Outlet context={context} /> : <ShouldLogIn />;
 }
 
 function ShouldLogIn() {

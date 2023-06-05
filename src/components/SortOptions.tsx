@@ -1,17 +1,21 @@
 import { RiArrowDownSFill } from 'react-icons/ri';
 
 export type SortOptionProps = {
+  sortOption: string;
   onSortOptionSelect: (option: string) => void;
 };
 
-export default function SortOption({ onSortOptionSelect }: SortOptionProps) {
+export default function SortOption({
+  sortOption,
+  onSortOptionSelect,
+}: SortOptionProps) {
   return (
     <div className="relative">
       <select
         id="sort-options"
         className="cursor-pointer appearance-none rounded-full border border-teal-500 bg-white text-teal-500 placeholder-teal-500 focus:border-teal-500 focus:border-transparent focus:ring-2 focus:ring-teal-400"
         onChange={(e) => onSortOptionSelect(e.target.value)}
-        defaultValue="latest"
+        defaultValue={sortOption}
       >
         <option value="none">Sort By</option>
         <option value="latest">Latest</option>

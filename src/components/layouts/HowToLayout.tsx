@@ -26,6 +26,27 @@ import getTopUsers from '~/utils/getTopUsers';
 
 export default function HowToLayout() {
   const context = useOutletContext<ContextType>();
+
+  // * explore page currentPage & sortOption
+  const [currentExplorePage, setCurrentExplorePage] = useState(0);
+  const handleCurrentExplorePageChange = (page: number) =>
+    setCurrentExplorePage(page);
+  const [exploreSortOption, setExploreSortOption] = useState('latest');
+  const handleExploreSortOptionSelect = (option: string) => {
+    setExploreSortOption(option);
+    setCurrentExplorePage(0);
+  };
+
+  // * bookmarks page currentPage & sortOption
+  const [currentBookmarksPage, setCurrentBookmarksPage] = useState(0);
+  const handleCurrentBookmarksPageChange = (page: number) =>
+    setCurrentBookmarksPage(page);
+  const [bookmarksSortOption, setBookmarksSortOption] = useState('');
+  const handleBookmarksSortOptionSelect = (option: string) => {
+    setBookmarksSortOption(option);
+    setCurrentBookmarksPage(0);
+  };
+
   return (
     <>
       <div className="container flex items-start md:space-x-5">
@@ -35,7 +56,19 @@ export default function HowToLayout() {
           <AsideLatestHowTo />
         </aside>
         <main className="flex-1">
-          <Outlet context={context} />
+          <Outlet
+            context={{
+              ...context,
+              currentExplorePage,
+              handleCurrentExplorePageChange,
+              exploreSortOption,
+              handleExploreSortOptionSelect,
+              currentBookmarksPage,
+              handleCurrentBookmarksPageChange,
+              bookmarksSortOption,
+              handleBookmarksSortOptionSelect,
+            }}
+          />
         </main>
       </div>
     </>

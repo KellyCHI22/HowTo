@@ -24,6 +24,14 @@ export type ContextType = {
   handleToggleLoginModal: () => void;
   handleToggleSignupModal: () => void;
   handleSearch: (query: string) => void;
+  currentExplorePage: number;
+  handleCurrentExplorePageChange: (page: number) => void;
+  exploreSortOption: string;
+  handleExploreSortOptionSelect: (option: string) => void;
+  currentBookmarksPage: number;
+  handleCurrentBookmarksPageChange: (page: number) => void;
+  bookmarksSortOption: string;
+  handleBookmarksSortOptionSelect: (option: string) => void;
 };
 
 export default function RootLayout() {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RiArrowRightSLine, RiArrowLeftSLine } from 'react-icons/ri';
 import ReactPaginate from 'react-paginate';
 import HowToItem from './HowtoItem';
@@ -8,14 +8,22 @@ import { Post } from '~/store/apis/postsApi';
 export type PaginatedPostsProps = {
   posts: Post[];
   postsPerPage: number;
+  currentPage: number;
+  handleCurrentPageChange: (page: number) => void;
 };
 
 export default function PaginatedPosts({
   posts,
   postsPerPage,
+  currentPage,
+  handleCurrentPageChange,
 }: PaginatedPostsProps) {
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [itemOffset, setItemOffset] = useState(0);
+
+  useEffect(() => {
+    setItemOffset(currentPage * postsPerPage);
+  }, [currentPage]);
 
   const endOffset = itemOffset + postsPerPage;
   const currentPosts = posts.slice(itemOffset, endOffset);
@@ -24,6 +32,7 @@ export default function PaginatedPosts({
   const handlePageClick = (event: any) => {
     const newOffset = (event.selected * postsPerPage) % posts.length;
     setItemOffset(newOffset);
+    handleCurrentPageChange(event.selected);
     window.scrollTo(0, 0);
   };
 
@@ -41,6 +50,7 @@ export default function PaginatedPosts({
           pageRangeDisplayed={isMobile ? 1 : 2}
           marginPagesDisplayed={1}
           pageCount={pageCount}
+          forcePage={currentPage}
           previousLabel={<RiArrowLeftSLine className="text-xl" />}
           renderOnZeroPageCount={null}
           containerClassName="flex gap-3 mt-5 mb-16 md:my-5 justify-center w-full"

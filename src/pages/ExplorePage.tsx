@@ -1,5 +1,5 @@
 import { ReactNode, useLayoutEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
 
 import Button from '~/components/elements/Button';
@@ -11,34 +11,32 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useFetchPostsQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
 import Spinner from '~/components/elements/Spinner';
+import { ContextType } from '~/components/layouts/RootLayout';
 
 export default function ExplorePage() {
+  const {
+    currentExplorePage,
+    handleCurrentExplorePageChange,
+    exploreSortOption,
+    handleExploreSortOptionSelect,
+  } = useOutletContext<ContextType>();
   const [currentUser] = useAuthState(auth);
   const { data, error, isFetching } = useFetchPostsQuery();
   const [renderedPosts, setRenderedPosts] = useState<Post[]>([]);
 
   useLayoutEffect(() => {
     if (data) {
-      const sortedPosts = [...data].sort(
-        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-      );
-      setRenderedPosts(sortedPosts);
-    }
-  }, [data]);
-
-  const handleSortOptionSelect = (option: string) => {
-    if (data !== undefined) {
-      if (option === 'latest') {
+      if (exploreSortOption === 'latest') {
         const sortedPosts = [...data].sort(
           (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
         );
         setRenderedPosts(sortedPosts);
-      } else if (option === 'oldest') {
+      } else if (exploreSortOption === 'oldest') {
         const sortedPosts = [...data].sort(
           (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
         );
         setRenderedPosts(sortedPosts);
-      } else if (option === 'popularity') {
+      } else if (exploreSortOption === 'popularity') {
         const sortedPosts = [...data].sort(
           (a, b) =>
             b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
@@ -48,7 +46,8 @@ export default function ExplorePage() {
         setRenderedPosts(renderedPosts);
       }
     }
-  };
+  }, [data, exploreSortOption]);
+
   return (
     <div className="my-5 md:my-12">
       <div className="mb-3 flex items-center justify-between">
@@ -56,7 +55,10 @@ export default function ExplorePage() {
           Explore
         </h2>
         <div className="flex md:gap-3">
-          <SortOption onSortOptionSelect={handleSortOptionSelect} />
+          <SortOption
+            sortOption={exploreSortOption}
+            onSortOptionSelect={handleExploreSortOptionSelect}
+          />
           <Link to="/create">
             <Button loading={false} basic primary className="hidden md:flex">
               <RiEdit2Line className="text-2xl" />
@@ -74,7 +76,12 @@ export default function ExplorePage() {
         )}
         {(error as ReactNode) && 'Error fetching posts'}
         {renderedPosts !== undefined && (
-          <PaginatedPosts posts={renderedPosts} postsPerPage={4} />
+          <PaginatedPosts
+            posts={renderedPosts}
+            postsPerPage={4}
+            currentPage={currentExplorePage}
+            handleCurrentPageChange={handleCurrentExplorePageChange}
+          />
         )}
       </div>
 

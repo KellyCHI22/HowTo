@@ -1,5 +1,5 @@
 import { ReactNode, useLayoutEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
 
 import { auth } from '~/firebase';
@@ -12,8 +12,16 @@ import Spinner from '~/components/elements/Spinner';
 
 import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
+import { ContextType } from '~/components/layouts/RootLayout';
 
 export default function BookmarksPage() {
+  const {
+    currentBookmarksPage,
+    handleCurrentBookmarksPageChange,
+    bookmarksSortOption,
+    handleBookmarksSortOptionSelect,
+  } = useOutletContext<ContextType>();
+
   // ! need to refactor this part in every page, too messy
   const {
     data: postsData,
@@ -37,26 +45,17 @@ export default function BookmarksPage() {
       const bookmarkedPosts = postsData?.filter((post) => {
         return user?.bookmarkedPosts.includes(post.id);
       });
-      const sortedPosts = [...bookmarkedPosts].sort(
-        (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-      );
-      setBookmarkPosts(sortedPosts);
-    }
-  }, [postsData, usersData]);
-
-  const handleSortOptionSelect = (option: string) => {
-    if (bookmarkedPosts !== undefined) {
-      if (option === 'latest') {
+      if (bookmarksSortOption === 'latest') {
         const sortedPosts = [...bookmarkedPosts].sort(
           (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
         );
         setBookmarkPosts(sortedPosts);
-      } else if (option === 'oldest') {
+      } else if (bookmarksSortOption === 'oldest') {
         const sortedPosts = [...bookmarkedPosts].sort(
           (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
         );
         setBookmarkPosts(sortedPosts);
-      } else if (option === 'popularity') {
+      } else if (bookmarksSortOption === 'popularity') {
         const sortedPosts = [...bookmarkedPosts].sort(
           (a, b) =>
             b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
@@ -66,7 +65,31 @@ export default function BookmarksPage() {
         setBookmarkPosts(bookmarkedPosts);
       }
     }
-  };
+  }, [postsData, usersData, bookmarksSortOption]);
+
+  // const handleSortOptionSelect = (option: string) => {
+  //   if (bookmarkedPosts !== undefined) {
+  //     if (option === 'latest') {
+  //       const sortedPosts = [...bookmarkedPosts].sort(
+  //         (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+  //       );
+  //       setBookmarkPosts(sortedPosts);
+  //     } else if (option === 'oldest') {
+  //       const sortedPosts = [...bookmarkedPosts].sort(
+  //         (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+  //       );
+  //       setBookmarkPosts(sortedPosts);
+  //     } else if (option === 'popularity') {
+  //       const sortedPosts = [...bookmarkedPosts].sort(
+  //         (a, b) =>
+  //           b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
+  //       );
+  //       setBookmarkPosts(sortedPosts);
+  //     } else {
+  //       setBookmarkPosts(bookmarkedPosts);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="my-5 md:my-12">
@@ -75,7 +98,10 @@ export default function BookmarksPage() {
           Bookmarks
         </h2>
         <div className="flex md:gap-3">
-          <SortOption onSortOptionSelect={handleSortOptionSelect} />
+          <SortOption
+            sortOption={bookmarksSortOption}
+            onSortOptionSelect={handleBookmarksSortOptionSelect}
+          />
           <Link to="/create">
             <Button loading={false} basic primary className="hidden md:flex">
               <RiEdit2Line className="text-2xl" />
@@ -93,7 +119,12 @@ export default function BookmarksPage() {
         )}
         {(isError as ReactNode) && 'error loading bookmarked posts'}
         {bookmarkedPosts !== undefined && (
-          <PaginatedPosts posts={bookmarkedPosts} postsPerPage={4} />
+          <PaginatedPosts
+            currentPage={currentBookmarksPage}
+            handleCurrentPageChange={handleCurrentBookmarksPageChange}
+            posts={bookmarkedPosts}
+            postsPerPage={4}
+          />
         )}
       </div>
       <Link to="/create">
