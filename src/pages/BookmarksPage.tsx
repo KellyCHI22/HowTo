@@ -8,11 +8,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import Button from '~/components/elements/Button';
 import SortOption from '~/components/SortOptions';
 import PaginatedPosts from '~/components/PaginatedPosts';
-import Spinner from '~/components/elements/Spinner';
 
 import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
 import { ContextType } from '~/components/layouts/RootLayout';
+import { SkeletonHowtoItem } from '~/components/HowtoItem';
 
 export default function BookmarksPage() {
   const {
@@ -67,30 +67,6 @@ export default function BookmarksPage() {
     }
   }, [postsData, usersData, bookmarksSortOption]);
 
-  // const handleSortOptionSelect = (option: string) => {
-  //   if (bookmarkedPosts !== undefined) {
-  //     if (option === 'latest') {
-  //       const sortedPosts = [...bookmarkedPosts].sort(
-  //         (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-  //       );
-  //       setBookmarkPosts(sortedPosts);
-  //     } else if (option === 'oldest') {
-  //       const sortedPosts = [...bookmarkedPosts].sort(
-  //         (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-  //       );
-  //       setBookmarkPosts(sortedPosts);
-  //     } else if (option === 'popularity') {
-  //       const sortedPosts = [...bookmarkedPosts].sort(
-  //         (a, b) =>
-  //           b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
-  //       );
-  //       setBookmarkPosts(sortedPosts);
-  //     } else {
-  //       setBookmarkPosts(bookmarkedPosts);
-  //     }
-  //   }
-  // };
-
   return (
     <div className="my-5 md:my-12">
       <div className="mb-3 flex items-center justify-between">
@@ -113,9 +89,12 @@ export default function BookmarksPage() {
 
       <div className="flex flex-col gap-3">
         {isLoading && (
-          <div className="grid h-96 w-full place-items-center rounded-lg bg-white">
-            <Spinner />
-          </div>
+          <>
+            <SkeletonHowtoItem />
+            <SkeletonHowtoItem />
+            <SkeletonHowtoItem />
+            <SkeletonHowtoItem />
+          </>
         )}
         {(isError as ReactNode) && 'error loading bookmarked posts'}
         {bookmarkedPosts !== undefined && (

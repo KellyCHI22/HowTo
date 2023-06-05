@@ -10,8 +10,8 @@ import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useFetchPostsQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
-import Spinner from '~/components/elements/Spinner';
 import { ContextType } from '~/components/layouts/RootLayout';
+import { SkeletonHowtoItem } from '~/components/HowtoItem';
 
 export default function ExplorePage() {
   const {
@@ -70,9 +70,12 @@ export default function ExplorePage() {
 
       <div className="flex flex-col gap-3">
         {isFetching && (
-          <div className="grid h-96 w-full place-items-center rounded-lg bg-white">
-            <Spinner />
-          </div>
+          <>
+            <SkeletonHowtoItem />
+            <SkeletonHowtoItem />
+            <SkeletonHowtoItem />
+            <SkeletonHowtoItem />
+          </>
         )}
         {(error as ReactNode) && 'Error fetching posts'}
         {renderedPosts !== undefined && (
