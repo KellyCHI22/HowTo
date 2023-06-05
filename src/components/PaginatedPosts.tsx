@@ -42,27 +42,29 @@ export default function PaginatedPosts({
         currentPosts.map((post: Post) => (
           <HowToItem key={post.id} post={post} />
         ))}
-      <div>
-        <ReactPaginate
-          breakLabel="..."
-          nextLabel={<RiArrowRightSLine className="text-xl" />}
-          onPageChange={handlePageClick}
-          pageRangeDisplayed={isMobile ? 1 : 2}
-          marginPagesDisplayed={1}
-          pageCount={pageCount}
-          forcePage={currentPage}
-          previousLabel={<RiArrowLeftSLine className="text-xl" />}
-          renderOnZeroPageCount={null}
-          containerClassName="flex gap-3 mt-5 mb-16 md:my-5 justify-center w-full"
-          pageLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"
-          pageClassName="text-teal-500"
-          previousLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"
-          previousClassName="text-teal-500"
-          nextLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"
-          nextClassName="text-teal-500"
-          activeClassName="text-white bg-teal-500 rounded-full"
-        />
-      </div>
+      {posts.length > 0 && (
+        <div>
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel={<RiArrowRightSLine className="text-xl" />}
+            onPageChange={handlePageClick}
+            pageRangeDisplayed={isMobile ? 1 : 2}
+            marginPagesDisplayed={1}
+            pageCount={pageCount}
+            forcePage={currentPage}
+            previousLabel={<RiArrowLeftSLine className="text-xl" />}
+            renderOnZeroPageCount={null}
+            containerClassName="flex gap-3 mt-5 mb-16 md:my-5 justify-center w-full"
+            pageLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"
+            pageClassName="text-teal-500"
+            previousLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"
+            previousClassName="text-teal-500"
+            nextLinkClassName="border border-teal-500 block w-8 h-8 grid place-items-center rounded-full"
+            nextClassName="text-teal-500"
+            activeClassName="text-white bg-teal-500 rounded-full"
+          />
+        </div>
+      )}
     </>
   );
 }
