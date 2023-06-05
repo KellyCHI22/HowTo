@@ -248,7 +248,7 @@ export default function HowToPage() {
             <div className="mt-5  flex items-center justify-end gap-3 text-gray-400">
               <div className="flex items-center gap-1">
                 <RiChat1Line className="md:text-2xl" />
-                <span>{post?.commentsCount}</span>
+                <span>{commentsData?.length}</span>
                 <span className="hidden lg:block">
                   {post && post?.commentsCount > 1 ? 'comments' : 'comment'}
                 </span>

@@ -17,7 +17,11 @@ import { ContextType } from './RootLayout';
 
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
+import {
+  useFetchCommentsQuery,
+  useFetchPostsQuery,
+  useFetchUsersQuery,
+} from '~/store';
 import Spinner from '../elements/Spinner';
 import { Post } from '~/store/apis/postsApi';
 import { User } from '~/store/apis/usersApi';
@@ -166,6 +170,16 @@ function AsideLatestHowTo() {
 }
 
 function LatestHowToItem({ howto }: { howto: Post }) {
+  const {
+    data: commentsData,
+    error: errorCommentsData,
+    isFetching: isFetchingCommentsData,
+  } = useFetchCommentsQuery(howto.id as string);
+
+  if (isFetchingCommentsData) {
+    return <div className="h-[5.75rem] bg-white" />;
+  }
+
   return (
     <Link to={`/howtos/${howto.id}`} className="block px-3">
       <div className="rounded-lg p-2 hover:bg-gray-100">
@@ -173,7 +187,7 @@ function LatestHowToItem({ howto }: { howto: Post }) {
         <div className="flex items-center justify-start gap-3 text-gray-400">
           <div className="flex items-center gap-1">
             <RiChat1Line />
-            {howto.commentsCount}
+            {commentsData?.length}
           </div>
           <div className="flex items-center gap-1">
             <RiHeartLine />
