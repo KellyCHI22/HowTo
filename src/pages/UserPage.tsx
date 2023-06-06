@@ -307,7 +307,6 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
   // * submit
   const [updateUser, updateUserResults] = useUpdateUserMutation();
   const handleSubmit = async () => {
-    console.log({ bio, avatar, cover });
     if (user) {
       if (bio?.trim().length === 0) {
         return setErrorMessage('Bio should not be blank');
