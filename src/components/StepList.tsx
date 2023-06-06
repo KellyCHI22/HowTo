@@ -1,7 +1,6 @@
-import { useState, ChangeEvent, useRef, Dispatch, SetStateAction } from 'react';
+import { useState, ChangeEvent, useRef } from 'react';
 import { DropResult, DragDropContext, Draggable } from 'react-beautiful-dnd';
 import {
-  RiCloseFill,
   RiAddFill,
   RiArrowDownSLine,
   RiArrowUpSLine,
@@ -24,8 +23,6 @@ type StepListPorps = {
 };
 
 export default function StepList({ steps, handleStepsUpdate }: StepListPorps) {
-  // const [steps, updateSteps] = useState(steps);
-
   function handleOnDragEnd(result: DropResult) {
     if (!result.destination) return;
 
@@ -36,7 +33,10 @@ export default function StepList({ steps, handleStepsUpdate }: StepListPorps) {
     handleStepsUpdate(items);
   }
 
-  function handleInputChange(event: ChangeEvent<HTMLInputElement>, id: string) {
+  function handleInputChange(
+    event: ChangeEvent<HTMLTextAreaElement>,
+    id: string
+  ) {
     const updatedSteps = steps.map((step) => {
       if (step.id === id) {
         return {
@@ -64,7 +64,7 @@ export default function StepList({ steps, handleStepsUpdate }: StepListPorps) {
   }
 
   return (
-    <div className="">
+    <div>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <StrictModeDroppable droppableId="steps">
           {(provided) => (
@@ -106,13 +106,21 @@ export default function StepList({ steps, handleStepsUpdate }: StepListPorps) {
   );
 }
 
+type DraggableStepItemProps = {
+  steps: Step[];
+  step: Step;
+  index: number;
+  handleInputChange: (e: ChangeEvent<HTMLTextAreaElement>, id: string) => void;
+  handleDeleteStep: (id: string) => void;
+};
+
 function DraggableStepItem({
   steps,
   step,
   index,
   handleInputChange,
   handleDeleteStep,
-}) {
+}: DraggableStepItemProps) {
   const [showTextarea, setShowTextArea] = useState(false);
   const handleShowTextarea = () => setShowTextArea((prev) => !prev);
   const stepDescriptionRef = useRef<HTMLTextAreaElement>(null);

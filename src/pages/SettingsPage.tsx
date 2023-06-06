@@ -44,9 +44,13 @@ export default function SettingsPage() {
     (user) => user.uid === currentUser?.uid
   );
 
+  if (errorUsersData) {
+    console.log(errorUsersData);
+  }
+
   return (
     <>
-      {isFetchingUsersData ? (
+      {isFetchingUsersData || errorUsersData ? (
         <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
           <Spinner />
         </div>
@@ -192,6 +196,10 @@ function BasicSettings({ currentUserData }: { currentUserData: User }) {
     }
   };
 
+  if (errorUpdateEmail) {
+    console.log(errorUpdateEmail);
+  }
+
   return (
     <div>
       <div>
@@ -292,6 +300,10 @@ function PasswordSettings() {
       }
     }
   };
+
+  if (errorUpdatePassword) {
+    console.log(errorUpdatePassword);
+  }
 
   return (
     <div>
@@ -406,6 +418,10 @@ function OtherSettings({ currentUserData }: { currentUserData: User }) {
       }
     }
   };
+
+  if (errorDeleteUser) {
+    console.log(errorDeleteUser);
+  }
 
   return (
     <div>

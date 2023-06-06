@@ -1,6 +1,7 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import {
   FieldValue,
+  Timestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -16,7 +17,7 @@ import { User } from './usersApi';
 
 export type Post = {
   id: string;
-  createdAt: Date | FieldValue;
+  createdAt: Date;
   title: string;
   introduction: string;
   tags: string[];
@@ -30,18 +31,42 @@ export type Post = {
   }[];
 };
 
+// * createdAt has a different type
+export type PostCreateType = {
+  id: string;
+  createdAt: Timestamp | FieldValue;
+  title: string;
+  introduction: string;
+  tags: string[];
+  authorId: string;
+  image: string;
+  commentsCount: number;
+  likesCount: number;
+  steps: {
+    id: string;
+    description: string;
+  }[];
+};
+
+type CustomErrorType = { message: string };
+
 const postsApi = createApi({
   reducerPath: 'posts',
-  baseQuery: fakeBaseQuery(),
-  endpoints(builder) {
+  baseQuery: fakeBaseQuery<CustomErrorType>(),
+  tagTypes: ['Posts'],
+  endpoints: (builder) => {
     return {
       fetchPosts: builder.query<Post[], void>({
-        providesTags: (result, error) => {
-          const tags = result?.map((post: Post) => {
-            return { type: 'Post', id: post.id };
-          });
-          tags?.push({ type: 'Posts', id: 'LIST' });
-          return tags as any;
+        providesTags: (result) => {
+          if (result) {
+            const tags = result?.map((post: Post) => {
+              return { type: 'Posts' as const, id: post.id };
+            });
+            tags?.push({ type: 'Posts', id: 'LIST' });
+            return tags;
+          } else {
+            return [{ type: 'Posts', id: 'LIST' }];
+          }
         },
         queryFn: async () => {
           try {
@@ -56,67 +81,84 @@ const postsApi = createApi({
             });
             return { data: filteredData };
           } catch (error) {
-            return { error: error };
+            return { error: { message: 'error fetching posts' } };
           }
         },
       }),
+      // ! idk how to type this one
       addPost: builder.mutation({
         invalidatesTags: () => {
-          return [{ type: 'Posts', id: 'LIST' }] as any;
+          return [{ type: 'Posts', id: 'LIST' }];
         },
-        queryFn: async (newPost: Partial<Post>) => {
+        queryFn: async (newPost: Partial<PostCreateType>) => {
           try {
             const postsColRef = collection(db, 'posts');
             const docRef = await addDoc(postsColRef, newPost);
             return { data: { ...newPost, id: docRef.id } };
           } catch (error) {
-            return { error: error };
+            return { error: { message: 'error adding posts' } };
           }
         },
       }),
-      removePost: builder.mutation({
-        invalidatesTags: (result, error, post: Post) => {
-          return [{ type: 'Post', id: post.id }] as any;
+      removePost: builder.mutation<Post, Post>({
+        invalidatesTags: (_, __, post: Post) => {
+          return [{ type: 'Posts', id: post.id }];
         },
-        queryFn: async (post: Post) => {
-          const postDoc = doc(db, 'posts', post.id);
-          await deleteDoc(postDoc);
-          return { data: post };
-        },
-      }),
-      updatePost: builder.mutation({
-        invalidatesTags: (result, error, [postId, updatedPost]) => {
-          return [{ type: 'Post', id: postId }] as any;
-        },
-        queryFn: async ([postId, updatedPost]: [string, Partial<Post>]) => {
-          const postDoc = doc(db, 'posts', postId);
-          await updateDoc(postDoc, updatedPost);
-          return { data: updatedPost };
+        queryFn: async (post) => {
+          try {
+            const postDoc = doc(db, 'posts', post.id);
+            await deleteDoc(postDoc);
+            return { data: post };
+          } catch (error) {
+            return { error: { message: 'error removing posts' } };
+          }
         },
       }),
-      deleteUserPosts: builder.mutation({
-        invalidatesTags: (result, error) => {
-          const tags = result?.map((post: Post) => {
-            return { type: 'Post', id: post.id };
-          });
-          tags?.push({ type: 'Posts', id: 'LIST' });
-          return tags as any;
+      updatePost: builder.mutation<Partial<Post>, [string, Partial<Post>]>({
+        invalidatesTags: (_, __, [postId]) => {
+          return [{ type: 'Posts', id: postId }];
         },
-        queryFn: async (user: User) => {
-          const batch = writeBatch(db);
-          const postsColRef = collection(db, 'posts');
-          const q = query(postsColRef, where('authorId', '==', user.uid));
+        queryFn: async ([postId, updatedPost]) => {
+          try {
+            const postDoc = doc(db, 'posts', postId);
+            await updateDoc(postDoc, updatedPost);
+            return { data: updatedPost };
+          } catch (error) {
+            return { error: { message: 'error updating posts' } };
+          }
+        },
+      }),
+      deleteUserPosts: builder.mutation<Post[], User>({
+        invalidatesTags: (result) => {
+          if (result) {
+            const tags = result?.map((post: Post) => {
+              return { type: 'Posts' as const, id: post.id };
+            });
+            tags?.push({ type: 'Posts', id: 'LIST' });
+            return tags;
+          } else {
+            return [{ type: 'Posts', id: 'LIST' }];
+          }
+        },
+        queryFn: async (user) => {
+          try {
+            const batch = writeBatch(db);
+            const postsColRef = collection(db, 'posts');
+            const q = query(postsColRef, where('authorId', '==', user.uid));
 
-          const querySnapshot = await getDocs(q);
-          querySnapshot.forEach((doc) => batch.delete(doc.ref));
-          batch.commit(); // * delete multiple docs at once
-          const filteredData = querySnapshot.docs.map((doc) => {
-            return {
-              id: doc.id,
-              ...doc.data(),
-            } as Post;
-          });
-          return { data: filteredData };
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => batch.delete(doc.ref));
+            batch.commit(); // * delete multiple docs at once
+            const filteredData = querySnapshot.docs.map((doc) => {
+              return {
+                id: doc.id,
+                ...doc.data(),
+              } as Post;
+            });
+            return { data: filteredData };
+          } catch (error) {
+            return { error: { message: 'error deleting user posts' } };
+          }
         },
       }),
     };

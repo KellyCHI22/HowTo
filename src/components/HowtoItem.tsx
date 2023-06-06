@@ -23,7 +23,6 @@ export default function HowToItem({ post }: Props) {
     authorId,
     image,
     likesCount,
-    commentsCount,
   } = post;
   const {
     data: usersData,
@@ -39,6 +38,10 @@ export default function HowToItem({ post }: Props) {
 
   if (isFetchingUsersData || isFetchingCommentsData) {
     return <SkeletonHowtoItem />;
+  }
+
+  if (errorUsersData || errorCommentsData) {
+    alert('Something went wrong, please try again!');
   }
 
   return (

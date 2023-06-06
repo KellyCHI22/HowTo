@@ -27,10 +27,14 @@ export default function SearchResultsPage() {
     }
   });
 
+  if (errorPostsData) {
+    console.log(errorPostsData);
+  }
+
   return (
     <>
       <div className="my-5 md:my-12">
-        {isFetchingPostsData ? (
+        {isFetchingPostsData || errorPostsData ? (
           <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
             <Spinner />
           </div>

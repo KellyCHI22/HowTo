@@ -22,20 +22,28 @@ export type Comment = {
   userId: string;
 };
 
+type CustomErrorType = { message: string };
+type TagType = 'Comments' | 'PostComments';
+
 const commentsApi = createApi({
   reducerPath: 'comments',
-  baseQuery: fakeBaseQuery(),
-  endpoints(builder) {
+  baseQuery: fakeBaseQuery<CustomErrorType>(),
+  tagTypes: ['Comments', 'PostComments'],
+  endpoints: (builder) => {
     return {
       fetchComments: builder.query<Comment[], string>({
-        providesTags: (result, error, postId) => {
-          const tags = result?.map((comment: Comment) => {
-            return { type: 'Comment', id: comment.id };
-          });
-          tags?.push({ type: 'PostComments', id: postId });
-          return tags as any;
+        providesTags: (result, _, postId) => {
+          if (result) {
+            const tags = result?.map((comment: Comment) => {
+              return { type: 'Comments' as TagType, id: comment.id };
+            });
+            tags?.push({ type: 'PostComments', id: postId });
+            return tags;
+          } else {
+            return [{ type: 'PostComments', id: postId }];
+          }
         },
-        queryFn: async (postId: string) => {
+        queryFn: async (postId) => {
           try {
             const commentsColRef = collection(db, 'comments');
             const q = query(commentsColRef, where('postId', '==', `${postId}`));
@@ -49,65 +57,86 @@ const commentsApi = createApi({
             });
             return { data: filteredData };
           } catch (error) {
-            return { error: error };
+            return { error: { message: 'error fetching comments' } };
           }
         },
       }),
+      // ! idk how to type this one
       addComment: builder.mutation({
-        invalidatesTags: (result, error, newComment) => {
-          return [{ type: 'PostComments', id: newComment.postId }] as any;
+        invalidatesTags: (_, __, newComment) => {
+          return [{ type: 'PostComments', id: newComment.postId }];
         },
         queryFn: async (newComment: Partial<Comment>) => {
-          const commentsColRef = collection(db, 'comments');
-          const docRef = await addDoc(commentsColRef, newComment);
-          return { data: { id: docRef.id, ...newComment } };
+          try {
+            const commentsColRef = collection(db, 'comments');
+            const docRef = await addDoc(commentsColRef, newComment);
+            return { data: { id: docRef.id, ...newComment } };
+          } catch (error) {
+            return { error: { message: 'error adding comment' } };
+          }
         },
       }),
-      removeComment: builder.mutation({
-        invalidatesTags: (result, error, comment) => {
-          return [{ type: 'PostComments', id: comment.postId }] as any;
+      removeComment: builder.mutation<Comment, Comment>({
+        invalidatesTags: (_, __, comment) => {
+          return [{ type: 'PostComments', id: comment.postId }];
         },
-        queryFn: async (comment: Comment) => {
-          const commentDoc = doc(db, 'comments', comment.id);
-          await deleteDoc(commentDoc);
-          return { data: comment };
-        },
-      }),
-      updateComment: builder.mutation({
-        invalidatesTags: (result, error, [comment, updatedComment]) => {
-          return [{ type: 'PostComments', id: comment.postId }] as any;
-        },
-        queryFn: async ([comment, updatedComment]: [
-          Comment,
-          Partial<Comment>
-        ]) => {
-          const commentDoc = doc(db, 'comments', comment.id);
-          await updateDoc(commentDoc, updatedComment);
-          return { data: updatedComment };
+        queryFn: async (comment) => {
+          try {
+            const commentDoc = doc(db, 'comments', comment.id);
+            await deleteDoc(commentDoc);
+            return { data: comment };
+          } catch (error) {
+            return { error: { message: 'error deleting comment' } };
+          }
         },
       }),
-      deleteUserComments: builder.mutation({
-        invalidatesTags: (result, error) => {
-          const tags = result?.map((comment: Comment) => {
-            return { type: 'Comment', id: comment.id };
-          });
-          return tags as any;
+      updateComment: builder.mutation<
+        Partial<Comment>,
+        [Comment, Partial<Comment>]
+      >({
+        invalidatesTags: (_, __, [comment]) => {
+          return [{ type: 'PostComments', id: comment.postId }];
         },
-        queryFn: async (user: User) => {
-          const batch = writeBatch(db);
-          const commentsColRef = collection(db, 'comments');
-          const q = query(commentsColRef, where('userId', '==', user.uid));
-          const querySnapshot = await getDocs(q);
-          querySnapshot.forEach((doc) => batch.delete(doc.ref));
-          batch.commit();
-          const filteredData = querySnapshot.docs.map((doc) => {
-            return {
-              id: doc.id,
-              ...doc.data(),
-              createdAt: doc.data().createdAt.toDate(),
-            } as Comment;
-          });
-          return { data: filteredData };
+        queryFn: async ([comment, updatedComment]) => {
+          try {
+            const commentDoc = doc(db, 'comments', comment.id);
+            await updateDoc(commentDoc, updatedComment);
+            return { data: updatedComment };
+          } catch (error) {
+            return { error: { message: 'error updating comment' } };
+          }
+        },
+      }),
+      deleteUserComments: builder.mutation<Comment[], User>({
+        invalidatesTags: (result) => {
+          if (result) {
+            const tags = result?.map((comment: Comment) => {
+              return { type: 'Comments' as TagType, id: comment.id };
+            });
+            return tags;
+          } else {
+            return [];
+          }
+        },
+        queryFn: async (user) => {
+          try {
+            const batch = writeBatch(db);
+            const commentsColRef = collection(db, 'comments');
+            const q = query(commentsColRef, where('userId', '==', user.uid));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => batch.delete(doc.ref));
+            batch.commit();
+            const filteredData = querySnapshot.docs.map((doc) => {
+              return {
+                id: doc.id,
+                ...doc.data(),
+                createdAt: doc.data().createdAt.toDate(),
+              } as Comment;
+            });
+            return { data: filteredData };
+          } catch (error) {
+            return { error: { message: 'error deleting user comments' } };
+          }
         },
       }),
     };

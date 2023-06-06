@@ -149,12 +149,17 @@ function AsideLatestHowTo() {
       ?.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice(0, 3);
   }
+
+  if (errorPostsData) {
+    console.log(errorPostsData);
+  }
+
   return (
     <div className="w-64 rounded-xl bg-white shadow-basic">
       <h3 className="border-b border-b-gray-200 px-5 py-3 text-lg font-bold text-teal-500">
         Latest How To
       </h3>
-      {isFetchingPostsData ? (
+      {isFetchingPostsData || errorPostsData ? (
         <div className="grid h-72 place-items-center">
           <Spinner />
         </div>
@@ -176,8 +181,12 @@ function LatestHowToItem({ howto }: { howto: Post }) {
     isFetching: isFetchingCommentsData,
   } = useFetchCommentsQuery(howto.id as string);
 
-  if (isFetchingCommentsData) {
+  if (isFetchingCommentsData || errorCommentsData) {
     return <div className="h-[5.75rem] bg-white" />;
+  }
+
+  if (errorCommentsData) {
+    console.log(errorCommentsData);
   }
 
   return (
@@ -212,6 +221,7 @@ function AsideTopUsers() {
   } = useFetchUsersQuery();
 
   const isLoading = isFetchingPostsData || isFetchingUsersData;
+  const isError = errorPostsData || errorUsersData;
   const [topUsers, setTopUsers] = useState<User[]>([]);
   useEffect(() => {
     if (postsData && usersData) {
@@ -220,9 +230,13 @@ function AsideTopUsers() {
     }
   }, [postsData, usersData]);
 
+  if (isError) {
+    console.log(errorPostsData || errorUsersData);
+  }
+
   return (
     <>
-      {isLoading ? (
+      {isLoading || isError ? (
         <div className="grid h-72 place-items-center">
           <Spinner />
         </div>

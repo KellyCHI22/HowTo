@@ -59,6 +59,8 @@ export default function HowToPage() {
   const isLoading =
     isFetchingPostsData || isFetchingUsersData || isFetchingCommentsData;
 
+  const isError = errorPostsData || errorUsersData || errorCommentsData;
+
   // * delete post
   const [removePost, removePostResults] = useRemovePostMutation();
   const handleDeletePost = async () => {
@@ -139,12 +141,16 @@ export default function HowToPage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isError) {
     return (
       <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
         <Spinner />
       </div>
     );
+  }
+
+  if (isError) {
+    console.log(errorPostsData || errorUsersData || errorCommentsData);
   }
 
   return (
@@ -303,7 +309,12 @@ export default function HowToPage() {
       {/* comments */}
       <div className="space-y-3">
         {commentsData?.map((comment) => (
-          <CommentItem key={comment.id} comment={comment} post={post} />
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+            post={post}
+            usersData={usersData}
+          />
         ))}
       </div>
 

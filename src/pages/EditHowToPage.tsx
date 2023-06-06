@@ -82,7 +82,6 @@ export default function EditHowToPage() {
   } = useFetchPostsQuery();
 
   const post = postsData?.find((post) => post.id === id) as Post;
-  const isLoading = isFetchingPostsData;
 
   useLayoutEffect(() => {
     if (postsData) {
@@ -137,12 +136,16 @@ export default function EditHowToPage() {
     }
   };
 
-  if (isLoading) {
+  if (isFetchingPostsData || errorPostsData) {
     return (
       <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
         <Spinner />
       </div>
     );
+  }
+
+  if (errorPostsData) {
+    console.log(errorPostsData);
   }
 
   return (

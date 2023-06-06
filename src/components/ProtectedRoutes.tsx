@@ -12,8 +12,7 @@ import { ContextType } from './layouts/RootLayout';
 import Spinner from './elements/Spinner';
 
 export default function ProtectedRoutes() {
-  const [currentUser, loadingCurrentUser, errorCurrentUser] =
-    useAuthState(auth);
+  const [currentUser, loadingCurrentUser] = useAuthState(auth);
   const context = useOutletContext<ContextType>();
 
   if (loadingCurrentUser)

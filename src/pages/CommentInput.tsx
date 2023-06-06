@@ -76,7 +76,7 @@ export default function CommentInput({ post }: CommentInputProps) {
         <div className="flex items-center justify-between">
           <p className="text-red-500">{commentInputError}</p>
           <Button
-            loading={addCommentResults.isLoading}
+            loading={addCommentResults.isLoading || updatePostResults.isLoading}
             primary
             basic
             className="mt-2 self-end font-bold"

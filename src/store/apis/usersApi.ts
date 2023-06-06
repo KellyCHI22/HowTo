@@ -23,48 +23,68 @@ export type User = {
   bookmarkedPosts: string[];
 };
 
+type CustomErrorType = { message: string };
+
 const usersApi = createApi({
   reducerPath: 'users',
-  baseQuery: fakeBaseQuery(),
-  endpoints(builder) {
+  baseQuery: fakeBaseQuery<CustomErrorType>(),
+  tagTypes: ['Users'],
+  endpoints: (builder) => {
     return {
       fetchUsers: builder.query<User[], void>({
-        providesTags: (result, error) => {
-          const tags = result?.map((user: User) => {
-            return { type: 'User', id: user.uid };
-          });
-          return tags as any;
+        providesTags: (result) => {
+          if (result) {
+            const tags = result?.map((user: User) => {
+              return { type: 'Users' as const, id: user.uid };
+            });
+            tags?.push({ type: 'Users', id: 'LIST' });
+            return tags;
+          } else {
+            return [{ type: 'Users', id: 'LIST' }];
+          }
         },
         queryFn: async () => {
-          const usersColRef = collection(db, 'users');
-          const docSnapshot = await getDocs(usersColRef);
-          const filteredData = docSnapshot.docs.map((doc) => {
-            return {
-              id: doc.id,
-              ...doc.data(),
-            } as User;
-          });
-          return { data: filteredData };
+          try {
+            const usersColRef = collection(db, 'users');
+            const docSnapshot = await getDocs(usersColRef);
+            const filteredData = docSnapshot.docs.map((doc) => {
+              return {
+                id: doc.id,
+                ...doc.data(),
+              } as User;
+            });
+            return { data: filteredData };
+          } catch (error) {
+            return { error: { message: 'error fetching users' } };
+          }
         },
       }),
-      updateUser: builder.mutation({
-        invalidatesTags: (result, error, [user, updatedUser]) => {
-          return [{ type: 'User', id: user.uid }] as any;
+      updateUser: builder.mutation<Partial<User>, [User, Partial<User>]>({
+        invalidatesTags: (_, __, [user]) => {
+          return [{ type: 'Users', id: user.uid }];
         },
-        queryFn: async ([user, updatedUser]: [User, Partial<User>]) => {
-          const userDoc = doc(db, 'users', user.id);
-          await updateDoc(userDoc, updatedUser);
-          return { data: updatedUser };
+        queryFn: async ([user, updatedUser]) => {
+          try {
+            const userDoc = doc(db, 'users', user.id);
+            await updateDoc(userDoc, updatedUser);
+            return { data: updatedUser };
+          } catch (error) {
+            return { error: { message: 'error updating user' } };
+          }
         },
       }),
-      deleteUser: builder.mutation({
-        invalidatesTags: (result, error, user) => {
-          return [{ type: 'User', id: user.uid }] as any;
+      deleteUser: builder.mutation<User, User>({
+        invalidatesTags: (_, __, user) => {
+          return [{ type: 'Users', id: user.uid }];
         },
         queryFn: async (user) => {
-          const userDoc = doc(db, 'users', user.id);
-          await deleteDoc(userDoc);
-          return { data: user };
+          try {
+            const userDoc = doc(db, 'users', user.id);
+            await deleteDoc(userDoc);
+            return { data: user };
+          } catch (error) {
+            return { error: { message: 'error deleting user' } };
+          }
         },
       }),
     };

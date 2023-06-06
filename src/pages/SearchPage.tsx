@@ -34,6 +34,10 @@ export default function SearchPage() {
     renderedTags = tags.splice(0, 10);
   }
 
+  if (errorPostsData) {
+    console.log(errorPostsData);
+  }
+
   return (
     <>
       <div className="my-5 md:my-12">
@@ -51,7 +55,7 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {isFetchingPostsData ? (
+        {isFetchingPostsData || errorPostsData ? (
           <div className="grid h-96 w-full place-items-center">
             <Spinner />
           </div>

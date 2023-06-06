@@ -32,8 +32,7 @@ export default function MobileSidebar({
   toggleLoginModal,
   toggleSignupModal,
 }: MobileSidebarProps) {
-  const [currentUser, loadingCurrentUser, errorCurrentUser] =
-    useAuthState(auth);
+  const [currentUser] = useAuthState(auth);
   const [signOut, loadingSignOut, errorSignOut] = useSignOut(auth);
   const handleLogOut = async () => {
     const success = await signOut();
@@ -41,6 +40,10 @@ export default function MobileSidebar({
       alert('You are signed out');
     }
   };
+
+  if (errorSignOut) {
+    alert('Something went wrong when signing out, please try again');
+  }
 
   return (
     <>
@@ -121,7 +124,10 @@ export default function MobileSidebar({
               <div className="absolute bottom-5">
                 <button
                   onClick={handleLogOut}
-                  className="flex items-center rounded-lg p-2 hover:bg-gray-100 "
+                  className={clsx(
+                    'flex items-center rounded-lg p-2 hover:bg-gray-100',
+                    { 'pointer-events-none': loadingSignOut }
+                  )}
                 >
                   <RiLogoutBoxRLine className="text-2xl text-gray-400" />
                   <span className="ml-3 flex-1 whitespace-nowrap">Log out</span>

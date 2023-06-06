@@ -2,11 +2,7 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import {
-  useFetchUsersQuery,
-  useUpdatePostMutation,
-  useRemoveCommentMutation,
-} from '~/store';
+import { useUpdatePostMutation, useRemoveCommentMutation } from '~/store';
 import { Post } from '~/store/apis/postsApi.ts';
 import { Comment, useUpdateCommentMutation } from '~/store/apis/commentsApi.ts';
 import clsx from 'clsx';
@@ -21,20 +17,21 @@ import ReactTimeAgo from 'react-time-ago';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import Button from './elements/Button';
 import Textarea from './elements/Textarea';
+import { User } from '~/store/apis/usersApi';
 
 type CommentItemProps = {
   comment: Comment;
   post: Post | undefined;
+  usersData: User[] | undefined;
 };
 
-export default function CommentItem({ comment, post }: CommentItemProps) {
+export default function CommentItem({
+  comment,
+  post,
+  usersData,
+}: CommentItemProps) {
   const [currentUser] = useAuthState(auth);
   const { createdAt, content, userId } = comment;
-  const {
-    data: usersData,
-    error: errorUsersData,
-    isFetching: isFetchingUsersData,
-  } = useFetchUsersQuery();
   const user = usersData?.find((user) => user.uid === userId);
 
   const [showOption, setShowOption] = useState(false);
@@ -86,10 +83,6 @@ export default function CommentItem({ comment, post }: CommentItemProps) {
     }
   };
 
-  if (isFetchingUsersData) {
-    return <>{'loading'}</>;
-  }
-
   return (
     <>
       {isEditMode ? (
@@ -113,7 +106,9 @@ export default function CommentItem({ comment, post }: CommentItemProps) {
             />
             <div className="mt-2 flex justify-between">
               <Button
-                loading={removeCommentResults.isLoading}
+                loading={
+                  removeCommentResults.isLoading || updatePostResults.isLoading
+                }
                 danger
                 rounded
                 className="absolute left-4"

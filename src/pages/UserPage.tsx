@@ -48,6 +48,11 @@ export default function UserPage() {
   const handleEditMode = () => setIsEditMode((prev) => !prev);
 
   const isLoading = isFetchingPostsData || isFetchingUsersData;
+  const isError = errorPostsData || errorUsersData;
+
+  if (isError) {
+    console.log(errorPostsData || errorUsersData);
+  }
 
   return (
     <>
