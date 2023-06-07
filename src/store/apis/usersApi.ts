@@ -5,7 +5,7 @@ import {
   doc,
   getDocs,
   updateDoc,
-} from 'firebase/firestore';
+} from 'firebase/firestore/lite';
 import { db } from '~/firebase';
 
 export type User = {

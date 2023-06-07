@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import StepList, { Step } from '~/components/StepList';
 import Button from '~/components/elements/Button';
 import { useAddPostMutation } from '~/store';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore/lite';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, storage } from '~/firebase';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';

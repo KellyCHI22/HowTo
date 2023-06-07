@@ -1,5 +1,5 @@
 import { auth } from '~/firebase';
-import { serverTimestamp } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore/lite';
 import { useState, useRef } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { RiSendPlaneFill } from 'react-icons/ri';
