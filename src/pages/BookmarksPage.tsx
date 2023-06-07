@@ -13,6 +13,7 @@ import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
 import { ContextType } from '~/components/layouts/RootLayout';
 import { SkeletonHowtoItem } from '~/components/HowtoItem';
+import getSortedPosts from '~/utils/getSortedPosts';
 
 export default function BookmarksPage() {
   const {
@@ -45,25 +46,8 @@ export default function BookmarksPage() {
       const bookmarkedPosts = postsData?.filter((post) => {
         return user?.bookmarkedPosts.includes(post.id);
       });
-      if (bookmarksSortOption === 'latest') {
-        const sortedPosts = [...bookmarkedPosts].sort(
-          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-        );
-        setBookmarkPosts(sortedPosts);
-      } else if (bookmarksSortOption === 'oldest') {
-        const sortedPosts = [...bookmarkedPosts].sort(
-          (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-        );
-        setBookmarkPosts(sortedPosts);
-      } else if (bookmarksSortOption === 'popularity') {
-        const sortedPosts = [...bookmarkedPosts].sort(
-          (a, b) =>
-            b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
-        );
-        setBookmarkPosts(sortedPosts);
-      } else {
-        setBookmarkPosts(bookmarkedPosts);
-      }
+      const sortedPosts = getSortedPosts(bookmarksSortOption, bookmarkedPosts);
+      setBookmarkPosts(sortedPosts);
     }
   }, [postsData, usersData, bookmarksSortOption]);
 

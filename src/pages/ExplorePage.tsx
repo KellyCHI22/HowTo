@@ -12,6 +12,7 @@ import { useFetchPostsQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
 import { ContextType } from '~/components/layouts/RootLayout';
 import { SkeletonHowtoItem } from '~/components/HowtoItem';
+import getSortedPosts from '~/utils/getSortedPosts';
 
 export default function ExplorePage() {
   const {
@@ -26,25 +27,8 @@ export default function ExplorePage() {
 
   useLayoutEffect(() => {
     if (data) {
-      if (exploreSortOption === 'latest') {
-        const sortedPosts = [...data].sort(
-          (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
-        );
-        setRenderedPosts(sortedPosts);
-      } else if (exploreSortOption === 'oldest') {
-        const sortedPosts = [...data].sort(
-          (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
-        );
-        setRenderedPosts(sortedPosts);
-      } else if (exploreSortOption === 'popularity') {
-        const sortedPosts = [...data].sort(
-          (a, b) =>
-            b.commentsCount + b.likesCount - a.commentsCount - a.likesCount
-        );
-        setRenderedPosts(sortedPosts);
-      } else {
-        setRenderedPosts(renderedPosts);
-      }
+      const sortedPosts = getSortedPosts(exploreSortOption, data);
+      setRenderedPosts(sortedPosts);
     }
   }, [data, exploreSortOption]);
 
