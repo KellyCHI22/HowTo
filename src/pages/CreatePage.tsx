@@ -76,8 +76,9 @@ export default function CreatePage() {
   const [steps, setSteps] = useState<Step[]>([]);
   const handleStepsUpdate = (steps: Step[]) => setSteps(steps);
 
-  // submit
+  // * submit
   const [addPost, results] = useAddPostMutation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
     if (title.trim().length === 0) {
       return setErrorMessage('Title should not be blank');
@@ -98,6 +99,7 @@ export default function CreatePage() {
     }
 
     if (currentUser) {
+      setIsSubmitting(true);
       if (image !== null) {
         try {
           const imageRef = ref(
@@ -117,8 +119,12 @@ export default function CreatePage() {
             likesCount: 0,
             steps: steps,
           });
-          if (success) return navigate('/howtos');
+          if (success) {
+            setIsSubmitting(false);
+            return navigate('/howtos');
+          }
         } catch {
+          setIsSubmitting(false);
           return setErrorMessage('Something went wrong, please try again');
         }
       }
@@ -287,7 +293,7 @@ export default function CreatePage() {
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
           <Button
-            loading={results.isLoading}
+            loading={results.isLoading || isSubmitting}
             primary
             basic
             onClick={handleSubmit}

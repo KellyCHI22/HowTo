@@ -5,6 +5,7 @@ import {
   forwardRef,
 } from 'react';
 import clsx from 'clsx';
+import { RiLoader4Fill } from 'react-icons/ri';
 
 interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   loading: boolean;
@@ -60,7 +61,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           }
         )}
       >
-        {children}
+        {loading ? (
+          <RiLoader4Fill className="animate-spin text-2xl" />
+        ) : (
+          children
+        )}
       </button>
     );
   }

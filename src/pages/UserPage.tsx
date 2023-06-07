@@ -306,6 +306,7 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
 
   // * submit
   const [updateUser, updateUserResults] = useUpdateUserMutation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
     if (user) {
       if (bio?.trim().length === 0) {
@@ -317,6 +318,7 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
       }
 
       try {
+        setIsSubmitting(true);
         const avatarUrl = await getImageUrl(avatar, 'user-image');
         const coverUrl = await getImageUrl(cover, 'user-image');
         const success = await updateUser([
@@ -327,8 +329,12 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
             cover_image: coverUrl ? coverUrl : user.cover_image,
           },
         ]);
-        if (success) return handleEditMode();
+        if (success) {
+          setIsSubmitting(false);
+          return handleEditMode();
+        }
       } catch {
+        setIsSubmitting(false);
         return setErrorMessage('Something went wrong, please try again');
       }
     }
@@ -413,7 +419,7 @@ function EditProfile({ handleEditMode, user }: EditProfileProps) {
                 <RiArrowGoBackLine className="text-2xl" />
               </Button>
               <Button
-                loading={updateUserResults.isLoading}
+                loading={updateUserResults.isLoading || isSubmitting}
                 primary
                 basic
                 className="font-bold"

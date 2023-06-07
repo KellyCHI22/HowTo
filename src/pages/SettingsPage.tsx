@@ -137,6 +137,7 @@ function BasicSettings({ currentUserData }: { currentUserData: User }) {
   // * submit
   const [updateUser, updateUserResults] = useUpdateUserMutation();
   const [updateEmail, updatingEmail, errorUpdateEmail] = useUpdateEmail(auth);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
     if (currentUser) {
       // * check if name and email are the same as before
@@ -156,13 +157,16 @@ function BasicSettings({ currentUserData }: { currentUserData: User }) {
       }
 
       try {
+        setIsSubmitting(true);
         // * update email if email has changed
         if (email !== currentUser?.email) {
           const currentPassword = prompt(
             'Please type your password to continue'
           );
-          if (currentPassword === null)
+          if (currentPassword === null) {
+            setIsSubmitting(false);
             return setErrorMessage('Please try again');
+          }
           const credential = EmailAuthProvider.credential(
             currentUser.email as string,
             currentPassword
@@ -175,8 +179,10 @@ function BasicSettings({ currentUserData }: { currentUserData: User }) {
             const successUpdateEmail = await updateEmail(email);
             if (successUpdateEmail) {
               alert('Email updated successfully!');
+              setIsSubmitting(false);
               currentUser?.reload();
             } else {
+              setIsSubmitting(false);
               return setErrorMessage('Invalid email or email already in use');
             }
           }
@@ -189,8 +195,9 @@ function BasicSettings({ currentUserData }: { currentUserData: User }) {
             email: email,
           },
         ]);
-        if (successUpdateUser) return;
+        if (successUpdateUser) return setIsSubmitting(false);
       } catch {
+        setIsSubmitting(false);
         return setErrorMessage('Something went wrong, please try again');
       }
     }
@@ -231,7 +238,9 @@ function BasicSettings({ currentUserData }: { currentUserData: User }) {
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
           <Button
-            loading={updateUserResults.isLoading || updatingEmail}
+            loading={
+              updateUserResults.isLoading || updatingEmail || isSubmitting
+            }
             primary
             basic
             onClick={handleSubmit}
@@ -256,6 +265,7 @@ function PasswordSettings() {
   // * submit
   const [updatePassword, updatingPassword, errorUpdatePassword] =
     useUpdatePassword(auth);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
     if (currentUser) {
       // * check if inputs are correct
@@ -272,6 +282,7 @@ function PasswordSettings() {
       }
 
       try {
+        setIsSubmitting(true);
         // * update password
         const credential = EmailAuthProvider.credential(
           currentUser.email as string,
@@ -288,14 +299,17 @@ function PasswordSettings() {
             setOldPassword('');
             setNewPassword('');
             setConfirmNewPassword('');
+            setIsSubmitting(false);
             currentUser?.reload();
           } else {
+            setIsSubmitting(false);
             return setErrorMessage(
               'Invalid password or password too weak (Password should be at least 6 characters)'
             );
           }
         }
       } catch {
+        setIsSubmitting(false);
         return setErrorMessage('Invalid password, please try again');
       }
     }
@@ -343,7 +357,7 @@ function PasswordSettings() {
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
           <Button
-            loading={updatingPassword}
+            loading={updatingPassword || isSubmitting}
             primary
             basic
             onClick={handleSubmit}
@@ -372,11 +386,7 @@ function OtherSettings({ currentUserData }: { currentUserData: User }) {
     useDeleteUserPostsMutation();
   const [deleteUserComments, deleteUserCommentsResults] =
     useDeleteUserCommentsMutation();
-  const isLoading =
-    loadingDeleteUser ||
-    deleteUserDataResults.isLoading ||
-    deleteUserPostsResults.isLoading ||
-    deleteUserCommentsResults.isLoading;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
     if (currentUser) {
@@ -392,6 +402,7 @@ function OtherSettings({ currentUserData }: { currentUserData: User }) {
       }
 
       try {
+        setIsSubmitting(true);
         const credential = EmailAuthProvider.credential(
           currentUser.email as string,
           password
@@ -407,13 +418,16 @@ function OtherSettings({ currentUserData }: { currentUserData: User }) {
           const success = await deleteUser();
           if (success) {
             alert('Account deleted successfully!');
+            setIsSubmitting(false);
             navigate('/howtos');
             return window.location.reload();
           } else {
+            setIsSubmitting(false);
             return setErrorMessage('Something went wrong, please try again');
           }
         }
       } catch {
+        setIsSubmitting(false);
         setErrorMessage('Invalid password, please try again');
       }
     }
@@ -461,7 +475,7 @@ function OtherSettings({ currentUserData }: { currentUserData: User }) {
           <Button loading={false} secondary rounded>
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
-          <Button loading={isLoading} danger basic onClick={handleSubmit}>
+          <Button loading={isSubmitting} danger basic onClick={handleSubmit}>
             <RiDeleteBin6Line className="text-2xl" />
             Delete account
           </Button>

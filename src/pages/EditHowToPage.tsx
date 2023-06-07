@@ -95,6 +95,7 @@ export default function EditHowToPage() {
 
   // * submit
   const [updatePost, results] = useUpdatePostMutation();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const handleSubmit = async () => {
     if (post) {
       if (title.trim().length === 0) {
@@ -118,6 +119,7 @@ export default function EditHowToPage() {
       }
 
       try {
+        setIsSubmitting(true);
         const url = await getImageUrl(image, 'posts-image');
         const success = await updatePost([
           post.id,
@@ -129,8 +131,12 @@ export default function EditHowToPage() {
             steps: steps,
           },
         ]);
-        if (success) return navigate('/howtos');
+        if (success) {
+          setIsSubmitting(false);
+          return navigate('/howtos');
+        }
       } catch {
+        setIsSubmitting(false);
         return setErrorMessage('Something went wrong, please try again');
       }
     }
@@ -299,7 +305,7 @@ export default function EditHowToPage() {
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
           <Button
-            loading={results.isLoading}
+            loading={results.isLoading || isSubmitting}
             primary
             basic
             onClick={handleSubmit}
