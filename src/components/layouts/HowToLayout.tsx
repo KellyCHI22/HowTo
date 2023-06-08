@@ -178,7 +178,6 @@ function LatestHowToItem({ howto }: { howto: Post }) {
   const {
     data: commentsData,
     error: errorCommentsData,
-    isFetching: isFetchingCommentsData,
     isLoading: isLoadingCommentsData,
   } = useFetchCommentsQuery(howto.id as string);
 
@@ -213,13 +212,11 @@ function AsideTopUsers() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
     isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
   const {
     data: usersData,
     error: errorUsersData,
-    isFetching: isFetchingUsersData,
     isLoading: isLoadingUsersData,
   } = useFetchUsersQuery();
 
