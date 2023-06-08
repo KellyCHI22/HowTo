@@ -72,18 +72,16 @@ export default function ExplorePage() {
         )}
       </div>
 
-      {currentUser && (
-        <Link to="/create">
-          <Button
-            loading={false}
-            rounded
-            primary
-            className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
-          >
-            <RiEdit2Line className="text-2xl" />
-          </Button>
-        </Link>
-      )}
+      <Link to="/create">
+        <Button
+          loading={false}
+          rounded
+          primary
+          className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
+        >
+          <RiEdit2Line className="text-2xl" />
+        </Button>
+      </Link>
     </div>
   );
 }

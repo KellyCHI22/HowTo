@@ -61,7 +61,7 @@ export default function SearchPage() {
           <>
             <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
               {renderedTags?.map((tag, index) => {
-                return <Tag label={tag} key={index} className="my-1" />;
+                return <Tag label={tag} key={index} />;
               })}
             </div>
             <div className="mt-24 grid place-items-center">
@@ -70,18 +70,16 @@ export default function SearchPage() {
           </>
         )}
 
-        {currentUser && (
-          <Link to="/create">
-            <Button
-              loading={false}
-              rounded
-              primary
-              className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
-            >
-              <RiEdit2Line className="text-2xl " />
-            </Button>
-          </Link>
-        )}
+        <Link to="/create">
+          <Button
+            loading={false}
+            rounded
+            primary
+            className="fixed bottom-8 right-5 px-3 py-3 shadow-lg md:hidden"
+          >
+            <RiEdit2Line className="text-2xl " />
+          </Button>
+        </Link>
       </div>
     </>
   );

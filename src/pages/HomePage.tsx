@@ -137,7 +137,10 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-        <section className="relative text-center md:items-center lg:mx-24 lg:grid lg:grid-cols-5 lg:gap-3 lg:pb-24">
+        <section
+          className="relative text-center md:items-center lg:mx-24 lg:grid lg:grid-cols-5 lg:gap-3 lg:pb-24"
+          aria-label="latest-howtos-section"
+        >
           <div className="flex-2 lg:col-span-2">
             <h2 className="text-3xl font-extrabold text-teal-500 lg:mb-10">
               Latest How-tos...
@@ -165,15 +168,15 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-      <footer className="bg-teal-500 py-3 text-sm text-white">
-        <p className="mx-auto w-fit">
+      <footer className="bg-teal-500 py-3 text-sm text-white lg:flex lg:justify-center lg:gap-5">
+        <p className="mx-auto w-fit lg:mx-0">
           Milano illustration assets from{' '}
           <a href="https://www.streamlinehq.com/" className="underline">
             Streamline
             <RiExternalLinkLine className="inline text-lg" />
           </a>
         </p>
-        <p className="mx-auto flex w-fit items-center">
+        <p className="mx-auto flex w-fit items-center lg:mx-0">
           Copyright © 2023
           <a href="https://github.com/KellyCHI22" className="ml-1 underline">
             Kelly CHI
