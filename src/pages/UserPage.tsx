@@ -23,6 +23,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '~/firebase';
 import { Post } from '~/store/apis/postsApi';
 import getImageUrl from '~/utils/getImageUrl';
+import clsx from 'clsx';
 
 export default function UserPage() {
   const { id } = useParams();
@@ -101,6 +102,8 @@ function UserProfile({
   userPosts,
   currentUserData,
 }: UserProfileProps) {
+  const [currentUser] = useAuthState(auth);
+
   let joinedTime;
   if (user) {
     joinedTime = new Date(user?.createdAt).toLocaleString('en-us', {
@@ -182,7 +185,7 @@ function UserProfile({
           <div>
             <img
               src={user?.avatar}
-              alt=""
+              alt="user-avatar"
               className="aspect-square h-20 w-20 rounded-full object-cover"
             />
             {currentUserData?.uid === user?.uid ? (
@@ -202,7 +205,9 @@ function UserProfile({
                 outline={!isFollowing}
                 primary={isFollowing}
                 basic
-                className="absolute right-5 top-5"
+                className={clsx('absolute right-5 top-5', {
+                  hidden: !currentUser,
+                })}
                 onClick={handleFollow}
               >
                 {isFollowing ? (

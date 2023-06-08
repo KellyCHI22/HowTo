@@ -256,7 +256,9 @@ export default function HowToPage() {
                 <RiChat1Line className="md:text-2xl" />
                 <span>{commentsData?.length}</span>
                 <span className="hidden lg:block">
-                  {post && post?.commentsCount > 1 ? 'comments' : 'comment'}
+                  {commentsData && commentsData?.length > 1
+                    ? 'comments'
+                    : 'comment'}
                 </span>
               </div>
               <div className="flex items-center gap-1">
