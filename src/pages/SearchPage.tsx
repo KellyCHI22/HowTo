@@ -1,9 +1,8 @@
 import { RiEdit2Line } from 'react-icons/ri';
 import Tag from '~/components/elements/Tag';
 import { ReactComponent as SearchIllustration } from '~/assets/illustration_search.svg';
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from '~/components/elements/Button';
-import { ContextType } from '~/components/layouts/RootLayout';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useFetchPostsQuery } from '~/store';
@@ -11,7 +10,6 @@ import Spinner from '~/components/elements/Spinner';
 
 export default function SearchPage() {
   const [currentUser] = useAuthState(auth);
-  const { handleSearch } = useOutletContext<ContextType>();
   const {
     data: postsData,
     error: errorPostsData,
@@ -63,15 +61,7 @@ export default function SearchPage() {
           <>
             <div className="flex flex-wrap gap-2 rounded-xl bg-white p-4 shadow-basic">
               {renderedTags?.map((tag, index) => {
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleSearch(tag)}
-                    className="my-1"
-                  >
-                    <Tag label={tag} />
-                  </button>
-                );
+                return <Tag label={tag} key={index} className="my-1" />;
               })}
             </div>
             <div className="mt-24 grid place-items-center">

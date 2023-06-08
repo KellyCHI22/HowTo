@@ -23,7 +23,6 @@ import { useFetchUsersQuery } from '~/store';
 export type ContextType = {
   handleToggleLoginModal: () => void;
   handleToggleSignupModal: () => void;
-  handleSearch: (query: string) => void;
   currentExplorePage: number;
   handleCurrentExplorePageChange: (page: number) => void;
   exploreSortOption: string;
@@ -229,7 +228,6 @@ export default function RootLayout() {
               context={{
                 handleToggleLoginModal,
                 handleToggleSignupModal,
-                handleSearch,
               }}
             />
           )
@@ -238,7 +236,6 @@ export default function RootLayout() {
             context={{
               handleToggleLoginModal,
               handleToggleSignupModal,
-              handleSearch,
             }}
           />
         )}

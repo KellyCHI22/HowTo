@@ -45,7 +45,7 @@ export default function SearchResultsPage() {
                 <button
                   className="hidden text-teal-500 md:block"
                   onClick={() => {
-                    navigate('/search');
+                    navigate(-1);
                   }}
                 >
                   <RiArrowLeftLine className="text-2xl" />
