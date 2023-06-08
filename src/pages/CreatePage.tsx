@@ -59,7 +59,9 @@ export default function CreatePage() {
   const removeTag = (indexToRemove: number) => {
     setTags([...tags.filter((_, index) => index !== indexToRemove)]);
   };
-  const addTag = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyboardAddTag = (
+    event: React.KeyboardEvent<HTMLInputElement>
+  ) => {
     if (event.key === 'Enter') {
       if (tagInput.length > 20) {
         return setTagError('Tags cannot be longer than 20 characters');
@@ -72,6 +74,19 @@ export default function CreatePage() {
       }
     }
   };
+
+  const handleButtonAddTag = () => {
+    if (tagInput.length > 20) {
+      return setTagError('Tags cannot be longer than 20 characters');
+    } else if (tags.length >= 5) {
+      return setTagError('Cannot add more than 5 tags');
+    } else if (tagInput !== '') {
+      setTags([...tags, tagInput]);
+      setTagInput('');
+      setTagError('');
+    }
+  };
+
   // steps
   const [steps, setSteps] = useState<Step[]>([]);
   const handleStepsUpdate = (steps: Step[]) => setSteps(steps);
@@ -257,7 +272,8 @@ export default function CreatePage() {
           value={tagInput}
           error={tagError}
           placeholder="Press enter to add tags..."
-          onAddTag={addTag}
+          onButtonAddTag={handleButtonAddTag}
+          onKeyboardAddTag={handleKeyboardAddTag}
           onRemoveTag={removeTag}
           onChange={handleTagInputChange}
         />
