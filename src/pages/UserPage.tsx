@@ -31,12 +31,12 @@ export default function UserPage() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
   const {
     data: usersData,
     error: errorUsersData,
-    isFetching: isFetchingUsersData,
+    isLoading: isLoadingUsersData,
   } = useFetchUsersQuery();
 
   const user = usersData?.find((user) => user.uid === id);
@@ -48,7 +48,7 @@ export default function UserPage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const handleEditMode = () => setIsEditMode((prev) => !prev);
 
-  const isLoading = isFetchingPostsData || isFetchingUsersData;
+  const isLoading = isLoadingPostsData || isLoadingUsersData;
   const isError = errorPostsData || errorUsersData;
 
   if (isError) {

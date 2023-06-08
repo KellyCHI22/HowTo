@@ -10,7 +10,7 @@ export default function SearchPage() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
   let renderedTags;
 
@@ -50,7 +50,7 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {isFetchingPostsData || errorPostsData ? (
+        {isLoadingPostsData || errorPostsData ? (
           <div className="grid h-96 w-full place-items-center">
             <Spinner />
           </div>

@@ -27,16 +27,16 @@ export default function HowToItem({ post }: Props) {
   const {
     data: usersData,
     error: errorUsersData,
-    isFetching: isFetchingUsersData,
+    isLoading: isLoadingPostsData,
   } = useFetchUsersQuery();
   const {
     data: commentsData,
     error: errorCommentsData,
-    isFetching: isFetchingCommentsData,
+    isLoading: isLoadingUsersData,
   } = useFetchCommentsQuery(id as string);
   const user = usersData?.find((user) => user.uid === authorId);
 
-  if (isFetchingUsersData || isFetchingCommentsData) {
+  if (isLoadingPostsData || isLoadingUsersData) {
     return <SkeletonHowtoItem />;
   }
 

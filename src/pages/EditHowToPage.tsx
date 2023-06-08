@@ -93,7 +93,7 @@ export default function EditHowToPage() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
 
   const post = postsData?.find((post) => post.id === id) as Post;
@@ -157,7 +157,7 @@ export default function EditHowToPage() {
     }
   };
 
-  if (isFetchingPostsData || errorPostsData) {
+  if (isLoadingPostsData || errorPostsData) {
     return (
       <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
         <Spinner />

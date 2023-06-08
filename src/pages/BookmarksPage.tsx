@@ -26,14 +26,14 @@ export default function BookmarksPage() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
   const {
     data: usersData,
     error: errorUsersData,
-    isFetching: isFetchingUsersData,
+    isLoading: isLoadingUsersData,
   } = useFetchUsersQuery();
-  const isLoading = isFetchingPostsData || isFetchingUsersData;
+  const isLoading = isLoadingPostsData || isLoadingUsersData;
   const isError = errorPostsData || errorUsersData;
   const [currentUser] = useAuthState(auth);
 

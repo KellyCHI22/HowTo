@@ -14,7 +14,7 @@ export default function SearchResultsPage() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
   const searchResults = postsData?.filter((post) => {
     if (query) {
@@ -34,7 +34,7 @@ export default function SearchResultsPage() {
   return (
     <>
       <div className="my-5 md:my-12">
-        {isFetchingPostsData || errorPostsData ? (
+        {isLoadingPostsData || errorPostsData ? (
           <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
             <Spinner />
           </div>

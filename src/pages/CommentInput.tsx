@@ -20,7 +20,7 @@ type CommentInputProps = {
 
 export default function CommentInput({ post }: CommentInputProps) {
   const [currentUser] = useAuthState(auth);
-  const { data, error, isFetching } = useFetchUsersQuery();
+  const { data, error, isLoading } = useFetchUsersQuery();
   const defaultImage =
     'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
   const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
@@ -47,7 +47,7 @@ export default function CommentInput({ post }: CommentInputProps) {
           postId: post.id,
           userId: currentUser.uid,
         });
-        if (success) return;
+        if (success) return setCommentInput('');
       } catch {
         return setCommentInputError('Something went wrong, please try again');
       }
@@ -58,7 +58,7 @@ export default function CommentInput({ post }: CommentInputProps) {
     <div className="mt-3 flex gap-3 rounded-xl bg-white p-5 text-sm shadow-basic md:text-base">
       <Link to="#" className="flex-shrink-0">
         <img
-          src={isFetching || error ? defaultImage : currentUserData?.avatar}
+          src={isLoading || error ? defaultImage : currentUserData?.avatar}
           alt="author-avatar"
           className="aspect-square h-8 w-8 rounded-full object-cover"
         />

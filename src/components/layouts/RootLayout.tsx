@@ -278,14 +278,14 @@ export default function RootLayout() {
 
 function UserAvatar() {
   const [currentUser] = useAuthState(auth);
-  const { data, error, isFetching } = useFetchUsersQuery();
+  const { data, error, isLoading } = useFetchUsersQuery();
   const defaultImage =
     'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
   const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
 
   return (
     <img
-      src={isFetching || error ? defaultImage : currentUserData?.avatar}
+      src={isLoading || error ? defaultImage : currentUserData?.avatar}
       alt="user-avatar"
       className="h-12 w-12 overflow-hidden rounded-full"
     />

@@ -23,7 +23,7 @@ export default function HomePage() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
 
   if (errorPostsData) {
@@ -35,7 +35,7 @@ export default function HomePage() {
       <div className="container my-10 space-y-10 md:space-y-20">
         <HeroSection />
         <FeaturesSection />
-        {postsData && !isFetchingPostsData ? (
+        {postsData && !isLoadingPostsData ? (
           <>
             <RandomHowtoSection postsData={postsData} />
             <LatestHowtoSection postsData={postsData} />

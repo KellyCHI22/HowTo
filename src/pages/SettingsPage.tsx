@@ -38,7 +38,7 @@ export default function SettingsPage() {
   const {
     data: usersData,
     error: errorUsersData,
-    isFetching: isFetchingUsersData,
+    isLoading: isLoadingUsersData,
   } = useFetchUsersQuery();
   const currentUserData = usersData?.find(
     (user) => user.uid === currentUser?.uid
@@ -50,7 +50,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      {isFetchingUsersData || errorUsersData ? (
+      {isLoadingUsersData || errorUsersData ? (
         <div className="my-5 grid h-96 w-full place-items-center rounded-lg bg-white md:my-12">
           <Spinner />
         </div>
@@ -93,7 +93,7 @@ export default function SettingsPage() {
                   )}
                 </div>
               </div>
-              <div className="hidden place-items-center p-9 pl-16 xl:grid ">
+              <div className="hidden place-items-center p-9 pl-16 text-teal-500 xl:grid">
                 <CreativeIllustration />
               </div>
             </div>
@@ -195,7 +195,10 @@ function BasicSettings({ currentUserData }: { currentUserData: User }) {
             email: email,
           },
         ]);
-        if (successUpdateUser) return setIsSubmitting(false);
+        if (successUpdateUser) {
+          alert('Name updated successfully!');
+          return setIsSubmitting(false);
+        }
       } catch {
         setIsSubmitting(false);
         return setErrorMessage('Something went wrong, please try again');

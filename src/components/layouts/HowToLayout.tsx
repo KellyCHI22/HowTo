@@ -140,7 +140,7 @@ function AsideLatestHowTo() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
 
   let latestHowTos;
@@ -159,7 +159,7 @@ function AsideLatestHowTo() {
       <h3 className="border-b border-b-gray-200 px-5 py-3 text-lg font-bold text-teal-500">
         Latest How To
       </h3>
-      {isFetchingPostsData || errorPostsData ? (
+      {isLoadingPostsData || errorPostsData ? (
         <div className="grid h-72 place-items-center">
           <Spinner />
         </div>
@@ -179,9 +179,10 @@ function LatestHowToItem({ howto }: { howto: Post }) {
     data: commentsData,
     error: errorCommentsData,
     isFetching: isFetchingCommentsData,
+    isLoading: isLoadingCommentsData,
   } = useFetchCommentsQuery(howto.id as string);
 
-  if (isFetchingCommentsData || errorCommentsData) {
+  if (isLoadingCommentsData || errorCommentsData) {
     return <div className="h-[5.75rem] bg-white" />;
   }
 
@@ -213,14 +214,16 @@ function AsideTopUsers() {
     data: postsData,
     error: errorPostsData,
     isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
   const {
     data: usersData,
     error: errorUsersData,
     isFetching: isFetchingUsersData,
+    isLoading: isLoadingUsersData,
   } = useFetchUsersQuery();
 
-  const isLoading = isFetchingPostsData || isFetchingUsersData;
+  const isLoading = isLoadingPostsData || isLoadingUsersData;
   const isError = errorPostsData || errorUsersData;
   const [topUsers, setTopUsers] = useState<User[]>([]);
   useEffect(() => {

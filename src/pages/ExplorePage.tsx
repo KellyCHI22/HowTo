@@ -18,7 +18,7 @@ export default function ExplorePage() {
     exploreSortOption,
     handleExploreSortOptionSelect,
   } = useOutletContext<ContextType>();
-  const { data, error, isFetching } = useFetchPostsQuery();
+  const { data, error, isLoading } = useFetchPostsQuery();
   const [renderedPosts, setRenderedPosts] = useState<Post[]>([]);
 
   useLayoutEffect(() => {
@@ -49,7 +49,7 @@ export default function ExplorePage() {
       </div>
 
       <div className="flex flex-col gap-3">
-        {isFetching && (
+        {isLoading && (
           <>
             <SkeletonHowtoItem />
             <SkeletonHowtoItem />

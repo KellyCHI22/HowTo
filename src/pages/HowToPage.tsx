@@ -37,17 +37,17 @@ export default function HowToPage() {
   const {
     data: postsData,
     error: errorPostsData,
-    isFetching: isFetchingPostsData,
+    isLoading: isLoadingPostsData,
   } = useFetchPostsQuery();
   const {
     data: usersData,
     error: errorUsersData,
-    isFetching: isFetchingUsersData,
+    isLoading: isLoadingUsersData,
   } = useFetchUsersQuery();
   const {
     data: commentsData,
     error: errorCommentsData,
-    isFetching: isFetchingCommentsData,
+    isLoading: isLoadingCommentsData,
   } = useFetchCommentsQuery(id as string);
 
   const post = postsData?.find((post) => post.id === id);
@@ -57,7 +57,7 @@ export default function HowToPage() {
   );
 
   const isLoading =
-    isFetchingPostsData || isFetchingUsersData || isFetchingCommentsData;
+    isLoadingPostsData || isLoadingUsersData || isLoadingCommentsData;
 
   const isError = errorPostsData || errorUsersData || errorCommentsData;
 
@@ -274,9 +274,7 @@ export default function HowToPage() {
             {currentUser && (
               <>
                 <Button
-                  loading={
-                    updatePostResults.isLoading || updateUserResults.isLoading
-                  }
+                  loading={updatePostResults.isLoading}
                   primary={currentUserData?.likedPosts.includes(
                     post?.id as string
                   )}

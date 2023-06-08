@@ -213,7 +213,7 @@ export function AppNavLink({
 
 function UserAvatarAndName() {
   const [currentUser] = useAuthState(auth);
-  const { data, error, isFetching } = useFetchUsersQuery();
+  const { data, error, isLoading } = useFetchUsersQuery();
   const defaultImage =
     'https://firebasestorage.googleapis.com/v0/b/howto-creative.appspot.com/o/logo_wbg.png?alt=media&token=9afe0ad1-011c-45a0-a983-14b002ee9668';
   const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
@@ -222,7 +222,7 @@ function UserAvatarAndName() {
     <>
       <img
         src={
-          !currentUser || isFetching || error
+          !currentUser || isLoading || error
             ? defaultImage
             : currentUserData?.avatar
         }
@@ -230,7 +230,7 @@ function UserAvatarAndName() {
         className="h-16 w-16 overflow-hidden rounded-full object-cover"
       />
       <p>
-        {!currentUser || isFetching || error
+        {!currentUser || isLoading || error
           ? 'Unknown Capybara'
           : currentUserData?.name}
       </p>
