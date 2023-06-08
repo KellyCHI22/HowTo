@@ -433,8 +433,18 @@ function OtherSettings({ currentUserData }: { currentUserData: User }) {
     }
   };
 
-  if (errorDeleteUser) {
-    console.log(errorDeleteUser);
+  if (
+    errorDeleteUser ||
+    deleteUserDataResults.error ||
+    deleteUserPostsResults.error ||
+    deleteUserCommentsResults.error
+  ) {
+    console.log(
+      errorDeleteUser ||
+        deleteUserDataResults.error ||
+        deleteUserPostsResults.error ||
+        deleteUserCommentsResults.error
+    );
   }
 
   return (
@@ -475,7 +485,12 @@ function OtherSettings({ currentUserData }: { currentUserData: User }) {
           <Button loading={false} secondary rounded>
             <RiArrowGoBackLine className="text-2xl" />
           </Button>
-          <Button loading={isSubmitting} danger basic onClick={handleSubmit}>
+          <Button
+            loading={isSubmitting || loadingDeleteUser}
+            danger
+            basic
+            onClick={handleSubmit}
+          >
             <RiDeleteBin6Line className="text-2xl" />
             Delete account
           </Button>

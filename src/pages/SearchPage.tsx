@@ -3,13 +3,10 @@ import Tag from '~/components/elements/Tag';
 import { ReactComponent as SearchIllustration } from '~/assets/illustration_search.svg';
 import { Link } from 'react-router-dom';
 import Button from '~/components/elements/Button';
-import { auth } from '~/firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useFetchPostsQuery } from '~/store';
 import Spinner from '~/components/elements/Spinner';
 
 export default function SearchPage() {
-  const [currentUser] = useAuthState(auth);
   const {
     data: postsData,
     error: errorPostsData,

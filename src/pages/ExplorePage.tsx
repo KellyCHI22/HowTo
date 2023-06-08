@@ -5,9 +5,6 @@ import { RiEdit2Line } from 'react-icons/ri';
 import Button from '~/components/elements/Button';
 import SortOption from '~/components/SortOptions';
 import PaginatedPosts from '~/components/PaginatedPosts';
-
-import { auth } from '~/firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { useFetchPostsQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
 import { ContextType } from '~/components/layouts/RootLayout';
@@ -21,7 +18,6 @@ export default function ExplorePage() {
     exploreSortOption,
     handleExploreSortOptionSelect,
   } = useOutletContext<ContextType>();
-  const [currentUser] = useAuthState(auth);
   const { data, error, isFetching } = useFetchPostsQuery();
   const [renderedPosts, setRenderedPosts] = useState<Post[]>([]);
 

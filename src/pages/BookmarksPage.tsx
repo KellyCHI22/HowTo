@@ -23,7 +23,6 @@ export default function BookmarksPage() {
     handleBookmarksSortOptionSelect,
   } = useOutletContext<ContextType>();
 
-  // ! need to refactor this part in every page, too messy
   const {
     data: postsData,
     error: errorPostsData,
@@ -37,7 +36,7 @@ export default function BookmarksPage() {
   const isLoading = isFetchingPostsData || isFetchingUsersData;
   const isError = errorPostsData || errorUsersData;
   const [currentUser] = useAuthState(auth);
-  // ! refactor above
+
   const [bookmarkedPosts, setBookmarkPosts] = useState<Post[]>([]);
 
   useLayoutEffect(() => {
