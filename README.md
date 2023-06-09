@@ -63,6 +63,10 @@ HowTo is a place to discover and craft unique step-by-step tutorials, from DIY p
 
 ![](public/screenshots/howto_demo_2.gif)
 
+#### Leave a comment to share your thoughts
+
+![](public/screenshots/howto_demo_6.gif)
+
 #### Search for all kinds of how-to ideas
 
 ![](public/screenshots/howto_demo_5.gif)
@@ -78,6 +82,7 @@ HowTo is a place to discover and craft unique step-by-step tutorials, from DIY p
 #### 🤔 Future Features
 
 - Use existed how-to tutorials as starting template
+- Save creation to drafts, edit and publish later
 - Get notifications when following users post a new tutorial
 - Develop backend code to separate data logic from the UI logic
 
