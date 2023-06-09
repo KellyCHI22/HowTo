@@ -65,7 +65,7 @@ export default function MobileSidebar({
 
         <div className=" overflow-y-auto py-4 pt-0">
           <div className="flex flex-col items-center justify-center gap-2 py-5">
-            <UserAvatarAndName />
+            <UserAvatarAndName toggleSidebar={toggleSidebar} />
           </div>
           {currentUser ? (
             <>
@@ -211,7 +211,7 @@ export function AppNavLink({
   );
 }
 
-function UserAvatarAndName() {
+function UserAvatarAndName({ toggleSidebar }: { toggleSidebar: () => void }) {
   const [currentUser] = useAuthState(auth);
   const { data, error, isLoading } = useFetchUsersQuery();
   const defaultImage =
@@ -220,15 +220,17 @@ function UserAvatarAndName() {
 
   return (
     <>
-      <img
-        src={
-          !currentUser || isLoading || error
-            ? defaultImage
-            : currentUserData?.avatar
-        }
-        alt="user-avatar"
-        className="h-16 w-16 overflow-hidden rounded-full object-cover"
-      />
+      <Link to={`/users/${currentUser?.uid}`} onClick={toggleSidebar}>
+        <img
+          src={
+            !currentUser || isLoading || error
+              ? defaultImage
+              : currentUserData?.avatar
+          }
+          alt="user-avatar"
+          className="h-16 w-16 overflow-hidden rounded-full object-cover"
+        />
+      </Link>
       <p>
         {!currentUser || isLoading || error
           ? 'Unknown Capybara'

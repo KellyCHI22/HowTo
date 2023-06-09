@@ -284,10 +284,12 @@ function UserAvatar() {
   const currentUserData = data?.find((user) => user.uid === currentUser?.uid);
 
   return (
-    <img
-      src={isLoading || error ? defaultImage : currentUserData?.avatar}
-      alt="user-avatar"
-      className="h-12 w-12 overflow-hidden rounded-full"
-    />
+    <Link to={`/users/${currentUser?.uid}`}>
+      <img
+        src={isLoading || error ? defaultImage : currentUserData?.avatar}
+        alt="user-avatar"
+        className="h-12 w-12 overflow-hidden rounded-full"
+      />
+    </Link>
   );
 }
