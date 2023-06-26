@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
+    "@testing-library/user-event": "^14.4.3",
     "browser-image-compression": "^2.0.2",
     "clsx": "^1.2.1",
     "eslint-config-prettier": "^8.8.0",
@@ -38,6 +39,7 @@
     "@types/react": "^18.0.28",
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "^18.0.11",
+    "@types/testing-library__jest-dom": "^5.14.6",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react": "^4.0.0",
