@@ -62,7 +62,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       >
         {loading ? (
-          <RiLoader4Fill className="animate-spin text-2xl" />
+          <RiLoader4Fill
+            data-testid="loader-element"
+            className="animate-spin text-2xl"
+          />
         ) : (
           children
         )}
