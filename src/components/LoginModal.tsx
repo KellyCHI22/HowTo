@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import Input from './elements/Input';
+import { Input, Button } from './elements';
 import { RiCloseFill, RiLock2Fill, RiMailFill } from 'react-icons/ri';
-import Button from './elements/Button';
 import { ReactComponent as WorkingIllustration } from '~/assets/illustration_working.svg';
 import { auth } from '~/firebase';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
@@ -90,7 +89,7 @@ export default function LoginModal({
           </h2>
           <div className="space-y-3">
             <Input
-              type="text"
+              type="email"
               label="Email"
               id="email"
               value={email}

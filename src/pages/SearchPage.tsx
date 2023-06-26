@@ -1,10 +1,8 @@
 import { RiEdit2Line } from 'react-icons/ri';
-import Tag from '~/components/elements/Tag';
+import { Tag, Button, Spinner } from '~/components/elements';
 import { ReactComponent as SearchIllustration } from '~/assets/illustration_search.svg';
 import { Link } from 'react-router-dom';
-import Button from '~/components/elements/Button';
 import { useFetchPostsQuery } from '~/store';
-import Spinner from '~/components/elements/Spinner';
 
 export default function SearchPage() {
   const {

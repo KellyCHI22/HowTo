@@ -2,7 +2,7 @@ import { ReactNode, useLayoutEffect, useState } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { RiEdit2Line } from 'react-icons/ri';
 
-import Button from '~/components/elements/Button';
+import { Button } from '~/components/elements';
 import SortOption from '~/components/SortOptions';
 import PaginatedPosts from '~/components/PaginatedPosts';
 import { useFetchPostsQuery } from '~/store';

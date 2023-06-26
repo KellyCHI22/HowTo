@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import {
   RiLightbulbFlashLine,
   RiLightbulbFlashFill,
@@ -11,10 +13,8 @@ import {
   RiChat1Line,
   RiLock2Fill,
 } from 'react-icons/ri';
-import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import { AppNavLink } from '../MobileSidebar';
 import { ContextType } from './RootLayout';
-
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import {
@@ -22,10 +22,9 @@ import {
   useFetchPostsQuery,
   useFetchUsersQuery,
 } from '~/store';
-import Spinner from '../elements/Spinner';
+import { Spinner } from '../elements';
 import { Post } from '~/store/apis/postsApi';
 import { User } from '~/store/apis/usersApi';
-import { useEffect, useState } from 'react';
 import getTopUsers from '~/utils/getTopUsers';
 
 export default function HowToLayout() {

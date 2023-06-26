@@ -4,8 +4,7 @@ import { useState, useRef } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
-import Button from '~/components/elements/Button';
-import Textarea from '~/components/elements/Textarea';
+import { Button, Textarea } from '~/components/elements';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import {
   useFetchUsersQuery,

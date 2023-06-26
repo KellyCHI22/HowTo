@@ -1,7 +1,6 @@
 import { ChangeEvent, useRef, useState } from 'react';
-import Input from '~/components/elements/Input';
-import TagInput from '~/components/elements/TagInput';
-import Textarea from '~/components/elements/Textarea';
+import { Button, Input, Textarea } from '~/components/elements';
+import TagInput from '~/components/TagInput';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import {
   RiArrowLeftLine,
@@ -13,7 +12,6 @@ import {
 } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import StepList, { Step } from '~/components/StepList';
-import Button from '~/components/elements/Button';
 import { useAddPostMutation } from '~/store';
 import { serverTimestamp } from 'firebase/firestore/lite';
 import { useAuthState } from 'react-firebase-hooks/auth';

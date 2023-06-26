@@ -2,8 +2,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { RiArrowLeftLine, RiEdit2Line } from 'react-icons/ri';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import HowToItem from '~/components/HowtoItem';
-import Button from '~/components/elements/Button';
-import Spinner from '~/components/elements/Spinner';
+import { Button, Spinner } from '~/components/elements';
 import { auth } from '~/firebase';
 import { useFetchPostsQuery } from '~/store';
 

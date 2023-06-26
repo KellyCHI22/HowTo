@@ -8,9 +8,8 @@ import {
 } from 'react-icons/ri';
 import { RxDragHandleDots2 } from 'react-icons/rx';
 import { StrictModeDroppable } from '~/utils/StrictModeDroppable';
-import Textarea from './elements/Textarea';
+import { Textarea, Button } from './elements';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
-import Button from './elements/Button';
 
 export type Step = {
   id: string;

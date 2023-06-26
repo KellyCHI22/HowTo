@@ -1,6 +1,12 @@
+import { ChangeEvent, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useAuthState } from 'react-firebase-hooks/auth';
 import HowToItem from '~/components/HowtoItem';
-import Button from '~/components/elements/Button';
+import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
+import { auth } from '~/firebase';
+import { User, useUpdateUserMutation } from '~/store/apis/usersApi';
+import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { Button, Spinner, Textarea } from '~/components/elements';
 import {
   RiEdit2Line,
   RiHeartLine,
@@ -13,14 +19,6 @@ import {
   RiUserAddLine,
   RiUserFollowLine,
 } from 'react-icons/ri';
-import Textarea from '~/components/elements/Textarea';
-import { ChangeEvent, useRef, useState } from 'react';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
-import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
-import { User, useUpdateUserMutation } from '~/store/apis/usersApi';
-import Spinner from '~/components/elements/Spinner';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from '~/firebase';
 import { Post } from '~/store/apis/postsApi';
 import getImageUrl from '~/utils/getImageUrl';
 import clsx from 'clsx';

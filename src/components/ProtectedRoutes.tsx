@@ -7,9 +7,8 @@ import {
   RiArrowRightLine,
   RiEyeOffLine,
 } from 'react-icons/ri';
-import Button from './elements/Button';
+import { Button, Spinner } from './elements';
 import { ContextType } from './layouts/RootLayout';
-import Spinner from './elements/Spinner';
 
 export default function ProtectedRoutes() {
   const [currentUser, loadingCurrentUser] = useAuthState(auth);

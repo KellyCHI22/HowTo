@@ -10,11 +10,8 @@ import {
 } from 'react-icons/ri';
 import { useNavigate, useParams } from 'react-router-dom';
 import StepList, { Step } from '~/components/StepList';
-import Button from '~/components/elements/Button';
-import Input from '~/components/elements/Input';
-import Spinner from '~/components/elements/Spinner';
-import TagInput from '~/components/elements/TagInput';
-import Textarea from '~/components/elements/Textarea';
+import { Button, Input, Spinner, Textarea } from '~/components/elements';
+import TagInput from '~/components/TagInput';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
 import { useFetchPostsQuery, useUpdatePostMutation } from '~/store';
 import { Post } from '~/store/apis/postsApi';

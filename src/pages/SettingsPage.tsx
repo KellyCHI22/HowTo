@@ -8,8 +8,7 @@ import {
   RiMailFill,
   RiDeleteBin6Line,
 } from 'react-icons/ri';
-import Button from '~/components/elements/Button';
-import Input from '~/components/elements/Input';
+import { Button, Input } from '~/components/elements';
 import { ReactComponent as CreativeIllustration } from '~/assets/illustration_creative.svg';
 import {
   useFetchUsersQuery,
@@ -25,7 +24,7 @@ import {
 } from 'react-firebase-hooks/auth';
 import { auth } from '~/firebase';
 import { User, useUpdateUserMutation } from '~/store/apis/usersApi';
-import Spinner from '~/components/elements/Spinner';
+import Spinner from '~/components/elements/Spinner/Spinner';
 import { EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 

@@ -2,14 +2,13 @@ import { useEffect, useState } from 'react';
 import { auth, db } from '../firebase';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import clsx from 'clsx';
-import Input from './elements/Input';
+import { Input, Button } from './elements';
 import {
   RiCloseFill,
   RiAccountCircleFill,
   RiLock2Fill,
   RiMailFill,
 } from 'react-icons/ri';
-import Button from './elements/Button';
 import { ReactComponent as IdeaIllustration } from '~/assets/illustration_idea.svg';
 import { addDoc, collection } from 'firebase/firestore/lite';
 import { User } from '../store/apis/usersApi.ts';

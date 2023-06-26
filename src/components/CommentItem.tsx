@@ -15,8 +15,7 @@ import {
 } from 'react-icons/ri';
 import ReactTimeAgo from 'react-time-ago';
 import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
-import Button from './elements/Button';
-import Textarea from './elements/Textarea';
+import { Button, Textarea } from './elements';
 import { User } from '~/store/apis/usersApi';
 
 type CommentItemProps = {

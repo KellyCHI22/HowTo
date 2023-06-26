@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useMediaQuery } from 'react-responsive';
-import Button from '../elements/Button';
+import { Button } from '../elements/';
 import MobileSidebar from '../MobileSidebar';
 import {
   RiMenuFill,
@@ -11,10 +12,8 @@ import {
   RiLogoutBoxRLine,
 } from 'react-icons/ri';
 import { ReactComponent as Logo } from '../../assets/logo.svg';
-import { useEffect, useState } from 'react';
 import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
-
 import ScrollToTop from '~/utils/ScrollToTop';
 import { auth } from '~/firebase';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';

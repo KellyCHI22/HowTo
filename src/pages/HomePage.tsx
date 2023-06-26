@@ -1,5 +1,12 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Button from '~/components/elements/Button';
+import { useFetchPostsQuery } from '~/store';
+import { Post } from '~/store/apis/postsApi';
+
+import { Button, Spinner } from '~/components/elements';
+import { SkeletonHowtoItem } from '~/components/HowtoItem';
+import HowToItem from '~/components/HowtoItem';
+
 import { ReactComponent as CreativeIllustration } from '~/assets/illustration_creative.svg';
 import { ReactComponent as IdeaIllustration } from '~/assets/illustration_idea.svg';
 import {
@@ -11,13 +18,6 @@ import {
   RiGithubFill,
 } from 'react-icons/ri';
 import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
-
-import HowToItem, { SkeletonHowtoItem } from '~/components/HowtoItem';
-import { useFetchPostsQuery } from '~/store';
-import HowtoItem from '~/components/HowtoItem';
-import { useState } from 'react';
-import { Post } from '~/store/apis/postsApi';
-import Spinner from '~/components/elements/Spinner';
 
 export default function HomePage() {
   const {
@@ -198,7 +198,7 @@ function LatestHowtoSection({ postsData }: { postsData: Post[] }) {
       <div className="lg:col-span-3">
         <div className="my-5 space-y-3 text-left">
           {latestHowTos?.map((howto) => (
-            <HowtoItem post={howto} key={howto.id} />
+            <HowToItem post={howto} key={howto.id} />
           ))}
         </div>
         <Link to="/howtos">
