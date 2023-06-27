@@ -9,7 +9,7 @@ import {
   RiDeleteBin6Line,
 } from 'react-icons/ri';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Button, Tag } from '~/components/elements';
+import { Button, Tag, Spinner } from '~/components/elements';
 import ReactTimeAgo from 'react-time-ago';
 import { auth } from '~/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -21,10 +21,9 @@ import {
   useUpdateUserMutation,
   useUpdatePostMutation,
 } from '~/store';
-import Spinner from '~/components/elements/Spinner/Spinner';
 import clsx from 'clsx';
 import CommentItem from '~/components/CommentItem';
-import CommentInput from './CommentInput';
+import CommentInput from '../components/CommentInput';
 
 export default function HowToPage() {
   const [currentUser] = useAuthState(auth);

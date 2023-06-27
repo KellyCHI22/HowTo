@@ -4,19 +4,20 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import RootLayout from '~/components/layouts/RootLayout';
-import HowToLayout from '~/components/layouts/HowToLayout';
-import HomePage from '~/pages/HomePage';
-import EditHowToPage from '~/pages/EditHowToPage';
-import ExplorePage from '~/pages/ExplorePage';
-import HowToPage from '~/pages/HowToPage';
-import BookmarksPage from '~/pages/BookmarksPage';
-import CreatePage from '~/pages/CreatePage';
-import SearchPage from '~/pages/SearchPage';
-import SettingsPage from '~/pages/SettingsPage';
-import UserPage from '~/pages/UserPage';
+import {
+  HomePage,
+  EditHowToPage,
+  ExplorePage,
+  HowToPage,
+  BookmarksPage,
+  CreatePage,
+  SearchPage,
+  SearchResultsPage,
+  SettingsPage,
+  UserPage,
+} from '~/pages';
+import { RootLayout, HowToLayout } from '~/components/layouts';
 import ProtectedRoutes from './components/ProtectedRoutes';
-import SearchResultsPage from './pages/SearchResultsPage';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
