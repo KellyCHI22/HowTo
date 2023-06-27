@@ -14,7 +14,7 @@ import {
 import { ReactComponent as Logo } from '../../assets/logo.svg';
 import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
-import ScrollToTop from '~/utils/ScrollToTop';
+import { ScrollToTop } from '~/utils';
 import { auth } from '~/firebase';
 import { useAuthState, useSignOut } from 'react-firebase-hooks/auth';
 import { useFetchUsersQuery } from '~/store';

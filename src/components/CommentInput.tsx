@@ -5,7 +5,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { RiSendPlaneFill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 import { Button, Textarea } from '~/components/elements';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { useAutosizeTextArea } from '~/hooks';
 import {
   useFetchUsersQuery,
   useUpdatePostMutation,

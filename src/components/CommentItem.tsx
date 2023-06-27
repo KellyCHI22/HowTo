@@ -14,7 +14,7 @@ import {
   RiEdit2Line,
 } from 'react-icons/ri';
 import ReactTimeAgo from 'react-time-ago';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { useAutosizeTextArea } from '~/hooks';
 import { Button, Textarea } from './elements';
 import { User } from '~/store/apis/usersApi';
 

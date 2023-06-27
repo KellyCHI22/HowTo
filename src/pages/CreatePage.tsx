@@ -1,7 +1,7 @@
 import { ChangeEvent, useRef, useState } from 'react';
 import { Button, Input, Textarea } from '~/components/elements';
 import TagInput from '~/components/TagInput';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { useAutosizeTextArea } from '~/hooks';
 import {
   RiArrowLeftLine,
   RiImageAddLine,

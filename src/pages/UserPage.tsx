@@ -5,7 +5,7 @@ import HowToItem from '~/components/HowtoItem';
 import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
 import { auth } from '~/firebase';
 import { User, useUpdateUserMutation } from '~/store/apis/usersApi';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { useAutosizeTextArea } from '~/hooks';
 import { Button, Spinner, Textarea } from '~/components/elements';
 import {
   RiEdit2Line,
@@ -20,7 +20,7 @@ import {
   RiUserFollowLine,
 } from 'react-icons/ri';
 import { Post } from '~/store/apis/postsApi';
-import getImageUrl from '~/utils/getImageUrl';
+import { getImageUrl } from '~/utils';
 import clsx from 'clsx';
 
 export default function UserPage() {

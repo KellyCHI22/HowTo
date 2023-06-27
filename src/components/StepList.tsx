@@ -7,9 +7,9 @@ import {
   RiCloseCircleFill,
 } from 'react-icons/ri';
 import { RxDragHandleDots2 } from 'react-icons/rx';
-import { StrictModeDroppable } from '~/utils/StrictModeDroppable';
+import { StrictModeDroppable } from '~/utils';
 import { Textarea, Button } from './elements';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { useAutosizeTextArea } from '~/hooks';
 
 export type Step = {
   id: string;

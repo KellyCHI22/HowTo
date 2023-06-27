@@ -12,10 +12,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import StepList, { Step } from '~/components/StepList';
 import { Button, Input, Spinner, Textarea } from '~/components/elements';
 import TagInput from '~/components/TagInput';
-import useAutosizeTextArea from '~/hooks/useAutosizeTextArea';
+import { useAutosizeTextArea } from '~/hooks';
 import { useFetchPostsQuery, useUpdatePostMutation } from '~/store';
 import { Post } from '~/store/apis/postsApi';
-import getImageUrl from '~/utils/getImageUrl';
+import { getImageUrl } from '~/utils';
 
 export default function EditHowToPage() {
   const { id } = useParams();

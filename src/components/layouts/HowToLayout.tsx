@@ -25,7 +25,7 @@ import {
 import { Spinner } from '../elements';
 import { Post } from '~/store/apis/postsApi';
 import { User } from '~/store/apis/usersApi';
-import getTopUsers from '~/utils/getTopUsers';
+import { getTopUsers } from '~/utils';
 
 export default function HowToLayout() {
   const context = useOutletContext<ContextType>();

@@ -13,7 +13,7 @@ import { useFetchPostsQuery, useFetchUsersQuery } from '~/store';
 import { Post } from '~/store/apis/postsApi';
 import { ContextType } from '~/components/layouts/RootLayout';
 import { SkeletonHowtoItem } from '~/components/HowtoItem';
-import getSortedPosts from '~/utils/getSortedPosts';
+import { getSortedPosts } from '~/utils';
 
 export default function BookmarksPage() {
   const {
