@@ -48,6 +48,9 @@ HowTo is a place to discover and craft unique step-by-step tutorials, from DIY p
 ### 🧩 Built with
 
 [![built with](https://skillicons.dev/icons?i=figma,ts,react,redux,tailwind,firebase,vite)](https://skillicons.dev)
+<img width="50" src="https://user-images.githubusercontent.com/11247099/145112184-a9ff6727-661c-439d-9ada-963124a281f7.png" alt="vitest logo">
+<img width="50" src="https://avatars.githubusercontent.com/u/49996085?s=200&v=4" alt="testing library logo">
+
 
 ![](public/screenshots/Screenshot_1.jpg)
 
