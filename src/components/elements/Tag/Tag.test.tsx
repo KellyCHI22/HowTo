@@ -24,7 +24,7 @@ vi.mock('react-router-dom', () => ({
 }));
 
 describe('Tag behavior', () => {
-  it('useNavigate hook is called correctly', () => {
+  it('useNavigate hook is called correctly when user clicks the Tag', () => {
     render(<Tag label="animal" />);
     const tagElement = screen.getByRole('button');
     fireEvent.click(tagElement);

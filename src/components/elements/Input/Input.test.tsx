@@ -44,7 +44,7 @@ describe('Input rendering', () => {
     expect(inputElement).toHaveAttribute('type', 'password');
   });
 
-  it('should render length limit if the limit prop is provided.', () => {
+  it('should render length limit if the limit prop is provided', () => {
     const limit = 50;
     render(
       <Input
@@ -60,7 +60,7 @@ describe('Input rendering', () => {
     expect(limitElement).toBeInTheDocument();
   });
 
-  it('the character indicator displays the correct character count.', () => {
+  it('the character indicator displays the correct character count', () => {
     const textInput = 'hello world';
     render(
       <Input
@@ -107,7 +107,7 @@ describe('Input behavior', () => {
     expect(inputElement).toHaveValue('test@mail.com');
   });
 
-  it('the character limit indicator changes according to user text input', () => {
+  it('the character limit indicator should change according to user text input', () => {
     const textInputAfterTyping = 'hello world';
     render(<WrappedInput />);
     const inputElement = screen.getByRole('textbox');

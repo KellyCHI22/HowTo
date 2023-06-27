@@ -23,6 +23,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   ) => {
     return (
       <div
+        data-testid="Textarea outer container"
         className={clsx(
           rest.className,
           'text-gray-500 focus-within:text-teal-500',
@@ -34,7 +35,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             {label}
           </label>
         )}
-        <div className="flex items-center border border-slate-400 focus-within:border-transparent focus-within:ring-2 focus-within:ring-teal-400">
+        <div
+          data-testid="Textarea inner container"
+          className="flex items-center border border-slate-400 focus-within:border-transparent focus-within:ring-2 focus-within:ring-teal-400"
+        >
           <textarea
             {...rest}
             id={id}
@@ -45,10 +49,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             onChange={onChange}
             className={clsx(
               rest.className,
-              'w-full resize-none border-none text-black placeholder-slate-400 focus:outline-none focus:ring-0',
-              {
-                '': disabled,
-              }
+              'w-full resize-none border-none text-black placeholder-slate-400 focus:outline-none focus:ring-0'
             )}
           />
         </div>
