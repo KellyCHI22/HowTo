@@ -160,6 +160,10 @@ ctrl + c
 - Vite 4.3.2
 - Eslint 8.38.0
 - Prettier 2.8.8
+- Vitest 0.32.2
+- @testing-library/jest-dom 5.16.5
+- @testing-library/react 14.0.0
+- @testing-library/user-event 14.4.3
 
 ### 📦 File Structure
 
