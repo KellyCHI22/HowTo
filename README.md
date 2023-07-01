@@ -34,6 +34,7 @@
     - [🤯 Development Process](#-development-process)
       - [Design file](#design-file)
       - [User flow](#user-flow)
+      - [Functional map](#functional-map)
       - [Sitemap draft](#sitemap-draft)
   - [🔒 License](#-license)
 
@@ -50,7 +51,6 @@ HowTo is a place to discover and craft unique step-by-step tutorials, from DIY p
 [![built with](https://skillicons.dev/icons?i=figma,ts,react,redux,tailwind,firebase,vite)](https://skillicons.dev)
 <img width="50" src="https://user-images.githubusercontent.com/11247099/145112184-a9ff6727-661c-439d-9ada-963124a281f7.png" alt="vitest logo">
 <img width="50" src="https://avatars.githubusercontent.com/u/49996085?s=200&v=4" alt="testing library logo">
-
 
 ![](public/screenshots/Screenshot_1.jpg)
 
@@ -89,7 +89,7 @@ HowTo is a place to discover and craft unique step-by-step tutorials, from DIY p
 - Get notifications when following users post a new tutorial
 - Develop backend code to separate data logic from the UI logic
 
-## 🚀 Run locally
+## 🚀 Run Locally
 
 1. Clone this project to your local environment
 
@@ -155,7 +155,7 @@ ctrl + c
 - clsx 1.2.1
 - browser-image-compression 2.0.2
 
-### Development tools
+### Development Tools
 
 - Vite 4.3.2
 - Eslint 8.38.0
@@ -184,9 +184,6 @@ ctrl + c
 
 ### 🤯 Development Process
 
-<details>
-<summary>Click me</summary>
-
 #### Design file
 
 ![](public/screenshots/design-figma.jpg)
@@ -196,11 +193,9 @@ ctrl + c
 
 ![](public/screenshots/user-flow.jpg)
 
-#### Sitemap draft
+#### Functional map
 
-![](public/screenshots/sitemap.jpg)
-
-</details>
+![](public/screenshots/howto_funtional_map.png)
 
 ## 🔒 License
 
